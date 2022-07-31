@@ -371,18 +371,22 @@ class LuceneIndex(Index):
     def _build_spark(self, df, df_size, config, tmp_dir_path):
         nparts = df_size // self._index_build_chunk_size
         df = df.repartition(nparts, config.id_col)
+        
+        pickle_col = 'pickle'
+        schema = T.StringType([T.StructField(pickle_col, T.BinaryType(), False)])
 
-        schema = T.StringType([T.StructField('pickle', T.BinaryType(), False)])
-
-        df = df.mapInPandas(lambda x : LuceneIndex._build_spark_worker_local(x, config, tmp_dir_path))\
+        df = df.mapInPandas(lambda x : LuceneIndex._build_spark_worker_local(x, config, tmp_dir_path), schema=schema)\
                 .persist()
         # index stuff
         df.count()
-
+        # write all the files back to local disk
+        # these will then be merged into single local index
         for row in df.toLocalIterator(True):
-            path, data = pickle.loads(row['pickle'])
+            path, data = pickle.loads(row[pickle_col])
             with open(path, 'wb') as ofs:
                 ofs.write(data)
+        
+        df.unpersist()
 
         return list(tmp_dir_path.iterdir())
 
