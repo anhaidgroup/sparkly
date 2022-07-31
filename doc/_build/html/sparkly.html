@@ -1,0 +1,990 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>sparkly package &#8212; Sparkly 0.1 documentation</title>
+    <link rel="stylesheet" href="_static/groundwork.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Sparkly 0.1 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="sparkly-package">
+<h1>sparkly package<a class="headerlink" href="#sparkly-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="sparkly.index.html">sparkly.index package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sparkly.index.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sparkly.index.html#module-sparkly.index.index_base">sparkly.index.index_base module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sparkly.index.html#module-sparkly.index.index_config">sparkly.index.index_config module</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="sparkly.index.html#module-sparkly.index.lucene_index">sparkly.index.lucene_index module</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="sparkly.index.html#module-sparkly.index">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sparkly.index_optimizer.html">sparkly.index_optimizer package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sparkly.index_optimizer.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sparkly.index_optimizer.html#module-sparkly.index_optimizer.index_optimizer">sparkly.index_optimizer.index_optimizer module</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="sparkly.index_optimizer.html#module-sparkly.index_optimizer.query_scorer">sparkly.index_optimizer.query_scorer module</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="sparkly.index_optimizer.html#module-sparkly.index_optimizer">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sparkly.query_generator.html">sparkly.query_generator package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sparkly.query_generator.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sparkly.query_generator.html#module-sparkly.query_generator.lucene_query_generator">sparkly.query_generator.lucene_query_generator module</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="sparkly.query_generator.html#module-sparkly.query_generator.query_spec">sparkly.query_generator.query_spec module</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="sparkly.query_generator.html#module-sparkly.query_generator">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-sparkly.analysis">
+<span id="sparkly-analysis-module"></span><h2>sparkly.analysis module<a class="headerlink" href="#module-sparkly.analysis" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="sparkly.analysis.Gram3Analyzer">
+<em class="property">class </em><code class="descclassname">sparkly.analysis.</code><code class="descname">Gram3Analyzer</code><a class="headerlink" href="#sparkly.analysis.Gram3Analyzer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">org.apache.pylucene.analysis.PythonAnalyzer</span></code></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Attributes:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>class</strong></dt>
+<dd></dd>
+<dt><strong>reuseStrategy</strong></dt>
+<dd></dd>
+<dt><strong>self</strong></dt>
+<dd></dd>
+<dt><strong>version</strong></dt>
+<dd></dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">ReuseStrategy</span></code></td>
+<td>alias of <code class="xref py py-class docutils literal"><span class="pre">org.apache.lucene.analysis.Analyzer$ReuseStrategy</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">TokenStreamComponents</span></code></td>
+<td>alias of <code class="xref py py-class docutils literal"><span class="pre">org.apache.lucene.analysis.Analyzer$TokenStreamComponents</span></code></td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils">
+<colgroup>
+<col width="73%" />
+<col width="27%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><strong>cast_</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><strong>close</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td><strong>createComponents</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><strong>equals</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td><strong>finalize</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><strong>getClass</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td><strong>getOffsetGap</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><strong>getPositionIncrementGap</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td><strong>getReuseStrategy</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><strong>getVersion</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td><strong>hashCode</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><strong>initReader</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td><strong>instance_</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><strong>normalize</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td><strong>notify</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><strong>notifyAll</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td><strong>pythonExtension</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><strong>setVersion</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td><strong>toString</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><strong>tokenStream</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td><strong>wait</strong></td>
+<td>&#160;</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="sparkly.analysis.Gram3Analyzer.createComponents">
+<code class="descname">createComponents</code><span class="sig-paren">(</span><em>fieldName</em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.analysis.Gram3Analyzer.createComponents" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="sparkly.analysis.PythonAlnumTokenFilter">
+<em class="property">class </em><code class="descclassname">sparkly.analysis.</code><code class="descname">PythonAlnumTokenFilter</code><span class="sig-paren">(</span><em>tokenStream</em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.analysis.PythonAlnumTokenFilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">org.apache.pylucene.analysis.PythonFilteringTokenFilter</span></code></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Attributes:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>attributeClassesIterator</strong></dt>
+<dd></dd>
+<dt><strong>attributeFactory</strong></dt>
+<dd></dd>
+<dt><strong>attributeImplsIterator</strong></dt>
+<dd></dd>
+<dt><strong>class</strong></dt>
+<dd></dd>
+<dt><strong>self</strong></dt>
+<dd></dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">State</span></code></td>
+<td>alias of <code class="xref py py-class docutils literal"><span class="pre">org.apache.lucene.util.AttributeSource$State</span></code></td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils">
+<colgroup>
+<col width="76%" />
+<col width="24%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><strong>accept</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><strong>addAttribute</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td><strong>addAttributeImpl</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><strong>captureState</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td><strong>cast_</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><strong>clearAttributes</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td><strong>cloneAttributes</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><strong>close</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td><strong>copyTo</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><strong>end</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td><strong>endAttributes</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><strong>equals</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td><strong>finalize</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><strong>getAttribute</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td><strong>getAttributeClassesIterator</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><strong>getAttributeFactory</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td><strong>getAttributeImplsIterator</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><strong>getClass</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td><strong>hasAttribute</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><strong>hasAttributes</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td><strong>hashCode</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><strong>incrementToken</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td><strong>instance_</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><strong>notify</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td><strong>notifyAll</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><strong>pythonExtension</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td><strong>reflectAsString</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><strong>reflectWith</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td><strong>removeAllAttributes</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><strong>reset</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td><strong>restoreState</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><strong>toString</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td><strong>wait</strong></td>
+<td>&#160;</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="sparkly.analysis.PythonAlnumTokenFilter.accept">
+<code class="descname">accept</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.analysis.PythonAlnumTokenFilter.accept" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="sparkly.analysis.StandardEdgeGram36Analyzer">
+<em class="property">class </em><code class="descclassname">sparkly.analysis.</code><code class="descname">StandardEdgeGram36Analyzer</code><a class="headerlink" href="#sparkly.analysis.StandardEdgeGram36Analyzer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">org.apache.pylucene.analysis.PythonAnalyzer</span></code></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Attributes:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>class</strong></dt>
+<dd></dd>
+<dt><strong>reuseStrategy</strong></dt>
+<dd></dd>
+<dt><strong>self</strong></dt>
+<dd></dd>
+<dt><strong>version</strong></dt>
+<dd></dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">ReuseStrategy</span></code></td>
+<td>alias of <code class="xref py py-class docutils literal"><span class="pre">org.apache.lucene.analysis.Analyzer$ReuseStrategy</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">TokenStreamComponents</span></code></td>
+<td>alias of <code class="xref py py-class docutils literal"><span class="pre">org.apache.lucene.analysis.Analyzer$TokenStreamComponents</span></code></td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils">
+<colgroup>
+<col width="73%" />
+<col width="27%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><strong>cast_</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><strong>close</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td><strong>createComponents</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><strong>equals</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td><strong>finalize</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><strong>getClass</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td><strong>getOffsetGap</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><strong>getPositionIncrementGap</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td><strong>getReuseStrategy</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><strong>getVersion</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td><strong>hashCode</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><strong>initReader</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td><strong>instance_</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><strong>normalize</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td><strong>notify</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><strong>notifyAll</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td><strong>pythonExtension</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><strong>setVersion</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td><strong>toString</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><strong>tokenStream</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td><strong>wait</strong></td>
+<td>&#160;</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="sparkly.analysis.StandardEdgeGram36Analyzer.createComponents">
+<code class="descname">createComponents</code><span class="sig-paren">(</span><em>fieldName</em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.analysis.StandardEdgeGram36Analyzer.createComponents" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="sparkly.analysis.UnfilteredGram5Analyzer">
+<em class="property">class </em><code class="descclassname">sparkly.analysis.</code><code class="descname">UnfilteredGram5Analyzer</code><a class="headerlink" href="#sparkly.analysis.UnfilteredGram5Analyzer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">org.apache.pylucene.analysis.PythonAnalyzer</span></code></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Attributes:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>class</strong></dt>
+<dd></dd>
+<dt><strong>reuseStrategy</strong></dt>
+<dd></dd>
+<dt><strong>self</strong></dt>
+<dd></dd>
+<dt><strong>version</strong></dt>
+<dd></dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">ReuseStrategy</span></code></td>
+<td>alias of <code class="xref py py-class docutils literal"><span class="pre">org.apache.lucene.analysis.Analyzer$ReuseStrategy</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">TokenStreamComponents</span></code></td>
+<td>alias of <code class="xref py py-class docutils literal"><span class="pre">org.apache.lucene.analysis.Analyzer$TokenStreamComponents</span></code></td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils">
+<colgroup>
+<col width="73%" />
+<col width="27%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><strong>cast_</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><strong>close</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td><strong>createComponents</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><strong>equals</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td><strong>finalize</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><strong>getClass</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td><strong>getOffsetGap</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><strong>getPositionIncrementGap</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td><strong>getReuseStrategy</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><strong>getVersion</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td><strong>hashCode</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><strong>initReader</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td><strong>instance_</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><strong>normalize</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td><strong>notify</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><strong>notifyAll</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td><strong>pythonExtension</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><strong>setVersion</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td><strong>toString</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><strong>tokenStream</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td><strong>wait</strong></td>
+<td>&#160;</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="sparkly.analysis.UnfilteredGram5Analyzer.createComponents">
+<code class="descname">createComponents</code><span class="sig-paren">(</span><em>fieldName</em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.analysis.UnfilteredGram5Analyzer.createComponents" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="sparkly.analysis.analyze">
+<code class="descclassname">sparkly.analysis.</code><code class="descname">analyze</code><span class="sig-paren">(</span><em>analyzer</em>, <em>text</em>, <em>with_offset=False</em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.analysis.analyze" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply the analyzer to the text and return the tokens, optionally with offsets</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><strong>analyzer :</strong></dt>
+<dd><p class="first last">The lucene analyzer to be applied</p>
+</dd>
+<dt><strong>text</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">the text that will be analyzer</p>
+</dd>
+<dt><strong>with_offset</strong> <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
+<dd><p class="first last">if true, return the offsets with the tokens in the form 
+(TOKEN, START_OFFSET, END_OFFSET)</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt>list of str or tuples</dt>
+<dd><p class="first last">a list of tokens potentially with offsets</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="sparkly.analysis.get_shingle_analyzer">
+<code class="descclassname">sparkly.analysis.</code><code class="descname">get_shingle_analyzer</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.analysis.get_shingle_analyzer" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="sparkly.analysis.get_standard_analyzer_no_stop_words">
+<code class="descclassname">sparkly.analysis.</code><code class="descname">get_standard_analyzer_no_stop_words</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.analysis.get_standard_analyzer_no_stop_words" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-sparkly.search">
+<span id="sparkly-search-module"></span><h2>sparkly.search module<a class="headerlink" href="#module-sparkly.search" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="sparkly.search.Searcher">
+<em class="property">class </em><code class="descclassname">sparkly.search.</code><code class="descname">Searcher</code><span class="sig-paren">(</span><em>index</em>, <em>search_chunk_size=500</em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.search.Searcher" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>class for performing bulk search over a dataframe</p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#sparkly.search.Searcher.get_full_query_spec" title="sparkly.search.Searcher.get_full_query_spec"><code class="xref py py-obj docutils literal"><span class="pre">get_full_query_spec</span></code></a>()</td>
+<td>get a query spec that searches on all indexed fields</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#sparkly.search.Searcher.search" title="sparkly.search.Searcher.search"><code class="xref py py-obj docutils literal"><span class="pre">search</span></code></a>(search_df,&nbsp;query_spec,&nbsp;limit[,&nbsp;id_col])</td>
+<td>perform search for all the records in search_df according to</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="sparkly.search.Searcher.get_full_query_spec">
+<code class="descname">get_full_query_spec</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.search.Searcher.get_full_query_spec" title="Permalink to this definition">¶</a></dt>
+<dd><p>get a query spec that searches on all indexed fields</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sparkly.search.Searcher.search">
+<code class="descname">search</code><span class="sig-paren">(</span><em>search_df</em>, <em>query_spec</em>, <em>limit</em>, <em>id_col='_id'</em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.search.Searcher.search" title="Permalink to this definition">¶</a></dt>
+<dd><p>perform search for all the records in search_df according to
+query_spec</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><strong>search_df</strong> <span class="classifier-delimiter">:</span> <span class="classifier">pyspark.sql.DataFrame</span></dt>
+<dd><p class="first last">the records used for searching</p>
+</dd>
+<dt><strong>query_spec</strong> <span class="classifier-delimiter">:</span> <span class="classifier">QuerySpec</span></dt>
+<dd><p class="first last">the query spec for searching</p>
+</dd>
+<dt><strong>limit</strong> <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">the topk that will be retrieved for each query</p>
+</dd>
+<dt><strong>id_col</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">the id column from search_df that will be output with the query results</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt>pyspark DataFrame</dt>
+<dd><p class="first last">a pyspark dataframe with the schema (<cite>id_col</cite>, ids array&lt;long&gt; , scores array&lt;float&gt;, search_time float)</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="sparkly.search.search">
+<code class="descclassname">sparkly.search.</code><code class="descname">search</code><span class="sig-paren">(</span><em>index</em>, <em>query_spec</em>, <em>limit</em>, <em>search_recs</em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.search.search" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="sparkly.search.search_gen">
+<code class="descclassname">sparkly.search.</code><code class="descname">search_gen</code><span class="sig-paren">(</span><em>index</em>, <em>query_spec</em>, <em>limit</em>, <em>search_recs</em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.search.search_gen" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-sparkly.utils">
+<span id="sparkly-utils-module"></span><h2>sparkly.utils module<a class="headerlink" href="#module-sparkly.utils" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="sparkly.utils.Timer">
+<em class="property">class </em><code class="descclassname">sparkly.utils.</code><code class="descname">Timer</code><a class="headerlink" href="#sparkly.utils.Timer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>utility class for timing execution of code</p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#sparkly.utils.Timer.get_interval" title="sparkly.utils.Timer.get_interval"><code class="xref py py-obj docutils literal"><span class="pre">get_interval</span></code></a>()</td>
+<td>get the time that has elapsed since the object was created or the</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#sparkly.utils.Timer.get_total" title="sparkly.utils.Timer.get_total"><code class="xref py py-obj docutils literal"><span class="pre">get_total</span></code></a>()</td>
+<td>get total time this Timer has been alive</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#sparkly.utils.Timer.set_start_time" title="sparkly.utils.Timer.set_start_time"><code class="xref py py-obj docutils literal"><span class="pre">set_start_time</span></code></a>()</td>
+<td>set the start time to the current time</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="sparkly.utils.Timer.get_interval">
+<code class="descname">get_interval</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.utils.Timer.get_interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>get the time that has elapsed since the object was created or the 
+last time get_interval() was called</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt>float</dt>
+<dd></dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sparkly.utils.Timer.get_total">
+<code class="descname">get_total</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.utils.Timer.get_total" title="Permalink to this definition">¶</a></dt>
+<dd><p>get total time this Timer has been alive</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt>float</dt>
+<dd></dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sparkly.utils.Timer.set_start_time">
+<code class="descname">set_start_time</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.utils.Timer.set_start_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>set the start time to the current time</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="sparkly.utils.atomic_unzip">
+<code class="descclassname">sparkly.utils.</code><code class="descname">atomic_unzip</code><span class="sig-paren">(</span><em>zip_file_name</em>, <em>output_loc</em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.utils.atomic_unzip" title="Permalink to this definition">¶</a></dt>
+<dd><p>atomically unzip the file, that is this function is safe to call 
+from multiple threads at the same time</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>zip_file_name</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">the name of the file to be unzipped</p>
+</dd>
+<dt><strong>output_loc</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">the location that the file will be unzipped to</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="sparkly.utils.auc">
+<code class="descclassname">sparkly.utils.</code><code class="descname">auc</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.utils.auc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="sparkly.utils.get_index_name">
+<code class="descclassname">sparkly.utils.</code><code class="descname">get_index_name</code><span class="sig-paren">(</span><em>n</em>, <em>*postfixes</em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.utils.get_index_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>utility function for generating index names in a uniform way</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sparkly.utils.get_logger">
+<code class="descclassname">sparkly.utils.</code><code class="descname">get_logger</code><span class="sig-paren">(</span><em>name</em>, <em>level=10</em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.utils.get_logger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the logger for a module</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt>Logger</dt>
+<dd></dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="sparkly.utils.init_jvm">
+<code class="descclassname">sparkly.utils.</code><code class="descname">init_jvm</code><span class="sig-paren">(</span><em>vmargs=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.utils.init_jvm" title="Permalink to this definition">¶</a></dt>
+<dd><p>initialize the jvm for PyLucene</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>vmargs</strong> <span class="classifier-delimiter">:</span> <span class="classifier">list[str]</span></dt>
+<dd><p class="first last">the jvm args to the passed to the vm</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="sparkly.utils.invoke_task">
+<code class="descclassname">sparkly.utils.</code><code class="descname">invoke_task</code><span class="sig-paren">(</span><em>task</em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.utils.invoke_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>invoke a task created by joblib.delayed</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sparkly.utils.is_null">
+<code class="descclassname">sparkly.utils.</code><code class="descname">is_null</code><span class="sig-paren">(</span><em>o</em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.utils.is_null" title="Permalink to this definition">¶</a></dt>
+<dd><p>check if the object is null, note that this is here to 
+get rid of the weird behavior of np.isnan and pd.isnull</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sparkly.utils.is_persisted">
+<code class="descclassname">sparkly.utils.</code><code class="descname">is_persisted</code><span class="sig-paren">(</span><em>df</em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.utils.is_persisted" title="Permalink to this definition">¶</a></dt>
+<dd><p>check if the pyspark dataframe is persist</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sparkly.utils.kill_loky_workers">
+<code class="descclassname">sparkly.utils.</code><code class="descname">kill_loky_workers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.utils.kill_loky_workers" title="Permalink to this definition">¶</a></dt>
+<dd><p>kill all the child loky processes of this process. 
+used to prevent joblib from sitting on resources after using 
+joblib.Parallel to do computation</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sparkly.utils.norm_auc">
+<code class="descclassname">sparkly.utils.</code><code class="descname">norm_auc</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.utils.norm_auc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="sparkly.utils.persisted">
+<code class="descclassname">sparkly.utils.</code><code class="descname">persisted</code><span class="sig-paren">(</span><em>df</em>, <em>storage_level=StorageLevel(True</em>, <em>True</em>, <em>False</em>, <em>False</em>, <em>1)</em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.utils.persisted" title="Permalink to this definition">¶</a></dt>
+<dd><p>context manager for presisting a dataframe in a with statement.
+This automatically unpersists the dataframe at the end of the context</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sparkly.utils.repartition_df">
+<code class="descclassname">sparkly.utils.</code><code class="descname">repartition_df</code><span class="sig-paren">(</span><em>df</em>, <em>part_size</em>, <em>by</em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.utils.repartition_df" title="Permalink to this definition">¶</a></dt>
+<dd><p>repartition the dataframe into chunk of size ‘part_size’
+by column ‘by’</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sparkly.utils.spark_to_pandas_stream">
+<code class="descclassname">sparkly.utils.</code><code class="descname">spark_to_pandas_stream</code><span class="sig-paren">(</span><em>df</em>, <em>chunk_size</em>, <em>by='_id'</em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.utils.spark_to_pandas_stream" title="Permalink to this definition">¶</a></dt>
+<dd><p>repartition df into chunk_size and return as iterator of 
+pandas dataframes</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sparkly.utils.type_check">
+<code class="descclassname">sparkly.utils.</code><code class="descname">type_check</code><span class="sig-paren">(</span><em>var</em>, <em>var_name</em>, <em>expected</em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.utils.type_check" title="Permalink to this definition">¶</a></dt>
+<dd><p>type checking utility, throw a type error if the var isn’t the expected type</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sparkly.utils.type_check_iterable">
+<code class="descclassname">sparkly.utils.</code><code class="descname">type_check_iterable</code><span class="sig-paren">(</span><em>var</em>, <em>var_name</em>, <em>expected_var_type</em>, <em>expected_element_type</em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.utils.type_check_iterable" title="Permalink to this definition">¶</a></dt>
+<dd><p>type checking utility for iterables, throw a type error if the var isn’t the expected type
+or any of the elements are not the expected type</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sparkly.utils.zip_dir">
+<code class="descclassname">sparkly.utils.</code><code class="descname">zip_dir</code><span class="sig-paren">(</span><em>d</em>, <em>outfile=None</em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.utils.zip_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Zip a directory <cite>d</cite> and output it to <cite>outfile</cite>. If 
+<cite>outfile</cite> is not provided, the zipped file is output in /tmp</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><strong>d</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str or Path</span></dt>
+<dd><p class="first last">the directory to be zipped</p>
+</dd>
+<dt><strong>outfile</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str or Path, optional</span></dt>
+<dd><p class="first last">the output location of the zipped file</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt>Path</dt>
+<dd><p class="first last">the path to the new zip file</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-sparkly">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-sparkly" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Sparkly 0.1 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Derek Paulsen.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.
+    </div>
+  </body>
+</html>

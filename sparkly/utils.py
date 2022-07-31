@@ -1,0 +1,290 @@
+from contextlib import contextmanager
+from tempfile import mkdtemp
+import shutil
+import os
+import time
+import sys
+import logging
+import warnings
+import re
+from pathlib import Path
+from zipfile import ZipFile
+
+import psutil
+import pandas as pd
+import numpy as np
+
+from pyspark import SparkContext
+from pyspark import StorageLevel
+# needed to find the parquet module
+import pyarrow.parquet
+import pyarrow as pa
+import lucene
+
+
+logging.basicConfig(
+        stream=sys.stderr,
+        format='[%(filename)s:%(lineno)s - %(funcName)s() ] %(asctime)-15s : %(message)s',
+)
+logger = logging.getLogger(__name__)
+
+
+
+def get_index_name(n, *postfixes):
+    """
+    utility function for generating index names in a uniform way
+    """
+    s = n.lower().replace('-', '_')
+    if len(postfixes) != 0:
+        s += '_' + '_'.join(postfixes)
+    return s
+
+
+
+class Timer:
+    """
+    utility class for timing execution of code
+    """
+
+    def __init__(self):
+        self.start_time = time.time()
+        self._last_interval = time.time()
+
+    def get_interval(self):
+        """
+        get the time that has elapsed since the object was created or the 
+        last time get_interval() was called
+
+        Returns
+        -------
+        float
+        """
+        t = time.time()
+        interval = t - self._last_interval
+        self._last_interval = t
+        return interval
+
+    def get_total(self):
+        """
+        get total time this Timer has been alive
+
+        Returns
+        -------
+        float
+        """
+        return time.time() - self.start_time
+
+    def set_start_time(self):
+        """
+        set the start time to the current time
+        """
+        self.start_time = time.time()
+
+
+def get_logger(name, level=logging.DEBUG):
+    """
+    Get the logger for a module
+
+    Returns
+    -------
+    Logger
+
+    """
+    logger = logging.getLogger(name)
+    logger.setLevel(level)
+
+    return logger
+
+'''
+AUC for an array sorted in decending order
+slightly different results to np.trapz due to 
+FP error
+'''
+def auc(x):
+    return x[1:].sum() + (x[0] - x[-1]) / 2
+
+'''
+AUC for an array sorted in decending order
+slightly different results to np.trapz due to 
+FP error
+'''
+def norm_auc(x):
+    return (x[1:].sum() + (x[0] - x[-1]) / 2) / len(x)
+
+
+def atomic_unzip(zip_file_name, output_loc):
+    """
+    atomically unzip the file, that is this function is safe to call 
+    from multiple threads at the same time
+
+    Parameters
+    ----------
+    zip_file_name : str
+        the name of the file to be unzipped
+
+    output_loc : str
+        the location that the file will be unzipped to
+    """
+    tmp = mkdtemp(prefix='temp_zip_file.')
+    try:
+        with ZipFile(zip_file_name, 'r') as zf:
+            zf.extractall(tmp)
+        shutil.move(tmp, output_loc)
+    except Exception as e:
+        if not os.path.exists(output_loc):
+            raise e
+        # the directory already exists another 
+        # process already wrote it
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
+def _add_file_recursive(zip_file, base, file):
+    if file.is_dir():
+        for f in file.iterdir():
+            _add_file_recursive(zip_file, base, f)
+    else:
+        zip_file.write(file, arcname=file.relative_to(base))
+
+def zip_dir(d, outfile=None):
+    """
+    Zip a directory `d` and output it to `outfile`. If 
+    `outfile` is not provided, the zipped file is output in /tmp
+
+    Parameters
+    ----------
+    d : str or Path
+        the directory to be zipped
+
+    outfile : str or Path, optional
+        the output location of the zipped file
+
+    Returns
+    -------
+    Path 
+        the path to the new zip file
+
+    """
+    p = Path(d)
+    tmp_zip_file = Path(outfile) if outfile is not None else Path('/tmp') / f'{p.name}.zip'
+
+    with ZipFile(tmp_zip_file, 'w') as zf:
+        _add_file_recursive(zf, p, p)
+
+    return tmp_zip_file
+
+def init_jvm(vmargs=[]):
+    """
+    initialize the jvm for PyLucene
+
+    Parameters
+    ----------
+    vmargs : list[str]
+        the jvm args to the passed to the vm
+    """
+    if not lucene.getVMEnv():
+        lucene.initVM(vmargs=['-Djava.awt.headless=true'] + vmargs)
+def invoke_task(task):
+    """
+    invoke a task created by joblib.delayed
+    """
+    # task == (function, *args, **kwargs)
+    return task[0](*task[1], **task[2])
+
+
+@contextmanager
+def persisted(df, storage_level=StorageLevel.MEMORY_AND_DISK):
+    """
+    context manager for presisting a dataframe in a with statement.
+    This automatically unpersists the dataframe at the end of the context
+    """
+    if df is not None and not is_persisted(df):
+        df = df.persist(storage_level) 
+    try:
+        yield df
+    finally:
+        if df is not None:
+            df.unpersist()
+
+def is_persisted(df):
+    """
+    check if the pyspark dataframe is persist
+    """
+    sl = df.storageLevel
+    return sl.useMemory or sl.useDisk
+
+
+def repartition_df(df, part_size, by):
+    """
+    repartition the dataframe into chunk of size 'part_size'
+    by column 'by'
+    """
+    n = max(df.count() // part_size, SparkContext.getOrCreate().defaultParallelism * 4)
+
+    return df.repartition(n, by)
+
+def is_null(o):
+    """
+    check if the object is null, note that this is here to 
+    get rid of the weird behavior of np.isnan and pd.isnull
+    """
+    r = pd.isnull(o)
+    return r if isinstance(r, bool) else False
+
+
+
+_loky_re = re.compile('LokyProcess-\\d+')    
+def _is_loky(c):    
+    return any(map(_loky_re.match, c.cmdline()))    
+    
+def kill_loky_workers():
+    """
+    kill all the child loky processes of this process. 
+    used to prevent joblib from sitting on resources after using 
+    joblib.Parallel to do computation
+    """
+    proc_killed = False
+    parent_proc = psutil.Process()    
+    for c in parent_proc.children(recursive=True):    
+        if _is_loky(c):    
+            c.terminate()    
+            proc_killed = True
+
+    if not proc_killed:
+        warnings.warn('kill_loky_workers invoked but no processes were killed', UserWarning)
+
+
+ 
+def spark_to_pandas_stream(df, chunk_size, by='_id'):
+    """
+    repartition df into chunk_size and return as iterator of 
+    pandas dataframes
+    """
+    df = df.repartition(max(1, df.count() // chunk_size), by)\
+            .rdd\
+            .mapPartitions(lambda x : iter([pd.DataFrame([e.asDict(True) for e in x]).convert_dtypes()]) )\
+            .persist(StorageLevel.DISK_ONLY)
+    # trigger read
+    df.count()
+    for batch in df.toLocalIterator(True):
+        yield batch
+
+    df.unpersist()
+
+def type_check(var, var_name, expected):
+    """
+    type checking utility, throw a type error if the var isn't the expected type
+    """
+    if not isinstance(var, expected):
+        raise TypeError(f'{var_name} must be type {expected} (got {type(var)})')
+
+def type_check_iterable(var, var_name, expected_var_type, expected_element_type):
+    """
+    type checking utility for iterables, throw a type error if the var isn't the expected type
+    or any of the elements are not the expected type
+    """
+    type_check(var, var_name, expected_var_type)
+    for e in var:
+        if not isinstance(e, expected_element_type):
+            raise TypeError(f'all elements of {var_name} must be type{expected_element_type} (got {type(var)})')
+

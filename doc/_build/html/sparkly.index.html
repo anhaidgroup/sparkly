@@ -1,0 +1,733 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>sparkly.index package &#8212; Sparkly 0.1 documentation</title>
+    <link rel="stylesheet" href="_static/groundwork.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Sparkly 0.1 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="sparkly-index-package">
+<h1>sparkly.index package<a class="headerlink" href="#sparkly-index-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-sparkly.index.index_base">
+<span id="sparkly-index-index-base-module"></span><h2>sparkly.index.index_base module<a class="headerlink" href="#module-sparkly.index.index_base" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="sparkly.index.index_base.Index">
+<em class="property">class </em><code class="descclassname">sparkly.index.index_base.</code><code class="descname">Index</code><a class="headerlink" href="#sparkly.index.index_base.Index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">abc.ABC</span></code></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Attributes:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>config</strong></dt>
+<dd></dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="60%" />
+<col width="40%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><strong>build</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><strong>search</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td><strong>search_many</strong></td>
+<td>&#160;</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="sparkly.index.index_base.Index.build">
+<code class="descname">build</code><span class="sig-paren">(</span><em>df</em>, <em>config</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#sparkly.index.index_base.Index.build" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="sparkly.index.index_base.Index.config">
+<code class="descname">config</code><a class="headerlink" href="#sparkly.index.index_base.Index.config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sparkly.index.index_base.Index.search">
+<code class="descname">search</code><span class="sig-paren">(</span><em>doc</em>, <em>query_spec</em>, <em>limit</em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.index.index_base.Index.search" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sparkly.index.index_base.Index.search_many">
+<code class="descname">search_many</code><span class="sig-paren">(</span><em>docs</em>, <em>query_spec</em>, <em>limit</em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.index.index_base.Index.search_many" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-sparkly.index.index_config">
+<span id="sparkly-index-index-config-module"></span><h2>sparkly.index.index_config module<a class="headerlink" href="#module-sparkly.index.index_config" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="sparkly.index.index_config.IndexConfig">
+<em class="property">class </em><code class="descclassname">sparkly.index.index_config.</code><code class="descname">IndexConfig</code><span class="sig-paren">(</span><em>*</em>, <em>store_vectors=False</em>, <em>id_col='_id'</em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.index.index_config.IndexConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Attributes:</th><td class="field-body"><dl class="first last docutils">
+<dt><a class="reference internal" href="#sparkly.index.index_config.IndexConfig.id_col" title="sparkly.index.index_config.IndexConfig.id_col"><code class="xref py py-obj docutils literal"><span class="pre">id_col</span></code></a></dt>
+<dd><p class="first last">The unique id column for the records in the index this must be a 32 or 64 bit integer</p>
+</dd>
+<dt><a class="reference internal" href="#sparkly.index.index_config.IndexConfig.is_frozen" title="sparkly.index.index_config.IndexConfig.is_frozen"><code class="xref py py-obj docutils literal"><span class="pre">is_frozen</span></code></a></dt>
+<dd><p class="first last">Returns</p>
+</dd>
+<dt><a class="reference internal" href="#sparkly.index.index_config.IndexConfig.store_vectors" title="sparkly.index.index_config.IndexConfig.store_vectors"><code class="xref py py-obj docutils literal"><span class="pre">store_vectors</span></code></a></dt>
+<dd><p class="first last">True if the term vectors in the index should be stored, else False</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#sparkly.index.index_config.IndexConfig.add_concat_field" title="sparkly.index.index_config.IndexConfig.add_concat_field"><code class="xref py py-obj docutils literal"><span class="pre">add_concat_field</span></code></a>(field,&nbsp;concat_fields,&nbsp;analyzers)</td>
+<td>Add a new concat field to be indexed with this config</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#sparkly.index.index_config.IndexConfig.add_field" title="sparkly.index.index_config.IndexConfig.add_field"><code class="xref py py-obj docutils literal"><span class="pre">add_field</span></code></a>(field,&nbsp;analyzers)</td>
+<td>Add a new field to be indexed with this config</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#sparkly.index.index_config.IndexConfig.freeze" title="sparkly.index.index_config.IndexConfig.freeze"><code class="xref py py-obj docutils literal"><span class="pre">freeze</span></code></a>()</td>
+<td><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#sparkly.index.index_config.IndexConfig.from_json" title="sparkly.index.index_config.IndexConfig.from_json"><code class="xref py py-obj docutils literal"><span class="pre">from_json</span></code></a>(data)</td>
+<td>construct an index config from a dict or json string,</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#sparkly.index.index_config.IndexConfig.get_analyzed_fields" title="sparkly.index.index_config.IndexConfig.get_analyzed_fields"><code class="xref py py-obj docutils literal"><span class="pre">get_analyzed_fields</span></code></a>([query_spec])</td>
+<td>Get the fields used by the index or query_spec.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#sparkly.index.index_config.IndexConfig.remove_field" title="sparkly.index.index_config.IndexConfig.remove_field"><code class="xref py py-obj docutils literal"><span class="pre">remove_field</span></code></a>(field)</td>
+<td>remove a field from the config</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#sparkly.index.index_config.IndexConfig.to_dict" title="sparkly.index.index_config.IndexConfig.to_dict"><code class="xref py py-obj docutils literal"><span class="pre">to_dict</span></code></a>()</td>
+<td>convert this IndexConfig to a dictionary which can easily</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#sparkly.index.index_config.IndexConfig.to_json" title="sparkly.index.index_config.IndexConfig.to_json"><code class="xref py py-obj docutils literal"><span class="pre">to_json</span></code></a>()</td>
+<td>Dump this IndexConfig to a valid json strings</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="sparkly.index.index_config.IndexConfig.add_concat_field">
+<code class="descname">add_concat_field</code><span class="sig-paren">(</span><em>field: str</em>, <em>concat_fields</em>, <em>analyzers</em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.index.index_config.IndexConfig.add_concat_field" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a new concat field to be indexed with this config</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>field</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">The name of the field that will be added to the index</p>
+</dd>
+<dt><strong>concat_fields</strong> <span class="classifier-delimiter">:</span> <span class="classifier">set, list or tuple of strs</span></dt>
+<dd><p class="first last">the fields in the table that will be concatenated together to create <cite>field</cite></p>
+</dd>
+<dt><strong>analyzers</strong> <span class="classifier-delimiter">:</span> <span class="classifier">set, list or tuple of str</span></dt>
+<dd><p class="first last">The names of the analyzers that will be used to index the field</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sparkly.index.index_config.IndexConfig.add_field">
+<code class="descname">add_field</code><span class="sig-paren">(</span><em>field: str</em>, <em>analyzers</em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.index.index_config.IndexConfig.add_field" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a new field to be indexed with this config</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>field</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">The name of the field in the table to the index</p>
+</dd>
+<dt><strong>analyzers</strong> <span class="classifier-delimiter">:</span> <span class="classifier">set, list or tuple of str</span></dt>
+<dd><p class="first last">The names of the analyzers that will be used to index the field</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sparkly.index.index_config.IndexConfig.freeze">
+<code class="descname">freeze</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.index.index_config.IndexConfig.freeze" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt>IndexConfig</dt>
+<dd><p class="first last">a frozen deepcopy of this index config</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="sparkly.index.index_config.IndexConfig.from_json">
+<em class="property">classmethod </em><code class="descname">from_json</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.index.index_config.IndexConfig.from_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>construct an index config from a dict or json string,
+see IndexConfig.to_dict for expected format</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt>IndexConfig</dt>
+<dd></dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sparkly.index.index_config.IndexConfig.get_analyzed_fields">
+<code class="descname">get_analyzed_fields</code><span class="sig-paren">(</span><em>query_spec=None</em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.index.index_config.IndexConfig.get_analyzed_fields" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the fields used by the index or query_spec. If <cite>query_spec</cite> is None, 
+the fields that are used by the index are returned.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><strong>query_spec</strong> <span class="classifier-delimiter">:</span> <span class="classifier">QuerySpec, optional</span></dt>
+<dd><p class="first last">if provided, the fields that are used by <cite>query_spec</cite> in creating a query</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt>list of str</dt>
+<dd><p class="first last">the fields used</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sparkly.index.index_config.IndexConfig.id_col">
+<code class="descname">id_col</code><a class="headerlink" href="#sparkly.index.index_config.IndexConfig.id_col" title="Permalink to this definition">¶</a></dt>
+<dd><p>The unique id column for the records in the index this must be a 32 or 64 bit integer</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sparkly.index.index_config.IndexConfig.is_frozen">
+<code class="descname">is_frozen</code><a class="headerlink" href="#sparkly.index.index_config.IndexConfig.is_frozen" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt>bool</dt>
+<dd><p class="first last">True if this index is frozen (not modifiable) else False</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sparkly.index.index_config.IndexConfig.remove_field">
+<code class="descname">remove_field</code><span class="sig-paren">(</span><em>field</em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.index.index_config.IndexConfig.remove_field" title="Permalink to this definition">¶</a></dt>
+<dd><p>remove a field from the config</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><strong>field</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">the field to be removed from the config</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt>bool</dt>
+<dd><p class="first last">True if the field existed else False</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sparkly.index.index_config.IndexConfig.store_vectors">
+<code class="descname">store_vectors</code><a class="headerlink" href="#sparkly.index.index_config.IndexConfig.store_vectors" title="Permalink to this definition">¶</a></dt>
+<dd><p>True if the term vectors in the index should be stored, else False</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sparkly.index.index_config.IndexConfig.to_dict">
+<code class="descname">to_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.index.index_config.IndexConfig.to_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>convert this IndexConfig to a dictionary which can easily 
+be stored as json</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt>dict</dt>
+<dd><p class="first last">A dictionary representation of this IndexConfig</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sparkly.index.index_config.IndexConfig.to_json">
+<code class="descname">to_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.index.index_config.IndexConfig.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dump this IndexConfig to a valid json strings</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt>str</dt>
+<dd></dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-sparkly.index.lucene_index">
+<span id="sparkly-index-lucene-index-module"></span><h2>sparkly.index.lucene_index module<a class="headerlink" href="#module-sparkly.index.lucene_index" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="sparkly.index.lucene_index.LuceneIndex">
+<em class="property">class </em><code class="descclassname">sparkly.index.lucene_index.</code><code class="descname">LuceneIndex</code><span class="sig-paren">(</span><em>index_path</em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.index.lucene_index.LuceneIndex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#sparkly.index.index_base.Index" title="sparkly.index.index_base.Index"><code class="xref py py-class docutils literal"><span class="pre">sparkly.index.index_base.Index</span></code></a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Attributes:</th><td class="field-body"><dl class="first last docutils">
+<dt><a class="reference internal" href="#sparkly.index.lucene_index.LuceneIndex.config" title="sparkly.index.lucene_index.LuceneIndex.config"><code class="xref py py-obj docutils literal"><span class="pre">config</span></code></a></dt>
+<dd><p class="first last">the index config used to build this index</p>
+</dd>
+<dt><a class="reference internal" href="#sparkly.index.lucene_index.LuceneIndex.is_built" title="sparkly.index.lucene_index.LuceneIndex.is_built"><code class="xref py py-obj docutils literal"><span class="pre">is_built</span></code></a></dt>
+<dd><p class="first last">True if this index has been built else False</p>
+</dd>
+<dt><a class="reference internal" href="#sparkly.index.lucene_index.LuceneIndex.is_on_spark" title="sparkly.index.lucene_index.LuceneIndex.is_on_spark"><code class="xref py py-obj docutils literal"><span class="pre">is_on_spark</span></code></a></dt>
+<dd><p class="first last">True if this index has been distributed to the spark workers else False</p>
+</dd>
+<dt><a class="reference internal" href="#sparkly.index.lucene_index.LuceneIndex.query_gen" title="sparkly.index.lucene_index.LuceneIndex.query_gen"><code class="xref py py-obj docutils literal"><span class="pre">query_gen</span></code></a></dt>
+<dd><p class="first last">the query generator for this index</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#sparkly.index.lucene_index.LuceneIndex.build" title="sparkly.index.lucene_index.LuceneIndex.build"><code class="xref py py-obj docutils literal"><span class="pre">build</span></code></a>(df,&nbsp;config)</td>
+<td>build the index, indexing df according to config</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#sparkly.index.lucene_index.LuceneIndex.deinit" title="sparkly.index.lucene_index.LuceneIndex.deinit"><code class="xref py py-obj docutils literal"><span class="pre">deinit</span></code></a>()</td>
+<td>release resources held by this Index</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#sparkly.index.lucene_index.LuceneIndex.get_full_query_spec" title="sparkly.index.lucene_index.LuceneIndex.get_full_query_spec"><code class="xref py py-obj docutils literal"><span class="pre">get_full_query_spec</span></code></a>([cross_fields])</td>
+<td>get a query spec that uses all indexed columns</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#sparkly.index.lucene_index.LuceneIndex.init" title="sparkly.index.lucene_index.LuceneIndex.init"><code class="xref py py-obj docutils literal"><span class="pre">init</span></code></a>()</td>
+<td>initialize the index for usage in a spark worker. This method</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#sparkly.index.lucene_index.LuceneIndex.search" title="sparkly.index.lucene_index.LuceneIndex.search"><code class="xref py py-obj docutils literal"><span class="pre">search</span></code></a>(doc,&nbsp;query_spec,&nbsp;limit)</td>
+<td>perform search for <cite>doc</cite> according to <cite>query_spec</cite> return at most <cite>limit</cite> docs</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#sparkly.index.lucene_index.LuceneIndex.search_many" title="sparkly.index.lucene_index.LuceneIndex.search_many"><code class="xref py py-obj docutils literal"><span class="pre">search_many</span></code></a>(docs,&nbsp;query_spec,&nbsp;limit)</td>
+<td>perform search for the documents in <cite>docs</cite> according to <cite>query_spec</cite> return at most <cite>limit</cite> docs</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#sparkly.index.lucene_index.LuceneIndex.to_spark" title="sparkly.index.lucene_index.LuceneIndex.to_spark"><code class="xref py py-obj docutils literal"><span class="pre">to_spark</span></code></a>()</td>
+<td>send this index to the spark cluster. subsequent uses will read files from</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils">
+<colgroup>
+<col width="66%" />
+<col width="34%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><strong>id_to_lucene_id</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><strong>score_docs</strong></td>
+<td>&#160;</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="sparkly.index.lucene_index.LuceneIndex.ANALYZERS">
+<code class="descname">ANALYZERS</code><em class="property"> = {'3gram': &lt;class 'sparkly.analysis.Gram3Analyzer'&gt;, 'shingle': &lt;function get_shingle_analyzer at 0x7fc4d1632268&gt;, 'standard': &lt;function get_standard_analyzer_no_stop_words at 0x7fc4d1632378&gt;, 'standard36edgegram': &lt;class 'sparkly.analysis.StandardEdgeGram36Analyzer'&gt;, 'standard_stopwords': &lt;class 'org.apache.lucene.analysis.standard.StandardAnalyzer'&gt;, 'unfiltered_5gram': &lt;class 'sparkly.analysis.UnfilteredGram5Analyzer'&gt;}</em><a class="headerlink" href="#sparkly.index.lucene_index.LuceneIndex.ANALYZERS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="sparkly.index.lucene_index.LuceneIndex.LUCENE_DIR">
+<code class="descname">LUCENE_DIR</code><em class="property"> = 'LUCENE_INDEX'</em><a class="headerlink" href="#sparkly.index.lucene_index.LuceneIndex.LUCENE_DIR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="sparkly.index.lucene_index.LuceneIndex.PY_META_FILE">
+<code class="descname">PY_META_FILE</code><em class="property"> = 'PY_META.json'</em><a class="headerlink" href="#sparkly.index.lucene_index.LuceneIndex.PY_META_FILE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sparkly.index.lucene_index.LuceneIndex.build">
+<code class="descname">build</code><span class="sig-paren">(</span><em>df</em>, <em>config</em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.index.lucene_index.LuceneIndex.build" title="Permalink to this definition">¶</a></dt>
+<dd><p>build the index, indexing df according to config</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>df</strong> <span class="classifier-delimiter">:</span> <span class="classifier">pd.DataFrame or pyspark DataFrame</span></dt>
+<dd><p class="first last">the table that will be indexed, if a pyspark DataFrame is provided, the build will be done
+in parallel for suffciently large tables</p>
+</dd>
+<dt><strong>config</strong> <span class="classifier-delimiter">:</span> <span class="classifier">IndexConfig</span></dt>
+<dd><p class="first last">the config for the index being built</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sparkly.index.lucene_index.LuceneIndex.config">
+<code class="descname">config</code><a class="headerlink" href="#sparkly.index.lucene_index.LuceneIndex.config" title="Permalink to this definition">¶</a></dt>
+<dd><p>the index config used to build this index</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt>IndexConfig</dt>
+<dd></dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sparkly.index.lucene_index.LuceneIndex.deinit">
+<code class="descname">deinit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.index.lucene_index.LuceneIndex.deinit" title="Permalink to this definition">¶</a></dt>
+<dd><p>release resources held by this Index</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sparkly.index.lucene_index.LuceneIndex.get_full_query_spec">
+<code class="descname">get_full_query_spec</code><span class="sig-paren">(</span><em>cross_fields=False</em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.index.lucene_index.LuceneIndex.get_full_query_spec" title="Permalink to this definition">¶</a></dt>
+<dd><p>get a query spec that uses all indexed columns</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><strong>cross_fields</strong> <span class="classifier-delimiter">:</span> <span class="classifier">bool, default = False</span></dt>
+<dd><p class="first last">if True return &lt;FIELD&gt; -&gt; &lt;CONCAT FIELD&gt; in the query spec if FIELD is used to create CONCAT_FIELD
+else just return &lt;FIELD&gt; -&gt; &lt;FIELD&gt; and &lt;CONCAT_FIELD&gt; -&gt; &lt;CONCAT_FIELD&gt; pairs</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt>QuerySpec</dt>
+<dd></dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sparkly.index.lucene_index.LuceneIndex.id_to_lucene_id">
+<code class="descname">id_to_lucene_id</code><span class="sig-paren">(</span><em>i</em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.index.lucene_index.LuceneIndex.id_to_lucene_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sparkly.index.lucene_index.LuceneIndex.init">
+<code class="descname">init</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.index.lucene_index.LuceneIndex.init" title="Permalink to this definition">¶</a></dt>
+<dd><p>initialize the index for usage in a spark worker. This method 
+must be called before calling search or search_many.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sparkly.index.lucene_index.LuceneIndex.is_built">
+<code class="descname">is_built</code><a class="headerlink" href="#sparkly.index.lucene_index.LuceneIndex.is_built" title="Permalink to this definition">¶</a></dt>
+<dd><p>True if this index has been built else False</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt>bool</dt>
+<dd></dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sparkly.index.lucene_index.LuceneIndex.is_on_spark">
+<code class="descname">is_on_spark</code><a class="headerlink" href="#sparkly.index.lucene_index.LuceneIndex.is_on_spark" title="Permalink to this definition">¶</a></dt>
+<dd><p>True if this index has been distributed to the spark workers else False</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt>bool</dt>
+<dd></dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sparkly.index.lucene_index.LuceneIndex.query_gen">
+<code class="descname">query_gen</code><a class="headerlink" href="#sparkly.index.lucene_index.LuceneIndex.query_gen" title="Permalink to this definition">¶</a></dt>
+<dd><p>the query generator for this index</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt>LuceneQueryGenerator</dt>
+<dd></dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sparkly.index.lucene_index.LuceneIndex.score_docs">
+<code class="descname">score_docs</code><span class="sig-paren">(</span><em>ids</em>, <em>queries: dict</em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.index.lucene_index.LuceneIndex.score_docs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sparkly.index.lucene_index.LuceneIndex.search">
+<code class="descname">search</code><span class="sig-paren">(</span><em>doc</em>, <em>query_spec</em>, <em>limit</em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.index.lucene_index.LuceneIndex.search" title="Permalink to this definition">¶</a></dt>
+<dd><p>perform search for <cite>doc</cite> according to <cite>query_spec</cite> return at most <cite>limit</cite> docs</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><strong>doc</strong> <span class="classifier-delimiter">:</span> <span class="classifier">pd.Series or dict</span></dt>
+<dd><p class="first last">the record for searching</p>
+</dd>
+<dt><strong>query_spec</strong> <span class="classifier-delimiter">:</span> <span class="classifier">QuerySpec</span></dt>
+<dd><p class="first last">the query template that specifies how to search for <cite>doc</cite></p>
+</dd>
+<dt><strong>limit</strong> <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">the maximum number of documents returned</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt>QueryResult</dt>
+<dd><p class="first last">the documents matching the <cite>doc</cite></p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sparkly.index.lucene_index.LuceneIndex.search_many">
+<code class="descname">search_many</code><span class="sig-paren">(</span><em>docs</em>, <em>query_spec</em>, <em>limit</em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.index.lucene_index.LuceneIndex.search_many" title="Permalink to this definition">¶</a></dt>
+<dd><p>perform search for the documents in <cite>docs</cite> according to <cite>query_spec</cite> return at most <cite>limit</cite> docs
+per document <cite>docs</cite>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><strong>doc</strong> <span class="classifier-delimiter">:</span> <span class="classifier">pd.DataFrame</span></dt>
+<dd><p class="first last">the records for searching</p>
+</dd>
+<dt><strong>query_spec</strong> <span class="classifier-delimiter">:</span> <span class="classifier">QuerySpec</span></dt>
+<dd><p class="first last">the query template that specifies how to search for <cite>doc</cite></p>
+</dd>
+<dt><strong>limit</strong> <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">the maximum number of documents returned</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt>pd.DataFrame</dt>
+<dd><p class="first last">the search results for each document in <cite>docs</cite>, indexed by <cite>docs</cite>.index</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sparkly.index.lucene_index.LuceneIndex.to_spark">
+<code class="descname">to_spark</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.index.lucene_index.LuceneIndex.to_spark" title="Permalink to this definition">¶</a></dt>
+<dd><p>send this index to the spark cluster. subsequent uses will read files from 
+SparkFiles, allowing spark workers to perform search with a local copy of 
+the index.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-sparkly.index">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-sparkly.index" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Sparkly 0.1 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Derek Paulsen.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,319 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>sparkly.index_optimizer package &#8212; Sparkly 0.1 documentation</title>
+    <link rel="stylesheet" href="_static/groundwork.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Sparkly 0.1 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="sparkly-index-optimizer-package">
+<h1>sparkly.index_optimizer package<a class="headerlink" href="#sparkly-index-optimizer-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-sparkly.index_optimizer.index_optimizer">
+<span id="sparkly-index-optimizer-index-optimizer-module"></span><h2>sparkly.index_optimizer.index_optimizer module<a class="headerlink" href="#module-sparkly.index_optimizer.index_optimizer" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="sparkly.index_optimizer.index_optimizer.IndexOptimizer">
+<em class="property">class </em><code class="descclassname">sparkly.index_optimizer.index_optimizer.</code><code class="descname">IndexOptimizer</code><span class="sig-paren">(</span><em>is_dedupe</em>, <em>scorer=None</em>, <em>conf=0.99</em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.index_optimizer.index_optimizer.IndexOptimizer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>a class for optimizing the search columns and analyzers for indexes</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Attributes:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>index</strong></dt>
+<dd></dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#sparkly.index_optimizer.index_optimizer.IndexOptimizer.make_index_config" title="sparkly.index_optimizer.index_optimizer.IndexOptimizer.make_index_config"><code class="xref py py-obj docutils literal"><span class="pre">make_index_config</span></code></a>(df[,&nbsp;id_col])</td>
+<td>create the starting index config which can then be used to for optimization</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#sparkly.index_optimizer.index_optimizer.IndexOptimizer.optimize" title="sparkly.index_optimizer.index_optimizer.IndexOptimizer.optimize"><code class="xref py py-obj docutils literal"><span class="pre">optimize</span></code></a>(index,&nbsp;search_df)</td>
+<td><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="sparkly.index_optimizer.index_optimizer.IndexOptimizer.index">
+<code class="descname">index</code><a class="headerlink" href="#sparkly.index_optimizer.index_optimizer.IndexOptimizer.index" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sparkly.index_optimizer.index_optimizer.IndexOptimizer.make_index_config">
+<code class="descname">make_index_config</code><span class="sig-paren">(</span><em>df</em>, <em>id_col='_id'</em><span class="sig-paren">)</span> &#x2192; sparkly.index.index_config.IndexConfig<a class="headerlink" href="#sparkly.index_optimizer.index_optimizer.IndexOptimizer.make_index_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>create the starting index config which can then be used to for optimization
+throws out any columns where the average number of 
+whitespace delimited tokens are &gt;= 50</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>df</strong> <span class="classifier-delimiter">:</span> <span class="classifier">pyspark.sql.DataFrame</span></dt>
+<dd><p class="first last">the dataframe that we want to generate a config for</p>
+</dd>
+<dt><strong>id_col</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">the unique id column for the records in the dataframe</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="sparkly.index_optimizer.index_optimizer.IndexOptimizer.optimize">
+<code class="descname">optimize</code><span class="sig-paren">(</span><em>index: sparkly.index.index_base.Index</em>, <em>search_df</em><span class="sig-paren">)</span> &#x2192; sparkly.query_generator.query_spec.QuerySpec<a class="headerlink" href="#sparkly.index_optimizer.index_optimizer.IndexOptimizer.optimize" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><strong>index</strong> <span class="classifier-delimiter">:</span> <span class="classifier">Index</span></dt>
+<dd><p class="first last">the index that will have an optimzed query spec created for it</p>
+</dd>
+<dt><strong>search_df</strong> <span class="classifier-delimiter">:</span> <span class="classifier">pyspark.sql.DataFrame:</span></dt>
+<dd><p class="first last">the records that will be used to choose the query spec</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt>QuerySpec</dt>
+<dd><p class="first last">a query spec optimized for searching for <cite>search_df</cite> using <cite>index</cite></p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-sparkly.index_optimizer.query_scorer">
+<span id="sparkly-index-optimizer-query-scorer-module"></span><h2>sparkly.index_optimizer.query_scorer module<a class="headerlink" href="#module-sparkly.index_optimizer.query_scorer" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="sparkly.index_optimizer.query_scorer.AUCQueryScorer">
+<em class="property">class </em><code class="descclassname">sparkly.index_optimizer.query_scorer.</code><code class="descname">AUCQueryScorer</code><a class="headerlink" href="#sparkly.index_optimizer.query_scorer.AUCQueryScorer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#sparkly.index_optimizer.query_scorer.QueryScorer" title="sparkly.index_optimizer.query_scorer.QueryScorer"><code class="xref py py-class docutils literal"><span class="pre">sparkly.index_optimizer.query_scorer.QueryScorer</span></code></a></p>
+<p class="rubric">Methods</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="70%" />
+<col width="30%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><strong>score_query_result</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><strong>score_query_results</strong></td>
+<td>&#160;</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="sparkly.index_optimizer.query_scorer.AUCQueryScorer.score_query_result">
+<code class="descname">score_query_result</code><span class="sig-paren">(</span><em>query_result</em>, <em>query_spec</em>, <em>drop_first</em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#sparkly.index_optimizer.query_scorer.AUCQueryScorer.score_query_result" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sparkly.index_optimizer.query_scorer.AUCQueryScorer.score_query_results">
+<code class="descname">score_query_results</code><span class="sig-paren">(</span><em>query_results</em>, <em>query_spec</em>, <em>drop_first</em><span class="sig-paren">)</span> &#x2192; list<a class="headerlink" href="#sparkly.index_optimizer.query_scorer.AUCQueryScorer.score_query_results" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="sparkly.index_optimizer.query_scorer.QueryScorer">
+<em class="property">class </em><code class="descclassname">sparkly.index_optimizer.query_scorer.</code><code class="descname">QueryScorer</code><a class="headerlink" href="#sparkly.index_optimizer.query_scorer.QueryScorer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">abc.ABC</span></code></p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#sparkly.index_optimizer.query_scorer.QueryScorer.score_query_results" title="sparkly.index_optimizer.query_scorer.QueryScorer.score_query_results"><code class="xref py py-obj docutils literal"><span class="pre">score_query_results</span></code></a>(query_results,&nbsp;query_spec)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils">
+<colgroup>
+<col width="69%" />
+<col width="31%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><strong>score_query_result</strong></td>
+<td>&#160;</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="sparkly.index_optimizer.query_scorer.QueryScorer.score_query_result">
+<code class="descname">score_query_result</code><span class="sig-paren">(</span><em>query_result</em>, <em>query_spec</em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#sparkly.index_optimizer.query_scorer.QueryScorer.score_query_result" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sparkly.index_optimizer.query_scorer.QueryScorer.score_query_results">
+<code class="descname">score_query_results</code><span class="sig-paren">(</span><em>query_results</em>, <em>query_spec</em><span class="sig-paren">)</span> &#x2192; list<a class="headerlink" href="#sparkly.index_optimizer.query_scorer.QueryScorer.score_query_results" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="sparkly.index_optimizer.query_scorer.RankQueryScorer">
+<em class="property">class </em><code class="descclassname">sparkly.index_optimizer.query_scorer.</code><code class="descname">RankQueryScorer</code><span class="sig-paren">(</span><em>threshold</em>, <em>k</em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.index_optimizer.query_scorer.RankQueryScorer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#sparkly.index_optimizer.query_scorer.QueryScorer" title="sparkly.index_optimizer.query_scorer.QueryScorer"><code class="xref py py-class docutils literal"><span class="pre">sparkly.index_optimizer.query_scorer.QueryScorer</span></code></a></p>
+<p class="rubric">Methods</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="70%" />
+<col width="30%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><strong>score_query_result</strong></td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><strong>score_query_results</strong></td>
+<td>&#160;</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="sparkly.index_optimizer.query_scorer.RankQueryScorer.score_query_result">
+<code class="descname">score_query_result</code><span class="sig-paren">(</span><em>query_result</em>, <em>query_spec</em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#sparkly.index_optimizer.query_scorer.RankQueryScorer.score_query_result" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sparkly.index_optimizer.query_scorer.RankQueryScorer.score_query_results">
+<code class="descname">score_query_results</code><span class="sig-paren">(</span><em>query_results</em>, <em>query_spec</em><span class="sig-paren">)</span> &#x2192; list<a class="headerlink" href="#sparkly.index_optimizer.query_scorer.RankQueryScorer.score_query_results" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="sparkly.index_optimizer.query_scorer.compute_wilcoxon_score">
+<code class="descclassname">sparkly.index_optimizer.query_scorer.</code><code class="descname">compute_wilcoxon_score</code><span class="sig-paren">(</span><em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.index_optimizer.query_scorer.compute_wilcoxon_score" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="sparkly.index_optimizer.query_scorer.score_query_result">
+<code class="descclassname">sparkly.index_optimizer.query_scorer.</code><code class="descname">score_query_result</code><span class="sig-paren">(</span><em>scores</em>, <em>drop_first=False</em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.index_optimizer.query_scorer.score_query_result" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="sparkly.index_optimizer.query_scorer.score_query_result_sum">
+<code class="descclassname">sparkly.index_optimizer.query_scorer.</code><code class="descname">score_query_result_sum</code><span class="sig-paren">(</span><em>scores</em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.index_optimizer.query_scorer.score_query_result_sum" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="sparkly.index_optimizer.query_scorer.score_query_results">
+<code class="descclassname">sparkly.index_optimizer.query_scorer.</code><code class="descname">score_query_results</code><span class="sig-paren">(</span><em>query_results</em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.index_optimizer.query_scorer.score_query_results" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-sparkly.index_optimizer">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-sparkly.index_optimizer" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Sparkly 0.1 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Derek Paulsen.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.
+    </div>
+  </body>
+</html>
