@@ -408,8 +408,8 @@ class LuceneIndex(Index):
         # dedupe the dirs
         dirs = set(dirs)
         # kill the threadpool to prevent them from sitting on resources
-        kill_loky_workers()
-        pass
+
+        return dirs
     
     def build(self, df, config):
         """
@@ -436,14 +436,19 @@ class LuceneIndex(Index):
                 # put temp indexes in temp dir for easy deleting later
                 with TemporaryDirectory() as tmp_dir_base:
                     tmp_dir_base = Path(tmp_dir_base)
+                    
                     if df_size > self._index_build_chunk_size * 50:
+                        # build with spark if very large
                         dirs = self._build_spark(df, df_size, config, tmp_dir_base)
                     else:
+                        # else just use local threads
                         dirs = self._build_parallel_local(df, config, tmp_dir_base)
                     # get the name of the index dir in each tmp sub dir
                     dirs = [self._get_index_dir(d) for d in dirs]
                     # merge the segments 
                     self._merge_index_segments(config, dirs)
+                    # 
+                    kill_loky_workers()
                 # temp indexes deleted here
             else:
                 # table is small, build it single threaded

@@ -260,16 +260,17 @@ def spark_to_pandas_stream(df, chunk_size, by='_id'):
     repartition df into chunk_size and return as iterator of 
     pandas dataframes
     """
-    df = df.repartition(max(1, df.count() // chunk_size), by)\
+    df_size = df.count()
+    batch_df = df.repartition(max(1, df_size // chunk_size), by)\
             .rdd\
             .mapPartitions(lambda x : iter([pd.DataFrame([e.asDict(True) for e in x]).convert_dtypes()]) )\
             .persist(StorageLevel.DISK_ONLY)
     # trigger read
-    df.count()
-    for batch in df.toLocalIterator(True):
+    batch_df.count()
+    for batch in batch_df.toLocalIterator(True):
         yield batch
 
-    df.unpersist()
+    batch_df.unpersist()
 
 def type_check(var, var_name, expected):
     """
