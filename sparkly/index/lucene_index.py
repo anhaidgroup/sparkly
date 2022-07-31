@@ -11,11 +11,13 @@ import numpy as np
 import pandas as pd
 from joblib import Parallel, delayed
 import multiprocessing
+import pyspark.sql.types as T
 from sparkly.utils import type_check
 
 from pyspark import SparkFiles
 from pyspark import SparkContext
 from pyspark import sql
+import pickle
 
 import lucene
 from java.nio.file import Paths
@@ -341,7 +343,61 @@ class LuceneIndex(Index):
             dtype = df.schema[config.id_col].dataType
             if dtype.typeName() not in {'integer', 'long'}:
                 raise TypeError(f'id_col must be integer type (got {dtype})')
-            
+    
+    @classmethod
+    def _build_spark_worker_local(cls, df_itr, config, tmp_dir_path):
+        index = None
+        index_path = None
+        tmp_dir_path.mkdir(parents=True, exist_ok=True)
+
+        for df in df_itr:
+            if len(df) == 0:
+                continue
+
+            if index is None:
+                index_path = tmp_dir_path / str(df.iloc[0][config.id_col])
+                index = cls(index_path)
+
+            index._build(df, config, index_path, append=True)
+
+        # take all files, serialize with path and return 
+        for f in index_path.glob('**/*'):
+            with open(f, 'rb') as ifs:
+                data = ifs.read()
+            p = pickle.dumps( (f, data) ) 
+
+            yield pd.DataFrame([(p, )], columns=['pickle'])
+    
+    def _build_spark(self, df, df_size, config, tmp_dir_path):
+        nparts = df_size // self._index_build_chunk_size
+        df = df.repartition(nparts, config.id_col)
+
+        schema = T.StringType([T.StructField('pickle', T.BinaryType(), False)])
+
+        df = df.mapInPandas(lambda x : LuceneIndex._build_spark_worker_local(x, config, tmp_dir_path))\
+                .persist()
+        # index stuff
+        df.count()
+
+        for row in df.toLocalIterator(True):
+            path, data = pickle.loads(row['pickle'])
+            with open(path, 'wb') as ofs:
+                ofs.write(data)
+
+        return list(tmp_dir_path.iterdir())
+
+    def _build_parallel_local(self, df, config, tmp_dir_base):
+        # slice the dataframe into a local iterator of pandas dataframes
+        slices = spark_to_pandas_stream(df, self._index_build_chunk_size)
+        # use all available threads
+        pool = Parallel(n_jobs=-1)
+        # build in parallel in sub dirs of tmp dir
+        dirs = pool(delayed(self._build_segment)(s, config, tmp_dir_base) for s in tqdm(slices))
+        # dedupe the dirs
+        dirs = set(dirs)
+        # kill the threadpool to prevent them from sitting on resources
+        kill_loky_workers()
+        pass
     
     def build(self, df, config):
         """
@@ -362,25 +418,20 @@ class LuceneIndex(Index):
         if isinstance(df, sql.DataFrame):
             # project out unused columns
             df = df.select(config.id_col, *config.get_analyzed_fields())
-            if df.count() > self._index_build_chunk_size * 10:
+            df_size = df.count()
+            if df_size > self._index_build_chunk_size * 10:
                 # build large tables in parallel
                 # put temp indexes in temp dir for easy deleting later
                 with TemporaryDirectory() as tmp_dir_base:
                     tmp_dir_base = Path(tmp_dir_base)
-                    # slice the dataframe into a local iterator of pandas dataframes
-                    slices = spark_to_pandas_stream(df, self._index_build_chunk_size)
-                    # use all available threads
-                    pool = Parallel(n_jobs=-1)
-                    # build in parallel in sub dirs of tmp dir
-                    dirs = pool(delayed(self._build_segment)(s, config, tmp_dir_base) for s in tqdm(slices))
-                    # dedupe the dirs
-                    dirs = set(dirs)
+                    if df_size > self._index_build_chunk_size * 50:
+                        dirs = self._build_spark(df, df_size, config, tmp_dir_base)
+                    else:
+                        dirs = self._build_parallel_local(df, config, tmp_dir_base)
                     # get the name of the index dir in each tmp sub dir
                     dirs = [self._get_index_dir(d) for d in dirs]
                     # merge the segments 
                     self._merge_index_segments(config, dirs)
-                    # kill the threadpool to prevent them from sitting on resources
-                    kill_loky_workers()
                 # temp indexes deleted here
             else:
                 # table is small, build it single threaded
