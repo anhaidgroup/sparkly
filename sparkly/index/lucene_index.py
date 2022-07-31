@@ -362,30 +362,38 @@ class LuceneIndex(Index):
 
         # take all files, serialize with path and return 
         for f in index_path.glob('**/*'):
+            if not f.is_file():
+                continue 
+
             with open(f, 'rb') as ifs:
                 data = ifs.read()
             p = pickle.dumps( (f, data) ) 
 
             yield pd.DataFrame([(p, )], columns=['pickle'])
+
+        shutil.rmtree(index_path, ignore_errors=True)
     
+    @staticmethod
+    def _unpickle_and_write(p):
+        path, data = pickle.loads(p)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with open(path, 'wb') as ofs:
+            ofs.write(data)
+
     def _build_spark(self, df, df_size, config, tmp_dir_path):
         nparts = df_size // self._index_build_chunk_size
         df = df.repartition(nparts, config.id_col)
         
         pickle_col = 'pickle'
-        schema = T.StringType([T.StructField(pickle_col, T.BinaryType(), False)])
+        schema = T.StructType([T.StructField(pickle_col, T.BinaryType(), False)])
 
         df = df.mapInPandas(lambda x : LuceneIndex._build_spark_worker_local(x, config, tmp_dir_path), schema=schema)\
                 .persist()
         # index stuff
         df.count()
-        # write all the files back to local disk
-        # these will then be merged into single local index
-        for row in df.toLocalIterator(True):
-            path, data = pickle.loads(row[pickle_col])
-            with open(path, 'wb') as ofs:
-                ofs.write(data)
-        
+        itr = df.toLocalIterator(True)
+        # write with threads 
+        Parallel(n_jobs=-1, backend='threading')(delayed(self._unpickle_and_write)(row[pickle_col]) for row in itr)
         df.unpersist()
 
         return list(tmp_dir_path.iterdir())
