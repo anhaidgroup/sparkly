@@ -63,12 +63,13 @@ query_spec = QuerySpec(
                 description = {'description.standard'}
             )
 
-# boost the contribution of name -> name.3gram by 2x
+# boost the contribution of BM25(b.name, a.name.3gram) by 2 times
 # this changes the scores of documents from 
-# score = BM25(table_b.name, index.name.3gram) + BM25(table_b.description, index.description.standard) 
+# score(b, a) = BM25(b.name, a.name.3gram) + BM25(b.name, a.description.standard) + BM25(b.description, a.description.standard) 
 # to 
-# score = 2 * BM25(table_b.name, index.name.3gram) + BM25(table_b.description, index.description.standard) 
+# score(b, a) = 2 * BM25(b.name, a.name.3gram) + BM25(b.name, a.description.standard) + BM25(b.description, a.description.standard) 
 # 
+# where b is the search record and a is the indexed record
 # BM25 is a TF/IDF based similarity measure, for exact formula of BM25 : https://en.wikipedia.org/wiki/Okapi_BM25
 query_spec.boost_map = {
         ('name', 'name.3gram') : 2.0
