@@ -44,8 +44,8 @@ config.add_concat_field('concat_name_description', ['name', 'description'], ['st
 index = LuceneIndex('/tmp/example_index/')
 # index the records from table A according to the config we created above
 index.build(table_a, config)
-# this index now has 4 searchable subindexes each named '<FIELD_NAME>.<ANALYZER>', specifically
-# 'name.3gram', 'name.standard', 'description.3gram', and 'description.standard'
+# this index now has 5 searchable subindexes each named '<FIELD_NAME>.<ANALYZER>', specifically
+# 'name.3gram', 'name.standard', 'description.3gram','description.standard', and 'concat_name_description.standard'
 
 # Pass a mapping of {<SEARCH FIELD> -> {<SUBINDEX NAME>, ...}}
 # to create a QuerySpec which will specify how queries should be created for documents
@@ -60,6 +60,8 @@ query_spec = QuerySpec({
             })
 
 # boost the contribution of name -> name.3gram by 2x
+# note that boosting scoring components that don't appear in the query spec 
+# has no effect
 query_spec.boost_map = {
         ('name', 'name.3gram') : 2.0
     }
