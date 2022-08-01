@@ -31,11 +31,11 @@ in this repo. See these examples for usage.
 
 ## How It Works 
 
-Sparkly is built for blocking for [entity matching](https://en.wikipedia.org/wiki/Record_linkage).
-There have been many solutions this this problem from basic SQL joins to deep learning based. 
+Sparkly is built to do blocking for [entity matching](https://en.wikipedia.org/wiki/Record_linkage).
+There have been many solutions developed to address this problem, from basic SQL joins to deep learning based approaches. 
 Sparkly takes a top-k approach to blocking, in particular, each search record is 
 paired with the top-k records with the highest [BM25](https://en.wikipedia.org/wiki/Okapi_BM25) scores.
-In a SQL query this might look something like,
+In terms of SQL this might look something like executing this query for each record,
 ```SQL 
 SELECT id, BM25(<QUERY>, name) AS score 
 FROM table_a 
@@ -43,8 +43,10 @@ ORDER BY score DESC
 LIMIT <K>;
 ```
 
+where `QUERY` derived from the search record. 
+
 This kind of search is very common in information retrieval and keyword search applications. In fact, this is 
-exactly what Apache Lucene is designed to do. While this form of search is very powerful, it can also be very 
+exactly what Apache Lucene is designed to do. While this form of search produces high quality results, it can also be very 
 compute intensive, hence to speed up search, we leverage PySpark to distribute the computation. By using PySpark
 we can easily leverage a large number of machines to perform search without having to rely on approximation algorithms.
 
