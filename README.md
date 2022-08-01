@@ -48,5 +48,4 @@ exactly what Apache Lucene is designed to do. While this form of search is very 
 compute intensive, hence to speed up search, we leverage PySpark to distribute the computation. By using PySpark
 we can easily leverage a large number of machines to perform search without having to rely on approximation algorithms.
 
-For more details on solution architecture see our paper **TODO : add paper link to arxiv**
 
