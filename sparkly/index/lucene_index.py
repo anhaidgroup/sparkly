@@ -1,6 +1,7 @@
 from copy import deepcopy
 from typing import Union
 import shutil 
+import os
 from tqdm import tqdm
 from sparkly.query_generator import QuerySpec, LuceneQueryGenerator
 from sparkly.analysis import get_standard_analyzer_no_stop_words, Gram3Analyzer, StandardEdgeGram36Analyzer, UnfilteredGram5Analyzer, get_shingle_analyzer
@@ -349,6 +350,8 @@ class LuceneIndex(Index):
         index = None
         index_path = None
         tmp_dir_path.mkdir(parents=True, exist_ok=True)
+        # 128 MB
+        CHUNK_SIZE = 128 * (2**20)
 
         for df in df_itr:
             if len(df) == 0:
@@ -359,41 +362,87 @@ class LuceneIndex(Index):
                 index = cls(index_path)
 
             index._build(df, config, index_path, append=True)
-
-        # take all files, serialize with path and return 
-        for f in index_path.glob('**/*'):
-            if not f.is_file():
-                continue 
-
-            with open(f, 'rb') as ifs:
-                data = ifs.read()
-            p = pickle.dumps( (f, data) ) 
-
-            yield pd.DataFrame([(p, )], columns=['pickle'])
+        
+        for p in cls._serialize_and_stream_files(index_path, CHUNK_SIZE):
+            yield p
 
         shutil.rmtree(index_path, ignore_errors=True)
     
     @staticmethod
-    def _unpickle_and_write(p):
-        path, data = pickle.loads(p)
+    def _write_file_chunk(file, offset, data):
+        path = Path(file)
         path.parent.mkdir(parents=True, exist_ok=True)
-        with open(path, 'wb') as ofs:
-            ofs.write(data)
+        # O_APPEND (i.e. open(file, 'ab') ) cannot be used because on linux it 
+        # will just append and ignore the offset
+        # 
+        # create the file if it doesn't exist, else just open for write
+        fd = os.open(file, os.O_CREAT | os.O_WRONLY, 0o600)
+        try:
+            n = os.pwrite(fd, data, offset)
+            if n != len(data):
+                raise IOError(f'{n} != {len(data)}')
+        finally:
+            os.close(fd)
 
+
+    @staticmethod
+    def _stream_files(d, chunk_size):
+        # go through all of the files and 
+        for f in d.glob('**/*'):
+            # skip non-files
+            if not f.is_file():
+                continue 
+            f = str(f)
+            # split file into chunks of size at most chunk_size
+            with open(f, 'rb') as ifs:
+                offset = 0
+                while True:
+                    data = ifs.read(chunk_size)
+                    if len(data) == 0:
+                        break
+                    yield (f, offset, data)
+                    offset += len(data)
+
+
+    @staticmethod
+    def _serialize_and_stream_files(d, part_size):
+        # part_size in bytes
+        # take all files, serialize with path and return 
+        df_columns = ['file', 'offset', 'data']
+
+        curr_size = 0
+        rows = []
+        for row in LuceneIndex._stream_files(d, part_size):
+            rows.append(row)
+            curr_size += len(row[-1])
+            # buffer full
+            if curr_size >= part_size:
+                yield pd.DataFrame(rows, columns=df_columns)
+                rows.clear()
+                curr_size = 0
+        # yield last rows if there are any
+        if len(rows) > 0:
+            yield pd.DataFrame(rows, columns=df_columns)
+            rows.clear()
+                
     def _build_spark(self, df, df_size, config, tmp_dir_path):
         nparts = df_size // self._index_build_chunk_size
         df = df.repartition(nparts, config.id_col)
         
-        pickle_col = 'pickle'
-        schema = T.StructType([T.StructField(pickle_col, T.BinaryType(), False)])
+        schema = T.StructType([
+            T.StructField('file', T.StringType(), False),
+            T.StructField('offset', T.LongType(), False),
+            T.StructField('data', T.BinaryType(), False),
+        ])
 
         df = df.mapInPandas(lambda x : LuceneIndex._build_spark_worker_local(x, config, tmp_dir_path), schema=schema)\
                 .persist()
         # index stuff
         df.count()
         itr = df.toLocalIterator(True)
+
         # write with threads 
-        Parallel(n_jobs=-1, backend='threading')(delayed(self._unpickle_and_write)(row[pickle_col]) for row in itr)
+        Parallel(n_jobs=-1, backend='threading')(delayed(self._write_file_chunk)(*row) for row in itr)
         df.unpersist()
 
         return list(tmp_dir_path.iterdir())
