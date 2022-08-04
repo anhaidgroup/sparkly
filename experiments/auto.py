@@ -65,6 +65,13 @@ def main(args):
                             F.explode('ids').alias('a_id'),
                             F.col('_id').alias('b_id')
                         )
+        # dedupe case
+        if args.table_b is None:
+            pairs = pairs.select(
+                    F.least('a_id', 'b_id').alias('a_id'),
+                    F.greatest('a_id', 'b_id').alias('b_id')
+                    ).drop_duplicates()
+
         # number of matches found
         true_positives = gold.intersect(pairs).count()
         # precentage of matches found
