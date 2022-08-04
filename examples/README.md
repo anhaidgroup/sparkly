@@ -1,8 +1,12 @@
 # Examples
 
 This directory contains examples of how to use Sparkly, here we will give a brief overview of 
-what is contained in each file. Each example should be run out of this directory to 
-ensure that the test data is loaded correctly.
+what is contained in each file. Each example should be run out of the root directory to 
+ensure that the test data is loaded correctly. For example, 
+
+```
+$ python3 ./examples/basic_example/py
+```
 
 
 ## basic_example.py

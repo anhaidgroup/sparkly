@@ -16,9 +16,12 @@ import numpy as np
 
 from pyspark import SparkContext
 from pyspark import StorageLevel
+from pyspark.sql import SparkSession
+import pyspark.sql.types as T
 # needed to find the parquet module
 import pyarrow.parquet
 import pyarrow as pa
+from pyarrow.parquet import ParquetFile
 import lucene
 
 
@@ -288,4 +291,45 @@ def type_check_iterable(var, var_name, expected_var_type, expected_element_type)
     for e in var:
         if not isinstance(e, expected_element_type):
             raise TypeError(f'all elements of {var_name} must be type{expected_element_type} (got {type(var)})')
+
+
+
+
+_PYARROW_TO_PYSPARK_TYPE = {
+        pa.int32() : T.IntegerType(),
+        pa.int64() : T.LongType(),
+        pa.float32() : T.FloatType(),
+        pa.float64() : T.DoubleType(),
+        pa.string() : T.StringType(),
+        pa.bool_() : T.BooleanType(),
+}
+
+_PYARROW_TO_PYSPARK_TYPE.update([(pa.list_(a), T.ArrayType(s)) for a,s in _PYARROW_TO_PYSPARK_TYPE.items()])
+
+def _arrow_schema_to_pyspark_schema(schema):
+    fields = []
+    for i in range(len(schema)):
+        af = schema.field(i)
+        fields.append(
+                T.StructField(af.name, _PYARROW_TO_PYSPARK_TYPE[af.type])
+        )
+
+    return T.StructType(fields)
+
+
+
+
+def local_parquet_to_spark_df(file):
+    file = Path(file).absolute()
+    spark = SparkSession.builder.getOrCreate()
+        
+    pf = ParquetFile(file)
+    # get the schema for the dataframe
+    arrow_schema = pf.schema_arrow
+    schema = _arrow_schema_to_pyspark_schema(arrow_schema)
+    pdf = pd.read_parquet(file)
+    df = spark.createDataFrame(pdf, schema=schema, verifySchema=False)\
+
+    return df
+            
 

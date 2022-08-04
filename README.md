@@ -51,3 +51,6 @@ compute intensive, hence to speed up search, we leverage PySpark to distribute t
 we can easily leverage a large number of machines to perform search without having to rely on approximation algorithms.
 
 
+## Data
+
+Data used in the paper can be found [here](https://pages.cs.wisc.edu/~dpaulsen/sparkly_datasets/)
