@@ -26,7 +26,7 @@ as long as version 3.1.2 or greater is used.
 
 ## Running Sparkly
 
-Examples of how to use sparkly are provided under the `examples` folder 
+Examples of how to use sparkly are provided under the `examples` directory
 in this repo. See these examples for usage.
 
 ## How It Works 
@@ -51,6 +51,8 @@ compute intensive, hence to speed up search, we leverage PySpark to distribute t
 we can easily leverage a large number of machines to perform search without having to rely on approximation algorithms.
 
 
-## Data
+## Data and Experiments
+
+Scripts for running Sparkly-Manual and Sparkly-Auto can be found in the `experiments` directory.
 
 Data used in the paper can be found [here](https://pages.cs.wisc.edu/~dpaulsen/sparkly_datasets/)
