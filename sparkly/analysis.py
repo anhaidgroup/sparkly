@@ -8,6 +8,8 @@ from org.apache.lucene.analysis.shingle import ShingleAnalyzerWrapper
 from org.apache.lucene.analysis.ngram import  NGramTokenizer, EdgeNGramTokenFilter
 from org.apache.lucene.analysis.core import LowerCaseFilter
 from org.apache.lucene.analysis import CharArraySet
+from org.apache.lucene.analysis.pattern import PatternReplaceCharFilter
+from java.util.regex import Pattern
 
 def _fetch_terms_with_offsets(obj):
     termAtt = obj.getAttribute(CharTermAttribute.class_)
@@ -76,6 +78,26 @@ class PythonAlnumTokenFilter(PythonFilteringTokenFilter):
     def accept(self):
         return self.termAtt.toString().isalnum()
 
+
+
+class StrippedGram3Analyzer(PythonAnalyzer):
+
+    def __init__(self):
+        PythonAnalyzer.__init__(self)
+
+
+    def createComponents(self, fieldName):
+        
+        src = NGramTokenizer(3,3)
+        res = LowerCaseFilter(src)
+        # these chars already stripped out
+        #res = PythonAlnumTokenFilter(res)
+
+        return Analyzer.TokenStreamComponents(src, res)
+
+    def initReader(self, fieldName, reader):
+        pat = Pattern.compile("[^A-Za-z0-9]")
+        return PatternReplaceCharFilter(pat, '', reader)
 
 class Gram3Analyzer(PythonAnalyzer):
 
