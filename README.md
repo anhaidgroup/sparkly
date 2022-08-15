@@ -56,3 +56,23 @@ we can easily leverage a large number of machines to perform search without havi
 Scripts for running Sparkly-Manual and Sparkly-Auto can be found in the `experiments` directory.
 
 Data used in the paper can be found [here](https://pages.cs.wisc.edu/~dpaulsen/sparkly_datasets/)
+
+
+## Tips for Installing PyLucene
+
+In order to install PyLucene, you must first install JCC. JCC requires 
+a C++ compiler to compile the extension before it is installed. During this
+install look for *non-fatal* errors and warnings. In some cases the extensions are 
+not compiled for the correct architecture, resulting in non-fatal linker errors, 
+which will prevent PyLucene from installing correctly.
+If when running the `python3 setup.py build` the extension is being compiled with the 
+incorrect CPU architecture, you may need to manually specify the architecture by appending 
+them to `cflags` and `lflags` in `setup.py`. For example, you may want to add the lines
+```python
+
+cflags += ['-arch', 'arm64']
+lflags += ['-arch', 'arm64']
+```
+
+before the `Extension` constructor is called in the script.
+

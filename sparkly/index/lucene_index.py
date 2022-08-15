@@ -1,10 +1,12 @@
 from copy import deepcopy
 from typing import Union
 import shutil 
+import tempfile
 import os
 from tqdm import tqdm
 from sparkly.query_generator import QuerySpec, LuceneQueryGenerator
 from sparkly.analysis import get_standard_analyzer_no_stop_words, Gram3Analyzer, StandardEdgeGram36Analyzer, UnfilteredGram5Analyzer, get_shingle_analyzer
+from sparkly.analysis import StrippedGram3Analyzer
 from sparkly.utils import Timer, init_jvm, zip_dir, atomic_unzip, kill_loky_workers, spark_to_pandas_stream
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -13,6 +15,7 @@ import pandas as pd
 from joblib import Parallel, delayed
 import multiprocessing
 import pyspark.sql.types as T
+import pyspark.sql.functions as F
 from sparkly.utils import type_check
 
 from pyspark import SparkFiles
@@ -23,7 +26,8 @@ import pickle
 import lucene
 from java.nio.file import Paths
 from java.util import HashMap, HashSet
-from org.apache.lucene.search import BooleanQuery, BooleanClause, IndexSearcher
+from org.apache.lucene.search import BooleanQuery, BooleanClause, IndexSearcher, MatchAllDocsQuery
+from org.apache.lucene.search import SortedNumericSortField, Sort, SortField
 from org.apache.lucene.analysis.standard import StandardAnalyzer
 from org.apache.lucene.analysis.miscellaneous import PerFieldAnalyzerWrapper
 from org.apache.lucene.search.similarities import BM25Similarity
@@ -31,7 +35,7 @@ from org.apache.lucene.index import  DirectoryReader
 from org.apache.lucene.document import Document, StoredField, Field, LongPoint
 from org.apache.lucene.index import IndexWriter, IndexWriterConfig
 from org.apache.lucene.store import  FSDirectory
-from org.apache.lucene.document import FieldType
+from org.apache.lucene.document import FieldType, SortedNumericDocValuesField
 from org.apache.lucene.index import IndexOptions
 
 from .index_config import IndexConfig
@@ -78,6 +82,7 @@ class _DocumentConverter:
         
         doc.add(StoredField(self._config.id_col, row.name))
         doc.add(LongPoint(self._config.id_col, row.name))
+        doc.add(SortedNumericDocValuesField(self._config.id_col, row.name))
         for k,v in row.items():
             doc.add(Field(k, str(v), self._text_field_type))
 
@@ -99,6 +104,7 @@ class LuceneIndex(Index):
             'shingle' : get_shingle_analyzer,
             'standard_stopwords' : StandardAnalyzer,
             '3gram' : Gram3Analyzer,
+            'stripped_3gram' : StrippedGram3Analyzer,
             'standard36edgegram': StandardEdgeGram36Analyzer, 
             'unfiltered_5gram' : UnfilteredGram5Analyzer,
     }
@@ -346,9 +352,10 @@ class LuceneIndex(Index):
                 raise TypeError(f'id_col must be integer type (got {dtype})')
     
     @classmethod
-    def _build_spark_worker_local(cls, df_itr, config, tmp_dir_path):
+    def _build_spark_worker_local(cls, df_itr, config):
         index = None
         index_path = None
+        tmp_dir_path = Path(tempfile.gettempdir())
         tmp_dir_path.mkdir(parents=True, exist_ok=True)
         # 128 MB
         CHUNK_SIZE = 128 * (2**20)
@@ -364,6 +371,9 @@ class LuceneIndex(Index):
             index._build(df, config, index_path, append=True)
         
         for p in cls._serialize_and_stream_files(index_path, CHUNK_SIZE):
+            # change file path to be relvative so that it can be easily relocated 
+            # elsewhere
+            p['file'] = p['file'].apply(lambda x: str(Path(x).relative_to(tmp_dir_path)))
             yield p
 
         shutil.rmtree(index_path, ignore_errors=True)
@@ -434,8 +444,10 @@ class LuceneIndex(Index):
             T.StructField('offset', T.LongType(), False),
             T.StructField('data', T.BinaryType(), False),
         ])
-
-        df = df.mapInPandas(lambda x : LuceneIndex._build_spark_worker_local(x, config, tmp_dir_path), schema=schema)\
+        
+        
+        df = df.mapInPandas(lambda x : LuceneIndex._build_spark_worker_local(x, config), schema=schema)\
+                .withColumn('file', F.concat( F.lit(str(tmp_dir_path) + '/'), F.col('file')) )\
                 .persist()
         # index stuff
         df.count()
@@ -504,13 +516,77 @@ class LuceneIndex(Index):
                 df = df.toPandas()
 
         if isinstance(df, pd.DataFrame):
+            df_size = len(df)
             # if table is small just build directly
             self._build(df, config, self._index_path, append=False)
-
+        
         # write the config
         self._write_meta_data(config)
         self._config = config.freeze()
+
+        # verify the index is correct
+        self.verify_index_id_col()
+        i_size = self.num_indexed_docs()
+        if df_size != i_size:
+            raise RuntimeError(f'index build failed, number of indexed docs ({i_size}) is different than number of input table({df_size})')
+
     
+
+    def _stream_id_col_sorted(self):
+        """
+        stream all ids in self.config.id_col in sorted order
+        """
+        self.init()
+
+        load_fields = HashSet()
+        load_fields.add(self.config.id_col)
+
+        limit = 1000
+        query = MatchAllDocsQuery()
+        sort = Sort(SortedNumericSortField(self.config.id_col, SortField.Type.LONG))
+
+        hits = self._searcher.search(query, limit, sort, False).scoreDocs
+        while len(hits) > 0:
+            for hit in hits:
+                yield int(self._searcher.doc(hit.doc, load_fields).get(self.config.id_col))
+
+            hits = self._searcher.searchAfter(hit, query, limit, sort, False).scoreDocs
+    
+        self.deinit()
+
+    
+    def num_indexed_docs(self):
+        """
+        get the number of indexed documents
+        """
+        self.init()
+        n = self._index_reader.numDocs()
+        self.deinit()
+
+        return n
+
+
+    def verify_index_id_col(self):
+        """
+        check that the id col for this index is unique
+
+        Raises
+        ------
+        RuntimeError
+            if the id column is not unique
+        """
+        itr = self._stream_id_col_sorted()
+        prev = next(itr, None)
+        if prev is None:
+            return 
+
+        for i in itr:
+            if prev == i:
+                raise RuntimeError('duplicate ids found')
+            prev = i
+
+
+
     
     def get_full_query_spec(self, cross_fields=False):
         """
