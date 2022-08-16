@@ -472,7 +472,7 @@ class LuceneIndex(Index):
 
         return dirs
     
-    def build(self, df, config):
+    def build(self, df, config, disable_distributed=False):
         """
         build the index, indexing df according to config
 
@@ -485,6 +485,9 @@ class LuceneIndex(Index):
 
         config : IndexConfig
             the config for the index being built
+
+        disable_distributed : bool, default=False
+            disable using spark for building the index even for large tables
         """
         self._arg_check_build(df, config)
 
@@ -498,8 +501,8 @@ class LuceneIndex(Index):
                 with TemporaryDirectory() as tmp_dir_base:
                     tmp_dir_base = Path(tmp_dir_base)
                     
-                    if df_size > self._index_build_chunk_size * 50:
-                        # build with spark if very large
+                    if df_size > self._index_build_chunk_size * 50 and not disable_distributed:
+                        # build with spark if very large and disributed build is allowed
                         dirs = self._build_spark(df, df_size, config, tmp_dir_base)
                     else:
                         # else just use local threads
