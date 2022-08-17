@@ -17,6 +17,7 @@ import multiprocessing
 import pyspark.sql.types as T
 import pyspark.sql.functions as F
 from sparkly.utils import type_check
+import time
 
 from pyspark import SparkFiles
 from pyspark import SparkContext
@@ -365,7 +366,7 @@ class LuceneIndex(Index):
                 continue
 
             if index is None:
-                index_path = tmp_dir_path / str(df.iloc[0][config.id_col])
+                index_path = tmp_dir_path / f'{time.time()}_{df.iloc[0][config.id_col]}'
                 index = cls(index_path)
 
             index._build(df, config, index_path, append=True)
@@ -528,7 +529,6 @@ class LuceneIndex(Index):
         self._config = config.freeze()
 
         # verify the index is correct
-        self.verify_index_id_col()
         i_size = self.num_indexed_docs()
         if df_size != i_size:
             raise RuntimeError(f'index build failed, number of indexed docs ({i_size}) is different than number of input table({df_size})')
@@ -544,7 +544,7 @@ class LuceneIndex(Index):
         load_fields = HashSet()
         load_fields.add(self.config.id_col)
 
-        limit = 1000
+        limit = 1000000
         query = MatchAllDocsQuery()
         sort = Sort(SortedNumericSortField(self.config.id_col, SortField.Type.LONG))
 
@@ -571,7 +571,8 @@ class LuceneIndex(Index):
 
     def verify_index_id_col(self):
         """
-        check that the id col for this index is unique
+        check that the id col for this index is unique. This method 
+        is VERY slow, it should only be called for debugging.
 
         Raises
         ------
