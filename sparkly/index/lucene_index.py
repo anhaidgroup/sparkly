@@ -81,9 +81,10 @@ class _DocumentConverter:
         doc = Document()
         row.dropna(inplace=True)
         
-        doc.add(StoredField(self._config.id_col, row.name))
-        doc.add(LongPoint(self._config.id_col, row.name))
-        doc.add(SortedNumericDocValuesField(self._config.id_col, row.name))
+        doc.add(StoredField(self._config.id_col, int(row.name)))
+        doc.add(LongPoint(self._config.id_col, int(row.name)))
+        # needed for sorting by id_col
+        #doc.add(SortedNumericDocValuesField(self._config.id_col, int(row.name)))
         for k,v in row.items():
             doc.add(Field(k, str(v), self._text_field_type))
 
@@ -532,31 +533,6 @@ class LuceneIndex(Index):
         i_size = self.num_indexed_docs()
         if df_size != i_size:
             raise RuntimeError(f'index build failed, number of indexed docs ({i_size}) is different than number of input table({df_size})')
-
-    
-
-    def _stream_id_col_sorted(self):
-        """
-        stream all ids in self.config.id_col in sorted order
-        """
-        self.init()
-
-        load_fields = HashSet()
-        load_fields.add(self.config.id_col)
-
-        limit = 1000000
-        query = MatchAllDocsQuery()
-        sort = Sort(SortedNumericSortField(self.config.id_col, SortField.Type.LONG))
-
-        hits = self._searcher.search(query, limit, sort, False).scoreDocs
-        while len(hits) > 0:
-            for hit in hits:
-                yield int(self._searcher.doc(hit.doc, load_fields).get(self.config.id_col))
-
-            hits = self._searcher.searchAfter(hit, query, limit, sort, False).scoreDocs
-    
-        self.deinit()
-
     
     def num_indexed_docs(self):
         """
@@ -568,30 +544,6 @@ class LuceneIndex(Index):
 
         return n
 
-
-    def verify_index_id_col(self):
-        """
-        check that the id col for this index is unique. This method 
-        is VERY slow, it should only be called for debugging.
-
-        Raises
-        ------
-        RuntimeError
-            if the id column is not unique
-        """
-        itr = self._stream_id_col_sorted()
-        prev = next(itr, None)
-        if prev is None:
-            return 
-
-        for i in itr:
-            if prev == i:
-                raise RuntimeError('duplicate ids found')
-            prev = i
-
-
-
-    
     def get_full_query_spec(self, cross_fields=False):
         """
         get a query spec that uses all indexed columns
