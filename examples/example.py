@@ -1,3 +1,5 @@
+import sys
+sys.path.append('.')
 from pyspark.sql import SparkSession
 import pyspark.sql.functions as F
 from sparkly.index import IndexConfig, LuceneIndex
