@@ -35,6 +35,35 @@ def _fetch_terms(obj):
         obj.close()
 
 
+def analyze_generator(analyzer, text, with_offset=False):
+    """
+    Apply the analyzer to the text and return the tokens, optionally with offsets
+    
+    Parameters
+    ----------
+    analyzer : 
+        The lucene analyzer to be applied
+    text : str
+        the text that will be analyzer
+    with_offset : bool
+        if true, return the offsets with the tokens in the form 
+        (TOKEN, START_OFFSET, END_OFFSET)
+
+    Returns
+    -------
+    generator of str or tuples
+        a list of tokens potentially with offsets
+    """
+
+    stream = analyzer.tokenStream("contents", text)
+
+    if with_offset:
+        terms = _fetch_terms_with_offsets(stream)
+    else:
+        terms = _fetch_terms(stream)
+
+    return terms
+
 def analyze(analyzer, text, with_offset=False):
     """
     Apply the analyzer to the text and return the tokens, optionally with offsets
@@ -55,14 +84,8 @@ def analyze(analyzer, text, with_offset=False):
         a list of tokens potentially with offsets
     """
 
-    stream = analyzer.tokenStream("contents", text)
+    return list(analyze_generator(analyzer, text, with_offset))
 
-    if with_offset:
-        terms = [t for t in _fetch_terms_with_offsets(stream)]
-    else:
-        terms = [t for t in _fetch_terms(stream)]
-
-    return terms
 
 def get_shingle_analyzer():
     return ShingleAnalyzerWrapper(2, 3)
