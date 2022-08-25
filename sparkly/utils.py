@@ -128,18 +128,35 @@ def atomic_unzip(zip_file_name, output_loc):
     output_loc : str
         the location that the file will be unzipped to
     """
-    tmp = mkdtemp(prefix='temp_zip_file.')
-    try:
-        with ZipFile(zip_file_name, 'r') as zf:
-            zf.extractall(tmp)
-        shutil.move(tmp, output_loc)
-    except Exception as e:
-        if not os.path.exists(output_loc):
-            raise e
-        # the directory already exists another 
-        # process already wrote it
-    finally:
-        shutil.rmtree(tmp, ignore_errors=True)
+
+    out = Path(output_loc).absolute()
+    lock = Path(str(out) + '.lock')
+
+    if  out.exists() and not lock.exists():    
+        return    
+    
+    try:    
+        # try to acquire the lock
+        # throws FileExistsError if someone else grabbed it
+        lock.touch(exist_ok=False)    
+        try:    
+            # unzip the dir if it doesn't exist
+            if not out.exists():    
+                with ZipFile(zip_file_name, 'r') as zf:
+                    zf.extractall(str(out))
+        finally:    
+            # release the lock
+            lock.unlink()    
+    
+    except FileExistsError:    
+        # failed to get lock 
+        # wait for other thread to do the unzipping
+        while lock.exists():    
+            pass    
+        # something is wrong if the lock was released but the dir
+        # wasnt' created by someone else
+        if not out.exists():    
+            raise RuntimeError('atomic unzip failed for {f}')
 
 
 def _add_file_recursive(zip_file, base, file):
@@ -187,6 +204,7 @@ def init_jvm(vmargs=[]):
     """
     if not lucene.getVMEnv():
         lucene.initVM(vmargs=['-Djava.awt.headless=true'] + vmargs)
+
 def invoke_task(task):
     """
     invoke a task created by joblib.delayed
@@ -201,7 +219,7 @@ def persisted(df, storage_level=StorageLevel.MEMORY_AND_DISK):
     context manager for presisting a dataframe in a with statement.
     This automatically unpersists the dataframe at the end of the context
     """
-    if df is not None and not is_persisted(df):
+    if df is not None:
         df = df.persist(storage_level) 
     try:
         yield df
