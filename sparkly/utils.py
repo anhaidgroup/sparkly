@@ -23,6 +23,7 @@ import pyarrow.parquet
 import pyarrow as pa
 from pyarrow.parquet import ParquetFile
 import lucene
+import numba as nb
 
 
 logging.basicConfig(
@@ -103,6 +104,7 @@ AUC for an array sorted in decending order
 slightly different results to np.trapz due to 
 FP error
 '''
+@nb.njit('float32(float32[::1])')
 def auc(x):
     return x[1:].sum() + (x[0] - x[-1]) / 2
 
@@ -111,6 +113,7 @@ AUC for an array sorted in decending order
 slightly different results to np.trapz due to 
 FP error
 '''
+@nb.njit('float32(float32[::1])')
 def norm_auc(x):
     return (x[1:].sum() + (x[0] - x[-1]) / 2) / len(x)
 
@@ -131,21 +134,29 @@ def atomic_unzip(zip_file_name, output_loc):
 
     out = Path(output_loc).absolute()
     lock = Path(str(out) + '.lock')
+    tmp_out = Path(str(out) + '.tmp_out')
 
-    if  out.exists() and not lock.exists():    
+    if out.exists():    
         return    
     
     try:    
         # try to acquire the lock
         # throws FileExistsError if someone else grabbed it
-        lock.touch(exist_ok=False)    
+        lock_fd = os.open(str(lock.absolute()), os.O_EXCL | os.O_CREAT)  
+        #os.fsync(lock_fd)
+        #fd = os.open(str(out.parent.absolute()), os.O_RDONLY)
+        #os.fsync(fd)
+        #os.close(fd)
         try:    
             # unzip the dir if it doesn't exist
             if not out.exists():    
                 with ZipFile(zip_file_name, 'r') as zf:
-                    zf.extractall(str(out))
+                    zf.extractall(str(tmp_out))
+                # move to final output location
+                tmp_out.rename(out)
         finally:    
             # release the lock
+            os.close(lock_fd)
             lock.unlink()    
     
     except FileExistsError:    
