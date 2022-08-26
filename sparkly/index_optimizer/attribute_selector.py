@@ -1,7 +1,7 @@
 import sys
 from utils import init_spark, read_table_spark, repartition_df, Timer
 from collections import Counter
-from sparkly.utils import init_jvm
+from sparkly.utils import init_jvm, persisted
 from sparkly.index import LuceneIndex
 from sparkly.analysis import analyze
 from argparse import ArgumentParser
@@ -207,21 +207,20 @@ class AttributeSelector:
             return df.sample(fraction=sample_fraction, withReplacement=False)
         
     def select_columns(self, df, k, id_col='_id', sample_fraction=1.0):
-        exclude = {id_col}
-        df = repartition_df(df, 1000, id_col)
         timer = Timer()
-        self._init_column_stats(df)
-        df = self._select_word_limit(df, self._word_limit, exclude)
-        self.time_['select_word_limit'] = timer.get_interval()
-
+        exclude = {id_col}
         df = self._sample_dataframe(df, sample_fraction)
+        with persisted(repartition_df(df, 1000, id_col)) as df:
+            self._init_column_stats(df)
+            df = self._select_word_limit(df, self._word_limit, exclude)
+            self.time_['select_word_limit'] = timer.get_interval()
 
-        df = self._select_bm25(df, k, exclude)
+            df = self._select_bm25(df, k, exclude)
 
-        self.time_['select_bm25'] = timer.get_interval()
-        self.time_['total'] = timer.get_total()
+            self.time_['select_bm25'] = timer.get_interval()
+            self.time_['total'] = timer.get_total()
 
-        return df
+            return df
 
     def _select_bm25(self, df, k, exclude):
         if len(df.columns)  - len(exclude) <= k:

@@ -97,7 +97,7 @@ class IndexOptimizer():
 
 
     def _get_min_tasks(self):
-        return SparkContext.getOrCreate().defaultParallelism * 10
+        return SparkContext.getOrCreate().defaultParallelism * 4
 
     def _execute_and_score(self, tasks : pd.Series):
         sc = SparkContext.getOrCreate()
