@@ -131,8 +131,8 @@ class Gram3Analyzer(PythonAnalyzer):
     def createComponents(self, fieldName):
         
         src = NGramTokenizer(3,3)
-        res = LowerCaseFilter(src)
-        res = PythonAlnumTokenFilter(res)
+        res = PythonAlnumTokenFilter(src)
+        res = LowerCaseFilter(res)
 
         return Analyzer.TokenStreamComponents(src, res)
 
