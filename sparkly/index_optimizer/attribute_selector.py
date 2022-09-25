@@ -1,17 +1,13 @@
-import sys
-from utils import init_spark, read_table_spark, repartition_df, Timer
 from collections import Counter
-from sparkly.utils import init_jvm, persisted
+from sparkly.utils import init_jvm, persisted, repartition_df, Timer
 from sparkly.index import LuceneIndex
 from sparkly.analysis import analyze
-from argparse import ArgumentParser
 import pandas as pd
 import numpy as np
 import pyspark.sql.functions as F
 import pyspark.sql.types as T
 import mmh3
 import numba as nb
-from pprint import pformat 
 from pathlib import Path
 from pyspark import SparkFiles, SparkContext
 from tempfile import mkstemp
