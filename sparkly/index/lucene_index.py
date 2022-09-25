@@ -16,8 +16,9 @@ from joblib import Parallel, delayed
 import multiprocessing
 import pyspark.sql.types as T
 import pyspark.sql.functions as F
-from sparkly.utils import type_check
+from sparkly.utils import type_check, type_check_iterable
 import time
+from itertools import islice
 
 from pyspark import SparkFiles
 from pyspark import SparkContext
@@ -123,6 +124,7 @@ class LuceneIndex(Index):
         self._index_reader = None
         self._spark_index_zip_file = None
         self._initialized = False
+        self._is_built = False
         self._index_build_chunk_size = 2500
 
     @property
@@ -244,7 +246,8 @@ class LuceneIndex(Index):
         with open(p / self.PY_META_FILE) as ofs:
             return IndexConfig.from_json(ofs.read()).freeze()
         
-
+    
+    
     @property
     def is_on_spark(self):
         """
@@ -265,7 +268,7 @@ class LuceneIndex(Index):
         -------
         bool
         """
-        return self.config is not None
+        return self._is_built
 
     def to_spark(self):
         """
@@ -287,40 +290,29 @@ class LuceneIndex(Index):
 
         # use pid to decide which tmp index to write to
         path = tmp_dir_path/ str(multiprocessing.current_process().pid)
-        return self._build(df, config, path, append=True)
+        index_writer = self._get_index_writer(config, path)
+        self._add_docs(df, index_writer)
+        index_writer.commit()
+        index_writer.close()
 
-    def _build(self, df, config, index_path, append=True):
+        return path
+
+    def _add_docs(self, df, index_writer, upsert=False):
         if len(df.columns) == 0:
             raise ValueError('dataframe with no columns passed to build')
         init_jvm()
-        # clear the old index if we are not appending
-        if not append and index_path.exists():
-            shutil.rmtree(index_path)
 
-        index_writer = self._get_index_writer(config, index_path)
-        doc_conv = _DocumentConverter(config)
+        doc_conv = _DocumentConverter(self.config)
         docs = doc_conv.convert_docs(df)
         
         for d in docs.values:
             index_writer.addDocument(d)
 
-        index_writer.commit()
-        index_writer.close()
-
-        return index_path
     
-    def _merge_index_segments(self, config, dirs):
-
-        # clear the old index
-        if self._index_path.exists():
-            shutil.rmtree(self._index_path)
-        # create index writer for merged index
-        index_writer = self._get_index_writer(config, self._index_path)
+    def _merge_index_segments(self, index_writer, dirs):
         # merge segments 
         index_writer.addIndexes(dirs)
         index_writer.forceMerge(1)
-        index_writer.commit()
-        index_writer.close()
     
     def _chunk_df(self, df):
         for i in range(0, len(df), self._index_build_chunk_size):
@@ -357,11 +349,11 @@ class LuceneIndex(Index):
     def _build_spark_worker_local(cls, df_itr, config):
         index = None
         index_path = None
+        index_writer = None
         tmp_dir_path = Path(tempfile.gettempdir())
         tmp_dir_path.mkdir(parents=True, exist_ok=True)
         # 128 MB
         CHUNK_SIZE = 128 * (2**20)
-
         for df in df_itr:
             if len(df) == 0:
                 continue
@@ -369,8 +361,13 @@ class LuceneIndex(Index):
             if index is None:
                 index_path = tmp_dir_path / f'{time.time()}_{df.iloc[0][config.id_col]}'
                 index = cls(index_path)
+                index._config = config
+                index_writer = index._get_index_writer(config, index_path)
 
-            index._build(df, config, index_path, append=True)
+            index._add_docs(df, index_writer)
+
+        index_writer.commit()
+        index_writer.close()
         
         for p in cls._serialize_and_stream_files(index_path, CHUNK_SIZE):
             # change file path to be relvative so that it can be easily relocated 
@@ -458,7 +455,7 @@ class LuceneIndex(Index):
         # write with threads 
         Parallel(n_jobs=-1, backend='threading')(delayed(self._write_file_chunk)(*row) for row in itr)
         df.unpersist()
-
+, start_size={start_index_size}
         return list(tmp_dir_path.iterdir())
 
     def _build_parallel_local(self, df, config, tmp_dir_base):
@@ -473,6 +470,89 @@ class LuceneIndex(Index):
         # kill the threadpool to prevent them from sitting on resources
 
         return dirs
+    
+    def _count_docs(self, query):
+        self.init()
+        c = self._searcher.count(query)
+        self.deinit()
+        return c
+    
+    def _delete_docs(self, index_writer, ids):
+        if isinstance(ids, np.ndarray):
+            ids = ids.tolist()
+        type_check_iterable(ids, 'ids', list, int)
+
+        query = LongPoint.newSetQuery(self.config, ids)
+        cnt = self._count_docs(query)
+            
+        index_writer.deleteDocuments(query)
+        return cnt
+
+
+    def upsert_docs(self, df, disable_distributed=False):
+        type_check(df, 'df', (pd.DataFrame, sql.DataFrame))
+        if self.config is None:
+            raise RuntimeError('index must be built before upsert is called')
+
+        # verify the index is correct
+        try:
+            index_writer = self._get_index_writer(self.config, self._index_path)
+            start_index_size = 0 
+            num_docs_deleted = 0
+            # upsert
+            if self.is_built:
+                tmp_df = df
+                if isinstance(df, sql.DataFrame):
+                    tmp_df = df.select(self.config.id_col).toPandas()
+                ids = tmp_df[self.config.id_col].values.tolist()
+
+                start_index_size = self.num_indexed_docs()
+                num_docs_deleted = self._delete_docs(index_writer, ids)
+            
+
+            if isinstance(df, sql.DataFrame):
+                # project out unused columns
+                df = df.select(self.config.id_col, *self.config.get_analyzed_fields())
+                df_size = df.count()
+                if df_size > self._index_build_chunk_size * 10:
+                    # build large tables in parallel
+                    # put temp indexes in temp dir for easy deleting later
+                    with TemporaryDirectory() as tmp_dir_base:
+                        tmp_dir_base = Path(tmp_dir_base)
+                        
+                        if df_size > self._index_build_chunk_size * 50 and not disable_distributed:
+                            # build with spark if very large and disributed build is allowed
+                            dirs = self._build_spark(df, df_size, self.config, tmp_dir_base)
+                        else:
+                            # else just use local threads
+                            dirs = self._build_parallel_local(df, self.config, tmp_dir_base)
+                        # get the name of the index dir in each tmp sub dir
+                        dirs = [self._get_index_dir(d) for d in dirs]
+
+                        # merge the segments 
+                        self._merge_index_segments(index_writer, dirs)
+                        # 
+                        kill_loky_workers()
+                    # temp indexes deleted here
+                else:
+                    # table is small, build it single threaded
+                    df = df.toPandas()
+
+            if isinstance(df, pd.DataFrame):
+                df_size = len(df)
+                # if table is small just build directly
+                self._add_docs(df, index_writer)
+        except:
+            index_writer.rollback()
+            raise 
+        else:
+            index_writer.commit()
+
+        # verify the index is correct
+        end_index_size = self.num_indexed_docs()
+        if df_size - num_docs_deleted + start_index_size != end_index_size:
+            raise RuntimeError(f'index build failed, number of indexed docs ({end_index_size}) is different than number expected df_size={df_size}, n_delete={num_docs_deleted}, start_size={start_index_size}')
+
     
     def build(self, df, config, disable_distributed=False):
         """
@@ -492,47 +572,18 @@ class LuceneIndex(Index):
             disable using spark for building the index even for large tables
         """
         self._arg_check_build(df, config)
+        # clear the old index if it exists
+        if self._index_path.exists():
+            shutil.rmtree(self._index_path)
 
-        if isinstance(df, sql.DataFrame):
-            # project out unused columns
-            df = df.select(config.id_col, *config.get_analyzed_fields())
-            df_size = df.count()
-            if df_size > self._index_build_chunk_size * 10:
-                # build large tables in parallel
-                # put temp indexes in temp dir for easy deleting later
-                with TemporaryDirectory() as tmp_dir_base:
-                    tmp_dir_base = Path(tmp_dir_base)
-                    
-                    if df_size > self._index_build_chunk_size * 50 and not disable_distributed:
-                        # build with spark if very large and disributed build is allowed
-                        dirs = self._build_spark(df, df_size, config, tmp_dir_base)
-                    else:
-                        # else just use local threads
-                        dirs = self._build_parallel_local(df, config, tmp_dir_base)
-                    # get the name of the index dir in each tmp sub dir
-                    dirs = [self._get_index_dir(d) for d in dirs]
-                    # merge the segments 
-                    self._merge_index_segments(config, dirs)
-                    # 
-                    kill_loky_workers()
-                # temp indexes deleted here
-            else:
-                # table is small, build it single threaded
-                df = df.toPandas()
-
-        if isinstance(df, pd.DataFrame):
-            df_size = len(df)
-            # if table is small just build directly
-            self._build(df, config, self._index_path, append=False)
+        self._config = config.freeze()
+        
+        self.upsert_docs(df, disable_distributed)
         
         # write the config
         self._write_meta_data(config)
-        self._config = config.freeze()
+        self._is_built = True
 
-        # verify the index is correct
-        i_size = self.num_indexed_docs()
-        if df_size != i_size:
-            raise RuntimeError(f'index build failed, number of indexed docs ({i_size}) is different than number of input table({df_size})')
     
     def num_indexed_docs(self):
         """
