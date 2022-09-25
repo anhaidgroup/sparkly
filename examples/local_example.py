@@ -28,9 +28,9 @@ config = IndexConfig(id_col='_id')
 # add the 'name' column to be indexed with analyzer above
 config.add_field('name', analyzers)
 # create a new index stored at /tmp/example_index/
-index = LuceneIndex('/tmp/example_index/')
+index = LuceneIndex('/tmp/example_index/', config)
 # index the records from table A according to the config we created above
-index.build(table_a, config)
+index.upsert_docs(table_a)
 
 # get a query spec (template) which searches on 
 # all indexed fields

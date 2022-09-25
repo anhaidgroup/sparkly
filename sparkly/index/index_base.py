@@ -14,7 +14,11 @@ EMPTY_QUERY_RESULT = QueryResult(None, None, None)
 class Index(ABC):
 
     @abstractmethod
-    def build(self, df, config) -> None:
+    def upsert_docs(self, df) -> None:
+        pass
+
+    @abstractmethod
+    def delete_docs(self, ids) -> int:
         pass
 
     @abstractmethod

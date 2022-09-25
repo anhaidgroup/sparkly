@@ -40,9 +40,9 @@ config.add_field('name', analyzers)
 # do the same for the description
 config.add_field('description', analyzers)
 # create a new index stored at /tmp/example_index/
-index = LuceneIndex('/tmp/example_index/')
+index = LuceneIndex('/tmp/example_index/', config)
 # index the records from table A according to the config we created above
-index.build(table_a, config)
+index.upsert_docs(table_a)
 # this index now has 4 searchable subindexes each named '<FIELD_NAME>.<ANALYZER>', specifically
 # 'name.3gram', 'name.standard', 'description.3gram', and 'description.standard'
 
