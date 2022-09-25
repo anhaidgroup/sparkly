@@ -246,14 +246,20 @@ def is_persisted(df):
     return sl.useMemory or sl.useDisk
 
 
-def repartition_df(df, part_size, by):
+def repartition_df(df, part_size, by=None):
     """
     repartition the dataframe into chunk of size 'part_size'
     by column 'by'
     """
-    n = max(df.count() // part_size, SparkContext.getOrCreate().defaultParallelism * 4)
+    cnt = df.count()
+    n = max(cnt // part_size, SparkContext.getOrCreate().defaultParallelism * 4)
+    n = min(n, cnt)
+    if by is not None:
+        return df.repartition(n, by)
+    else:
+        return df.repartition(n)
 
-    return df.repartition(n, by)
+
 
 def is_null(o):
     """
