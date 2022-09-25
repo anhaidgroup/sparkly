@@ -114,19 +114,27 @@ class LuceneIndex(Index):
     PY_META_FILE = 'PY_META.json'
     LUCENE_DIR = 'LUCENE_INDEX'
 
-    def __init__(self, index_path):
+    def __init__(self, index_path, config, delete_if_exists=True):
         self._init_jvm()
         self._index_path = Path(index_path).absolute()
+        self._config = config.freeze()
         self._spark = False
         self._query_gen = None
         self._searcher = None
-        self._config = None
         self._index_reader = None
         self._spark_index_zip_file = None
         self._spark_index_dir_name = None
         self._initialized = False
         self._is_built = False
         self._index_build_chunk_size = 2500
+
+        self._arg_check_config(self.config)
+        # clear old index if it exists
+        if delete_if_exists and self._index_path.exists():
+            shutil.rmtree(self._index_path)
+
+        # write the config
+        self._write_meta_data(config)
 
     @property
     def config(self):
@@ -304,7 +312,7 @@ class LuceneIndex(Index):
 
         return path
 
-    def _add_docs(self, df, index_writer, upsert=False):
+    def _add_docs(self, df, index_writer):
         if len(df.columns) == 0:
             raise ValueError('dataframe with no columns passed to build')
         init_jvm()
@@ -326,16 +334,16 @@ class LuceneIndex(Index):
             end = min(len(df), i+self._index_build_chunk_size)
             yield df.iloc[i:end]
 
-
-    def _arg_check_build(self, df : Union[pd.DataFrame, sql.DataFrame], config : IndexConfig):
+    
+    def _arg_check_config(self, config):
         type_check(config, 'config', IndexConfig)
-        type_check(df, 'df', (pd.DataFrame, sql.DataFrame))
-        if self.config is not None:
-            raise RuntimeError('This index has already been built')
-
         if len(config.field_to_analyzers) == 0:
             raise ValueError('config with no fields passed to build')
-        
+
+    def _arg_check_upsert(self, df : Union[pd.DataFrame, sql.DataFrame]):
+        type_check(df, 'df', (pd.DataFrame, sql.DataFrame))
+
+        config = self.config
         if config.id_col not in df.columns:
             raise ValueError(f'id column {config.id_col} is not is dataframe columns {df.columns}')
         
@@ -367,9 +375,8 @@ class LuceneIndex(Index):
 
             if index is None:
                 index_path = tmp_dir_path / f'{time.time()}_{df.iloc[0][config.id_col]}'
-                index = cls(index_path)
-                index._config = config
-                index_writer = index._get_index_writer(config, index_path)
+                index = cls(index_path, config)
+                index_writer = index._get_index_writer(index.config, index_path)
 
             index._add_docs(df, index_writer)
 
@@ -495,6 +502,7 @@ class LuceneIndex(Index):
     
     def _invalidate_spark(self):
         self._spark = False
+        self.deinit()
 
     def delete_docs(self, ids):
         
@@ -517,13 +525,24 @@ class LuceneIndex(Index):
     
 
     def upsert_docs(self, df, disable_distributed=False):
-        type_check(df, 'df', (pd.DataFrame, sql.DataFrame))
-        if self.config is None:
-            raise RuntimeError('index must be built before upsert is called')
+        """
+        build the index, indexing df according to self.config
+
+        Parameters
+        ----------
+
+        df : pd.DataFrame or pyspark DataFrame
+            the table that will be indexed, if a pyspark DataFrame is provided, the build will be done
+            in parallel for suffciently large tables
+
+        disable_distributed : bool, default=False
+            disable using spark for building the index even for large tables
+        """
+        self._arg_check_upsert(df)
 
         # verify the index is correct
+        index_writer = self._get_index_writer(self.config, self._index_path)
         try:
-            index_writer = self._get_index_writer(self.config, self._index_path)
             start_index_size = 0 
             num_docs_deleted = 0
             # upsert
@@ -576,44 +595,14 @@ class LuceneIndex(Index):
             index_writer.commit()
             index_writer.close()
 
+        self._is_built = True
+
         self._invalidate_spark()
         # verify the index is correct
         end_index_size = self.num_indexed_docs()
         if df_size - num_docs_deleted + start_index_size != end_index_size:
             raise RuntimeError(f'index build failed, number of indexed docs ({end_index_size}) is different than number'
                                 f'expected df_size={df_size}, n_delete={num_docs_deleted}, start_size={start_index_size}')
-
-    
-    def build(self, df, config, disable_distributed=False):
-        """
-        build the index, indexing df according to config
-
-        Parameters
-        ----------
-
-        df : pd.DataFrame or pyspark DataFrame
-            the table that will be indexed, if a pyspark DataFrame is provided, the build will be done
-            in parallel for suffciently large tables
-
-        config : IndexConfig
-            the config for the index being built
-
-        disable_distributed : bool, default=False
-            disable using spark for building the index even for large tables
-        """
-        self._arg_check_build(df, config)
-        # clear the old index if it exists
-        if self._index_path.exists():
-            shutil.rmtree(self._index_path)
-
-        self._config = config.freeze()
-        # write the config
-        self._write_meta_data(config)
-        
-        self.upsert_docs(df, disable_distributed)
-        
-        self._is_built = True
-
     
     def num_indexed_docs(self):
         """
