@@ -39,9 +39,9 @@ def main(args):
     config = index_optimizer.make_index_config(table_a)
 
     # create a new index stored at /tmp/example_index/
-    index = LuceneIndex('/tmp/lucene_index/')
+    index = LuceneIndex('/tmp/lucene_index/', config)
     # index the records from table A according to the config we created above
-    index.build(table_a, config)
+    index.upsert_docs(table_a)
 
     # get a query spec (template) which searches on 
     # all indexed fields
