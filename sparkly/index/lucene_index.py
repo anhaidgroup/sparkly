@@ -289,6 +289,10 @@ class LuceneIndex(Index):
             sc.addFile(str(self._spark_index_zip_file))
             self._spark = True
     
+    def __reduce__(self):
+        self.deinit()
+        return super().__reduce__()
+
     def _build_segment(self, df, config, tmp_dir_path):
 
         # use pid to decide which tmp index to write to
@@ -476,7 +480,6 @@ class LuceneIndex(Index):
     def _count_docs(self, query):
         self.init()
         c = self._searcher.count(query)
-        self.deinit()
         return c
     
     def _delete_docs(self, index_writer, ids):
@@ -618,7 +621,6 @@ class LuceneIndex(Index):
         """
         self.init()
         n = self._index_reader.numDocs()
-        self.deinit()
 
         return n
 
