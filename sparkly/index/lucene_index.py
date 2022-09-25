@@ -123,6 +123,7 @@ class LuceneIndex(Index):
         self._config = None
         self._index_reader = None
         self._spark_index_zip_file = None
+        self._spark_index_dir_name = None
         self._initialized = False
         self._is_built = False
         self._index_build_chunk_size = 2500
@@ -209,7 +210,7 @@ class LuceneIndex(Index):
     
     def _get_data_dir(self):
         if self._spark:
-            p = Path(SparkFiles.get(self._index_path.name))
+            p = Path(SparkFiles.get(self._spark_index_dir_name))
             # if the file hasn't been unzipped yet,
             # atomically unzip the file and then use it
             if not p.exists():
@@ -238,6 +239,7 @@ class LuceneIndex(Index):
     
     def _write_meta_data(self, config):
         # write the index meta data 
+        self._index_path.mkdir(parents=True, exist_ok=True)
         with open(self._index_path / self.PY_META_FILE, 'w') as ofs:
             ofs.write(config.to_json())
 
@@ -283,6 +285,7 @@ class LuceneIndex(Index):
         if not self._spark:
             sc = SparkContext.getOrCreate()
             self._spark_index_zip_file = zip_dir(self._index_path)
+            self._spark_index_dir_name = self._spark_index_zip_file.stem
             sc.addFile(str(self._spark_index_zip_file))
             self._spark = True
     
@@ -455,7 +458,6 @@ class LuceneIndex(Index):
         # write with threads 
         Parallel(n_jobs=-1, backend='threading')(delayed(self._write_file_chunk)(*row) for row in itr)
         df.unpersist()
-, start_size={start_index_size}
         return list(tmp_dir_path.iterdir())
 
     def _build_parallel_local(self, df, config, tmp_dir_base):
@@ -478,16 +480,38 @@ class LuceneIndex(Index):
         return c
     
     def _delete_docs(self, index_writer, ids):
-        if isinstance(ids, np.ndarray):
+        if isinstance(ids, (np.ndarray, pd.Series)):
             ids = ids.tolist()
         type_check_iterable(ids, 'ids', list, int)
 
-        query = LongPoint.newSetQuery(self.config, ids)
+        query = LongPoint.newSetQuery(self.config.id_col, ids)
         cnt = self._count_docs(query)
             
         index_writer.deleteDocuments(query)
         return cnt
+    
+    def _invalidate_spark(self):
+        self._spark = False
 
+    def delete_docs(self, ids):
+        
+        if not self.is_built:
+            raise RuntimeError('index not built')
+
+        index_writer = self._get_index_writer(self.config, self._index_path)
+        try:
+            cnt = self._delete_docs(index_writer, ids)
+        except:
+            index_writer.rollback()
+            raise
+        else:
+            index_writer.commit()
+            index_writer.close()
+
+        self._invalidate_spark()
+        return cnt
+
+    
 
     def upsert_docs(self, df, disable_distributed=False):
         type_check(df, 'df', (pd.DataFrame, sql.DataFrame))
@@ -547,11 +571,14 @@ class LuceneIndex(Index):
             raise 
         else:
             index_writer.commit()
+            index_writer.close()
 
+        self._invalidate_spark()
         # verify the index is correct
         end_index_size = self.num_indexed_docs()
         if df_size - num_docs_deleted + start_index_size != end_index_size:
-            raise RuntimeError(f'index build failed, number of indexed docs ({end_index_size}) is different than number expected df_size={df_size}, n_delete={num_docs_deleted}, start_size={start_index_size}')
+            raise RuntimeError(f'index build failed, number of indexed docs ({end_index_size}) is different than number'
+                                f'expected df_size={df_size}, n_delete={num_docs_deleted}, start_size={start_index_size}')
 
     
     def build(self, df, config, disable_distributed=False):
@@ -577,11 +604,11 @@ class LuceneIndex(Index):
             shutil.rmtree(self._index_path)
 
         self._config = config.freeze()
+        # write the config
+        self._write_meta_data(config)
         
         self.upsert_docs(df, disable_distributed)
         
-        # write the config
-        self._write_meta_data(config)
         self._is_built = True
 
     
