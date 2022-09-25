@@ -1,5 +1,5 @@
 from contextlib import contextmanager
-from tempfile import mkdtemp
+from tempfile import mkdtemp, mkstemp
 import shutil
 import os
 import time
@@ -197,7 +197,8 @@ def zip_dir(d, outfile=None):
 
     """
     p = Path(d)
-    tmp_zip_file = Path(outfile) if outfile is not None else Path('/tmp') / f'{p.name}.zip'
+
+    tmp_zip_file = Path(outfile) if outfile is not None else Path(mkstemp(prefix=d.name, suffix='.zip')[1])
 
     with ZipFile(tmp_zip_file, 'w') as zf:
         _add_file_recursive(zf, p, p)
