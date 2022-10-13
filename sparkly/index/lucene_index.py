@@ -305,6 +305,7 @@ class LuceneIndex(Index):
 
         # use pid to decide which tmp index to write to
         path = tmp_dir_path/ str(multiprocessing.current_process().pid)
+        self._init_jvm()
         index_writer = self._get_index_writer(config, path)
         self._add_docs(df, index_writer)
         index_writer.commit()
@@ -315,7 +316,7 @@ class LuceneIndex(Index):
     def _add_docs(self, df, index_writer):
         if len(df.columns) == 0:
             raise ValueError('dataframe with no columns passed to build')
-        init_jvm()
+        self._init_jvm()
 
         doc_conv = _DocumentConverter(self.config)
         docs = doc_conv.convert_docs(df)
