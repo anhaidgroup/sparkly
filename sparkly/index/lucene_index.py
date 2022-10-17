@@ -28,6 +28,7 @@ import pickle
 import lucene
 from java.nio.file import Paths
 from java.util import HashMap, HashSet
+from java.lang import Long
 from org.apache.lucene.search import BooleanQuery, BooleanClause, IndexSearcher, MatchAllDocsQuery
 from org.apache.lucene.search import SortedNumericSortField, Sort, SortField
 from org.apache.lucene.analysis.standard import StandardAnalyzer
@@ -51,6 +52,8 @@ class _DocumentConverter:
 
         self._field_to_doc_fields = {}
         self._config = deepcopy(config)
+        #self._id_field_type = FieldType()
+        # self._id_field_type.setStored(True)
         self._text_field_type = FieldType()
         self._text_field_type.setIndexOptions(IndexOptions.DOCS_AND_FREQS)
         self._text_field_type.setStoreTermVectors(self._config.store_vectors)
@@ -81,8 +84,13 @@ class _DocumentConverter:
     def _row_to_lucene_doc(self, row):
         doc = Document()
         row.dropna(inplace=True)
-        
-        doc.add(StoredField(self._config.id_col, int(row.name)))
+        # this has to be a string because 
+        # pylucene improperly casts to an int, storing the incorrect 
+        # value for 64 bit integers 
+        f = StoredField(self._config.id_col, str(row.name))
+        #f = StoredField(self._config.id_col, Long.MAX_VALUE)
+        #f.setLongValue(int(row.name))
+        doc.add(f)
         doc.add(LongPoint(self._config.id_col, int(row.name)))
         # needed for sorting by id_col
         #doc.add(SortedNumericDocValuesField(self._config.id_col, int(row.name)))
