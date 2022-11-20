@@ -4,7 +4,7 @@ import shutil
 import tempfile
 import os
 from tqdm import tqdm
-from sparkly.query_generator import QuerySpec, LuceneQueryGenerator
+from sparkly.query_generator import QuerySpec, LuceneQueryGenerator, LuceneWeightedQueryGenerator
 from sparkly.analysis import get_standard_analyzer_no_stop_words, Gram3Analyzer, StandardEdgeGram36Analyzer, UnfilteredGram5Analyzer, get_shingle_analyzer
 from sparkly.analysis import StrippedGram3Analyzer
 from sparkly.utils import Timer, init_jvm, zip_dir, atomic_unzip, kill_loky_workers, spark_to_pandas_stream
@@ -185,7 +185,8 @@ class LuceneIndex(Index):
             # default is 1024 and errors on some datasets
             BooleanQuery.setMaxClauseCount(50000)
 
-            self._query_gen = LuceneQueryGenerator(analyzer, config, self._index_reader)
+            #self._query_gen = LuceneQueryGenerator(analyzer, config, self._index_reader)
+            self._query_gen = LuceneWeightedQueryGenerator(analyzer, config, self._index_reader)
 
             self._initialized = True
 
