@@ -179,14 +179,14 @@ class LuceneIndex(Index):
             p = self._get_index_dir(self._get_data_dir())
             config = self._read_meta_data()
             analyzer = self._get_analyzer(config)
-            # default is 1024 and errors on some datasets
-            BooleanQuery.setMaxClauseCount(50000)
-
-            self._query_gen = LuceneQueryGenerator(analyzer, config)
-
             self._index_reader = DirectoryReader.open(p)
             self._searcher = IndexSearcher(self._index_reader)
             self._searcher.setSimilarity(self._get_sim(config))
+            # default is 1024 and errors on some datasets
+            BooleanQuery.setMaxClauseCount(50000)
+
+            self._query_gen = LuceneQueryGenerator(analyzer, config, self._index_reader)
+
             self._initialized = True
 
     def deinit(self):
