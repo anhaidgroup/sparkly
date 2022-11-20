@@ -10,7 +10,7 @@ class LuceneQueryGenerator:
     A class for generating queries for Lucene based indexes
     """
 
-    def __init__(self, analyzer, config):
+    def __init__(self, analyzer, config, index_reader):
         """
         Parameters
         ----------
@@ -21,6 +21,7 @@ class LuceneQueryGenerator:
         """
         self._analyzer = analyzer
         self._config = config
+        # index reader not used 
         self._query_builder = QueryBuilder(analyzer)
         self._query_builder.setEnableGraphQueries(False)
     
