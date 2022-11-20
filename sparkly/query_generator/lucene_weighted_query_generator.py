@@ -46,6 +46,7 @@ class LuceneWeightedQueryGenerator:
             tstream.end()
             tstream.close()
         
+        N = 1 + self._num_docs
         for tok, tf in term_freq.items():
             term = Term(field, tok)
             df = self._index_reader.docFreq(term)
@@ -53,8 +54,8 @@ class LuceneWeightedQueryGenerator:
             # affect scores
             if not df:
                 continue
-            # soft idf
-            weight = (math.log(tf) + 1) * math.log(self._num_docs / (df + 1))
+            # sublinear tf and smooth idf
+            weight = (math.log(tf) + 1) * (math.log(N / (df + 1)) + 1)
             builder.add(BoostQuery(TermQuery(term), weight), BooleanClause.Occur.SHOULD)
 
         return builder.build()
