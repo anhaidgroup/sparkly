@@ -55,7 +55,7 @@ class LuceneWeightedQueryGenerator:
                 continue
             # soft idf
             weight = (math.log(tf) + 1) * math.log(self._num_docs / (df + 1))
-            builder.add(BoostQuery(TermQuery(term), weight))
+            builder.add(BoostQuery(TermQuery(term), weight), BooleanClause.Occur.SHOULD)
 
         return builder.build()
 
@@ -98,7 +98,7 @@ class LuceneWeightedQueryGenerator:
 
             val = str(val)
             for f in indexed_fields:
-                clause = self._generate_weighted_clause(field, val)
+                clause = self._generate_weighted_clause(f, val)
                 # empty clause skip adding to query
                 if clause is None:
                     continue
