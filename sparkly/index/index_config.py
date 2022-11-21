@@ -9,11 +9,10 @@ class IndexConfig:
         self.concat_fields = {}
         self._id_col = id_col
         self.default_analyzer = 'standard'
-        self.sim = {'type' : 'BM25', 'k1' : 1.2, 'b' : .75}  
+        self.sim = {'type' : 'BM25', 'k1' : 2.0, 'b' : 1.0}  
         type_check(store_vectors, 'store_vectors', bool)
         self._store_vectors = store_vectors
         self._frozen = False
-        # TODO add id column
     
 
     def freeze(self):

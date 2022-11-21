@@ -62,11 +62,10 @@ class IndexOptimizer():
         self._search_chunk_size = 50
         self._opt_query_limit = 250
 
-        # default es / lucene sim
         self._auc_sim = {
             'type' : 'BM25',
-            'b' : .75,
-            'k1' : 1.2
+            'b' : 1.0,
+            'k1' : 2.0
         }
 
     
