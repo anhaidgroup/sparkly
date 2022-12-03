@@ -34,7 +34,7 @@ class IndexOptimizer():
     a class for optimizing the search columns and analyzers for indexes
     """
 
-    def __init__(self, is_dedupe, scorer=None, conf=.99):
+    def __init__(self, is_dedupe, scorer=None, conf=.99, init_top_k=10, max_combination_size=3, opt_query_limit=250, sample_size=10000, use_early_pruning=True):
         """
         Parameters
         ----------
@@ -60,7 +60,11 @@ class IndexOptimizer():
         self._confidence = conf
         self._is_dedupe = is_dedupe
         self._search_chunk_size = 50
-        self._opt_query_limit = 250
+        self._opt_query_limit = opt_query_limit
+        self._init_top_k = init_top_k
+        self._max_combination_size = max_combination_size
+        self._sample_size = sample_size
+        self._use_early_pruning = use_early_pruning 
 
         # default es / lucene sim
         self._auc_sim = {
@@ -169,7 +173,7 @@ class IndexOptimizer():
             # minimum number of tasks to run at a time
             # note that this runs in the inner loop because the first round it will not return 
             # the correct value (appears to be a bug in the spark code)
-            min_tasks = self._get_min_tasks()
+            min_tasks = self._get_min_tasks() if self._use_early_pruning else len(search_df)
             # get the next batch to evaluate
             n_tasks_per_queue = max(5, min_tasks // len(task_queues))
             log.debug(f'n_queues : {len(task_queues)}, min_tasks : {min_tasks}, n_tasks_per_queue : {n_tasks_per_queue}')
@@ -279,8 +283,7 @@ class IndexOptimizer():
     
     
     def _sample_df(self, search_df, nulls):
-        sample_size = 10000
-        return search_df.limit(sample_size).toPandas()
+        return search_df.limit(self._sample_size).toPandas()
     
     def _count_average_tokens(self, df):
         cols = [F.size(F.split(F.col(c).cast("string"), "\\s+")).alias(c) for c in df.columns if c != '_id']
@@ -362,12 +365,12 @@ class IndexOptimizer():
 
         log.debug(f'starting candidate query specs\n{single_specs}')
         # get the top-k starting single query specs
-        start_k = 10
+        start_k = self._init_top_k
         single_specs = self._get_topk_specs(single_specs, search_df, null_top_k=-1, k=start_k, nulls=nulls)
         single_specs = single_specs.loc[single_specs['mean'] < 1.0]
         log.debug(f'top-{start_k} starting candidate query specs\n{single_specs.to_string()}')
         # generate combinations of query specs       
-        extensions = self._gen_combs(single_specs['spec'].values, max_k=3)
+        extensions = self._gen_combs(single_specs['spec'].values, max_k=self._max_combination_size)
         extensions = [s for s in extensions if not self._has_overlapping_fields(s)]
         max_depth = 1
         # optimization state
