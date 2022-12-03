@@ -136,6 +136,20 @@ class Gram3Analyzer(PythonAnalyzer):
 
         return Analyzer.TokenStreamComponents(src, res)
 
+
+class UnfilteredGram3Analyzer(PythonAnalyzer):
+
+    def __init__(self):
+        PythonAnalyzer.__init__(self)
+
+
+    def createComponents(self, fieldName):
+        
+        src = NGramTokenizer(3,3)
+        res = LowerCaseFilter(src)
+
+        return Analyzer.TokenStreamComponents(src, res)
+
 class UnfilteredGram5Analyzer(PythonAnalyzer):
 
     def __init__(self):
