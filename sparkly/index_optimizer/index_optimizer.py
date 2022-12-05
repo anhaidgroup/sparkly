@@ -253,6 +253,9 @@ class IndexOptimizer():
         return s
 
     def _gen_combs(self, specs, max_k=3):
+        if max_k is None:
+            max_k = len(specs)
+
         out = list(specs)
         for k in range(2, max_k+1):
             out.extend(map(self._union_specs, combinations(specs, k)))
@@ -283,7 +286,9 @@ class IndexOptimizer():
     
     
     def _sample_df(self, search_df, nulls):
-        return search_df.limit(self._sample_size).toPandas()
+        if self._sample_size is not None:
+            search_df =  search_df.limit(self._sample_size)
+        return search_df.toPandas()
     
     def _count_average_tokens(self, df):
         cols = [F.size(F.split(F.col(c).cast("string"), "\\s+")).alias(c) for c in df.columns if c != '_id']
