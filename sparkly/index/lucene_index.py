@@ -6,6 +6,7 @@ import os
 from tqdm import tqdm
 from sparkly.query_generator import QuerySpec, LuceneQueryGenerator
 from sparkly.analysis import get_standard_analyzer_no_stop_words, Gram3Analyzer, StandardEdgeGram36Analyzer, UnfilteredGram5Analyzer, get_shingle_analyzer, UnfilteredGram3Analyzer
+from sparkly.analysis import Gram4Analyzer, Gram2Analyzer
 from sparkly.analysis import StrippedGram3Analyzer
 from sparkly.utils import Timer, init_jvm, zip_dir, atomic_unzip, kill_loky_workers, spark_to_pandas_stream
 from pathlib import Path
@@ -115,6 +116,8 @@ class LuceneIndex(Index):
             'shingle' : get_shingle_analyzer,
             'standard_stopwords' : StandardAnalyzer,
             '3gram' : Gram3Analyzer,
+            '2gram' : Gram2Analyzer,
+            '4gram' : Gram4Analyzer,
             'stripped_3gram' : StrippedGram3Analyzer,
             'unfiltered_3gram' : UnfilteredGram3Analyzer,
             'standard36edgegram': StandardEdgeGram36Analyzer, 

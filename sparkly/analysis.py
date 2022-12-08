@@ -136,6 +136,33 @@ class Gram3Analyzer(PythonAnalyzer):
 
         return Analyzer.TokenStreamComponents(src, res)
 
+class Gram2Analyzer(PythonAnalyzer):
+
+    def __init__(self):
+        PythonAnalyzer.__init__(self)
+
+
+    def createComponents(self, fieldName):
+        
+        src = NGramTokenizer(2,2)
+        res = PythonAlnumTokenFilter(src)
+        res = LowerCaseFilter(res)
+
+        return Analyzer.TokenStreamComponents(src, res)
+
+class Gram4Analyzer(PythonAnalyzer):
+
+    def __init__(self):
+        PythonAnalyzer.__init__(self)
+
+
+    def createComponents(self, fieldName):
+        
+        src = NGramTokenizer(4,4)
+        res = PythonAlnumTokenFilter(src)
+        res = LowerCaseFilter(res)
+
+        return Analyzer.TokenStreamComponents(src, res)
 
 class UnfilteredGram3Analyzer(PythonAnalyzer):
 
