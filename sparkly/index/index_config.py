@@ -94,6 +94,7 @@ class IndexConfig:
         o.default_analyzer = data['default_analyzer']
         o.sim = data['sim']
         o.id_col = data['id_col']
+        o.weighted_queries = data['weighted_queries']
         return o
 
     def to_dict(self):
@@ -112,7 +113,8 @@ class IndexConfig:
                 'default_analyzer' : self.default_analyzer,
                 'sim' : self.sim,
                 'store_vectors' : self.store_vectors,
-                'id_col' : self.id_col
+                'id_col' : self.id_col,
+                'weighted_queries' : self.weighted_queries
         }
         return d
 
