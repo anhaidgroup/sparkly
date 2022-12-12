@@ -188,7 +188,7 @@ class LuceneIndex(Index):
             self._searcher.setSimilarity(self._get_sim(config))
             # default is 1024 and errors on some datasets
             BooleanQuery.setMaxClauseCount(50000)
-            if self.config.weighted_query:
+            if self.config.weighted_queries:
                 self._query_gen = LuceneWeightedQueryGenerator(analyzer, config, self._index_reader)
             else:
                 self._query_gen = LuceneQueryGenerator(analyzer, config, self._index_reader)
