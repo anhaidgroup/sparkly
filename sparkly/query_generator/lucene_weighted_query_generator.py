@@ -2,10 +2,14 @@ import pandas as pd
 from sparkly.utils import is_null
 import lucene
 from org.apache.lucene.util import QueryBuilder
-from org.apache.lucene.search import BooleanQuery, BooleanClause, BoostQuery
+from org.apache.lucene.index import Term
+from org.apache.lucene.search import BooleanQuery, BooleanClause, BoostQuery, TermQuery
+from org.apache.lucene.analysis.tokenattributes import CharTermAttribute
+from collections import Counter
+import math
 
 
-class LuceneQueryGenerator:
+class LuceneWeightedQueryGenerator:
     """
     A class for generating queries for Lucene based indexes
     """
@@ -21,10 +25,43 @@ class LuceneQueryGenerator:
         """
         self._analyzer = analyzer
         self._config = config
-        # index reader not used 
+        self._index_reader = index_reader
+        self._num_docs = self._index_reader.numDocs()
         self._query_builder = QueryBuilder(analyzer)
         self._query_builder.setEnableGraphQueries(False)
     
+
+    def _generate_weighted_clause(self, field, val):
+        builder = BooleanQuery.Builder()
+        term_freq = Counter()
+
+        tstream = self._analyzer.tokenStream(field, val)
+        termAtt = tstream.getAttribute(CharTermAttribute.class_)
+        try:
+            tstream.clearAttributes()
+            tstream.reset()
+            while tstream.incrementToken():
+                term_freq[termAtt.toString()] += 1
+        finally:
+            tstream.end()
+            tstream.close()
+        
+        N = 1 + self._num_docs
+        for tok, tf in term_freq.items():
+            term = Term(field, tok)
+            df = self._index_reader.docFreq(term)
+            # term not in index, ignore since it will not 
+            # affect scores
+            if not df:
+                continue
+            # sublinear tf and smooth idf
+            weight = (math.log(tf) + 1) * (math.log(N / (df + 1)) + 1)
+            builder.add(BoostQuery(TermQuery(term), weight), BooleanClause.Occur.SHOULD)
+
+        return builder.build()
+
+
+
     def generate_query(self, doc, query_spec):
         """
         Generate a query for doc given the query spec
@@ -62,7 +99,7 @@ class LuceneQueryGenerator:
 
             val = str(val)
             for f in indexed_fields:
-                clause = self._query_builder.createBooleanQuery(f, val)
+                clause = self._generate_weighted_clause(f, val)
                 # empty clause skip adding to query
                 if clause is None:
                     continue
