@@ -1,2 +1,3 @@
 from .query_spec import QuerySpec
 from .lucene_query_generator import LuceneQueryGenerator
+from .lucene_weighted_query_generator import LuceneWeightedQueryGenerator

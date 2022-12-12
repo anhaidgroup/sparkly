@@ -66,11 +66,10 @@ class IndexOptimizer():
         self._sample_size = sample_size
         self._use_early_pruning = use_early_pruning 
 
-        # default es / lucene sim
         self._auc_sim = {
             'type' : 'BM25',
             'b' : .75,
-            'k1' : 1.2
+            'k1' : 1.2,
         }
 
     

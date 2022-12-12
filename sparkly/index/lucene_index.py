@@ -4,9 +4,9 @@ import shutil
 import tempfile
 import os
 from tqdm import tqdm
-from sparkly.query_generator import QuerySpec, LuceneQueryGenerator
-from sparkly.analysis import get_standard_analyzer_no_stop_words, Gram3Analyzer, StandardEdgeGram36Analyzer, UnfilteredGram5Analyzer, get_shingle_analyzer, UnfilteredGram3Analyzer
-from sparkly.analysis import Gram4Analyzer, Gram2Analyzer
+from sparkly.analysis import Gram4Analyzer, Gram2Analyzer, UnfilteredGram3Analyzer
+from sparkly.query_generator import QuerySpec, LuceneQueryGenerator, LuceneWeightedQueryGenerator
+from sparkly.analysis import get_standard_analyzer_no_stop_words, Gram3Analyzer, StandardEdgeGram36Analyzer, UnfilteredGram5Analyzer, get_shingle_analyzer
 from sparkly.analysis import StrippedGram3Analyzer
 from sparkly.utils import Timer, init_jvm, zip_dir, atomic_unzip, kill_loky_workers, spark_to_pandas_stream
 from pathlib import Path
@@ -183,14 +183,16 @@ class LuceneIndex(Index):
             p = self._get_index_dir(self._get_data_dir())
             config = self._read_meta_data()
             analyzer = self._get_analyzer(config)
-            # default is 1024 and errors on some datasets
-            BooleanQuery.setMaxClauseCount(50000)
-
-            self._query_gen = LuceneQueryGenerator(analyzer, config)
-
             self._index_reader = DirectoryReader.open(p)
             self._searcher = IndexSearcher(self._index_reader)
             self._searcher.setSimilarity(self._get_sim(config))
+            # default is 1024 and errors on some datasets
+            BooleanQuery.setMaxClauseCount(50000)
+            if self.config.weighted_query:
+                self._query_gen = LuceneWeightedQueryGenerator(analyzer, config, self._index_reader)
+            else:
+                self._query_gen = LuceneQueryGenerator(analyzer, config, self._index_reader)
+
             self._initialized = True
 
     def deinit(self):

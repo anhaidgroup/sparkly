@@ -4,7 +4,7 @@ from sparkly.utils import type_check, type_check_iterable
 
 class IndexConfig:
 
-    def __init__(self, *, store_vectors=False, id_col='_id'):
+    def __init__(self, *, store_vectors=False, id_col='_id', weighted_queries=False):
         self.field_to_analyzers = {}
         self.concat_fields = {}
         self._id_col = id_col
@@ -13,7 +13,7 @@ class IndexConfig:
         type_check(store_vectors, 'store_vectors', bool)
         self._store_vectors = store_vectors
         self._frozen = False
-        # TODO add id column
+        self._weighted_queries = weighted_queries
     
 
     def freeze(self):
@@ -36,6 +36,18 @@ class IndexConfig:
             True if this index is frozen (not modifiable) else False
         """
         return self._frozen
+    @property
+    def weighted_queries(self):
+        """
+        True if the term vectors in the index should be stored, else False
+        """
+        return self._weighted_queries
+
+    @weighted_queries.setter
+    def weighted_queries(self, o):
+        self._raise_if_frozen()
+        type_check(o, 'weighted_queries', bool)
+        self._weighted_queries = o
 
     @property
     def store_vectors(self):
