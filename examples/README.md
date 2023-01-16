@@ -5,7 +5,7 @@ what is contained in each file. Each example should be run out of the root direc
 ensure that the test data is loaded correctly. For example, 
 
 ```
-$ python3 ./examples/basic_example/py
+$ python3 ./examples/basic_example.py
 ```
 
 
