@@ -8,7 +8,7 @@ top of Apache Spark and PyLucene.
 # Paper and Data
 
 A link to our paper can be found [here](https://pages.cs.wisc.edu/~anhai/papers1/sparkly-tr22.pdf).
-Data used in the paper can be found [here](https://pages.cs.wisc.edu/~dpaulsen/sparkly_datasets/)
+Data used in the paper can be found [here](https://pages.cs.wisc.edu/~dpaulsen/sparkly_datasets/).
 
 ## Installing Dependencies 
 
@@ -19,7 +19,8 @@ Sparkly has been tested for python3.10 on Ubuntu 22.04.
 ### PyLucene 
 
 Unfortunately PyLucene is not available in pypi, to install PyLucene see 
-[PyLucene docs](https://lucene.apache.org/pylucene/install.html)
+[PyLucene docs](https://lucene.apache.org/pylucene/install.html). Sparkly has been 
+tested with PyLucene 9.4.1.
 
 ### Other Requirements
 
