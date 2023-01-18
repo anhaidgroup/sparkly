@@ -1,3 +1,5 @@
+![license](https://img.shields.io/github/license/anhaidgroup/sparkly)
+
 # Sparkly
 
 Welcome to Sparkly! Sparkly is a TF/IDF top-k blocking for entity matching system built on
@@ -7,7 +9,7 @@ top of Apache Spark and PyLucene.
 
 ### Python
 
-Sparkly requires python 3.6+
+Sparkly has been tested for python3.10 on Ubuntu 22.04.
 
 ### PyLucene 
 
