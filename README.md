@@ -69,25 +69,4 @@ API docs can be found [here](https://derekpaulsen.github.io/sparkly/html/)
 
 ## Tips for Installing PyLucene
 
-In order to install PyLucene, you must first install JCC. JCC requires 
-a C++ compiler to compile the extension before it is installed. During this
-install look for *non-fatal* errors and warnings. In some cases the extensions are 
-not compiled for the correct architecture, resulting in non-fatal linker errors, 
-which will prevent PyLucene from installing correctly.
-If when running the `python3 setup.py build` the extension is being compiled with the 
-incorrect CPU architecture, you may need to manually specify the architecture by appending 
-them to `cflags` and `lflags` in `setup.py`. For example, you may want to add the lines
-```python
-
-cflags += ['-arch', 'arm64']
-lflags += ['-arch', 'arm64']
-```
-
-before the `Extension` constructor is called in the script.
-
-
-### MacOS
-
-In MacOS High Sierra and later sometimes MacOS will kill pyspark workers when the JVM is initialized for PyLucene. If 
-`examples/local_example.py` runs but `examples/basic_example.py` crashes, try modifying the enviorment variables 
-as described in this [stack overflow post](https://stackoverflow.com/questions/50168647/multiprocessing-causes-python-to-crash-and-gives-an-error-may-have-been-in-progr).
+For tips on installing pylucene take a look at this [readme](https://github.com/anhaidgroup/sparkly/tips/pylucene.md).
