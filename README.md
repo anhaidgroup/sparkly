@@ -69,4 +69,4 @@ API docs can be found [here](https://derekpaulsen.github.io/sparkly/html/)
 
 ## Tips for Installing PyLucene
 
-For tips on installing pylucene take a look at this [readme](https://github.com/anhaidgroup/sparkly/tips/pylucene.md).
+For tips on installing pylucene take a look at this [readme](https://github.com/anhaidgroup/sparkly/blob/main/tips/pylucene.md).
