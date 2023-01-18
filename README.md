@@ -5,6 +5,11 @@
 Welcome to Sparkly! Sparkly is a TF/IDF top-k blocking for entity matching system built on
 top of Apache Spark and PyLucene. 
 
+# Paper and Data
+
+A link to our paper can be found [here](https://pages.cs.wisc.edu/~anhai/papers1/sparkly-tr22.pdf).
+Data used in the paper can be found [here](https://pages.cs.wisc.edu/~dpaulsen/sparkly_datasets/)
+
 ## Installing Dependencies 
 
 ### Python
@@ -53,12 +58,13 @@ compute intensive, hence to speed up search, we leverage PySpark to distribute t
 we can easily leverage a large number of machines to perform search without having to rely on approximation algorithms.
 
 
-## Data and Experiments
+## Experiments
 
 Scripts for running Sparkly-Manual and Sparkly-Auto can be found in the `experiments` directory.
 
-Data used in the paper can be found [here](https://pages.cs.wisc.edu/~dpaulsen/sparkly_datasets/)
+## API Docs
 
+API docs can be found [here](https://derekpaulsen.github.io/sparkly/html/)
 
 ## Tips for Installing PyLucene
 
