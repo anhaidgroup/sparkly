@@ -5,17 +5,17 @@
 Welcome to Sparkly! Sparkly is a TF/IDF top-k blocking for entity matching system built on
 top of Apache Spark and PyLucene. 
 
-# Paper and Data
+## Paper and Data
 
 A link to our paper can be found [here](https://pages.cs.wisc.edu/~anhai/papers1/sparkly-tr22.pdf).
 Data used in the paper can be found [here](https://pages.cs.wisc.edu/~dpaulsen/sparkly_datasets/).
 
 
 
-# Quick Start: Sparkly in 30 Seconds
+## Quick Start: Sparkly in 30 Seconds
 
 
-There are three main steps to running sparkly, 
+There are three main steps to running Sparkly, 
 
 1. Reading Data
 
@@ -42,7 +42,7 @@ index.upsert_docs(table_a)
 ```python
 query_spec = index.get_full_query_spec()
 
-candidates = Searcher(index).search(table_b, query_spec, id_col='_id', limit=50).cache()
+candidates = Searcher(index).search(table_b, query_spec, id_col='_id', limit=50)
 candidates.show()
 ```
 
@@ -50,7 +50,7 @@ candidates.show()
 
 ### Python
 
-Sparkly has been tested for python3.10 on Ubuntu 22.04.
+Sparkly has been tested for python 3.10 on Ubuntu 22.04.
 
 ### PyLucene 
 
@@ -68,10 +68,11 @@ packages, to install these dependencies simply use pip
 The requirements file will install pyspark with pip but any installation can be used 
 as long as version 3.1.2 or greater is used.
 
-## Running Sparkly
+## Tutorials
 
 Examples of how to use sparkly are provided under the `examples` directory
-in this repo. See these examples for usage.
+in this repo. Additionally, we have a provided scripts for running Sparkly-Manual 
+and Sparkly-Auto from the paper under the `experiments` directory. 
 
 ## How It Works 
 
