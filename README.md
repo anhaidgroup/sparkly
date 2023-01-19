@@ -10,6 +10,42 @@ top of Apache Spark and PyLucene.
 A link to our paper can be found [here](https://pages.cs.wisc.edu/~anhai/papers1/sparkly-tr22.pdf).
 Data used in the paper can be found [here](https://pages.cs.wisc.edu/~dpaulsen/sparkly_datasets/).
 
+
+
+# Quick Start: Sparkly in 30 Seconds
+
+
+There are three main steps to running sparkly, 
+
+1. Reading Data
+
+
+```python
+spark = SparkSession.builder.getOrCreate()
+
+table_a = spark.read.parquet('./examples/data/abt_buy/table_a.parquet')
+table_b = spark.read.parquet('./examples/data/abt_buy/table_b.parquet')
+```
+
+2. Index Building
+
+```python
+config = IndexConfig(id_col='_id')
+config.add_field('name', ['3gram'])
+
+index = LuceneIndex('/tmp/example_index/', config)
+index.upsert_docs(table_a)
+```
+
+3. Blocking 
+
+```python
+query_spec = index.get_full_query_spec()
+
+candidates = Searcher(index).search(table_b, query_spec, id_col='_id', limit=50).cache()
+candidates.show()
+```
+
 ## Installing Dependencies 
 
 ### Python
