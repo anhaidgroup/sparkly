@@ -70,7 +70,7 @@ as long as version 3.1.2 or greater is used.
 
 ## Tutorials
 
-To get started with Sparkly we recommend starting with the ipython notebook included with 
+To get started with Sparkly we recommend starting with the IPython notebook included with 
 the repository [examples/example.ipynb](https://github.com/anhaidgroup/sparkly/blob/main/examples/example.ipynb).
 
 Additional examples of how to use Sparkly are provided under the
