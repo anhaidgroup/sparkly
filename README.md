@@ -50,29 +50,32 @@ candidates.show()
 
 ### Python
 
-Sparkly has been tested for python 3.10 on Ubuntu 22.04.
+Sparkly has been tested for Python 3.10 on Ubuntu 22.04.
 
 ### PyLucene 
 
-Unfortunately PyLucene is not available in pypi, to install PyLucene see 
+Unfortunately PyLucene is not available in PyPI, to install PyLucene see 
 [PyLucene docs](https://lucene.apache.org/pylucene/install.html). Sparkly has been 
 tested with PyLucene 9.4.1.
 
 ### Other Requirements
 
-This repo has a requirements file which will install the python 
-packages, to install these dependencies simply use pip
+This repo has a requirements file which will install the 
+other dependencies for Sparkly, to install these dependencies simply use pip
 
 `$ python3 -m pip install -r ./requirements.txt`
 
-The requirements file will install pyspark with pip but any installation can be used 
+The requirements file will install PySpark 3.3.1 with pip but any PySpark installation can be used 
 as long as version 3.1.2 or greater is used.
 
 ## Tutorials
 
-Examples of how to use sparkly are provided under the `examples` directory
-in this repo. Additionally, we have a provided scripts for running Sparkly-Manual 
-and Sparkly-Auto from the paper under the `experiments` directory. 
+To get started with Sparkly we recommend starting with the ipython notebook included with 
+the repository [examples/example.ipynb](https://github.com/anhaidgroup/sparkly/blob/main/examples/example.ipynb).
+
+Additional examples of how to use Sparkly are provided under the
+[examples/](https://github.com/anhaidgroup/sparkly/tree/main/examples)
+directory in this repository. 
 
 ## How It Works 
 
@@ -81,6 +84,7 @@ There have been many solutions developed to address this problem, from basic SQL
 Sparkly takes a top-k approach to blocking, in particular, each search record is 
 paired with the top-k records with the highest [BM25](https://en.wikipedia.org/wiki/Okapi_BM25) scores.
 In terms of SQL this might look something like executing this query for each record,
+
 ```SQL 
 SELECT id, BM25(<QUERY>, name) AS score 
 FROM table_a 
@@ -96,14 +100,10 @@ compute intensive, hence to speed up search, we leverage PySpark to distribute t
 we can easily leverage a large number of machines to perform search without having to rely on approximation algorithms.
 
 
-## Experiments
-
-Scripts for running Sparkly-Manual and Sparkly-Auto can be found in the `experiments` directory.
-
 ## API Docs
 
 API docs can be found [here](https://derekpaulsen.github.io/sparkly/html/)
 
 ## Tips for Installing PyLucene
 
-For tips on installing pylucene take a look at this [readme](https://github.com/anhaidgroup/sparkly/blob/main/tips/pylucene.md).
+For tips on installing PyLucene take a look at this [readme](https://github.com/anhaidgroup/sparkly/blob/main/tips/pylucene.md).
