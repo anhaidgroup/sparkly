@@ -171,7 +171,7 @@ class LuceneIndex(Index):
         return self._query_gen
     
     def _init_jvm(self):
-        init_jvm(['-Xmx500m'])
+        init_jvm(['-Xmx256m'])
         
     def init(self):
         """
@@ -187,7 +187,7 @@ class LuceneIndex(Index):
             self._searcher = IndexSearcher(self._index_reader)
             self._searcher.setSimilarity(self._get_sim(config))
             # default is 1024 and errors on some datasets
-            BooleanQuery.setMaxClauseCount(50000)
+            BooleanQuery.setMaxClauseCount(500000)
             if self.config.weighted_queries:
                 self._query_gen = LuceneWeightedQueryGenerator(analyzer, config, self._index_reader)
             else:
@@ -593,7 +593,7 @@ class LuceneIndex(Index):
                         # merge the segments 
                         self._merge_index_segments(index_writer, dirs)
                         # 
-                        kill_loky_workers()
+                        #kill_loky_workers()
                     # temp indexes deleted here
                 else:
                     # table is small, build it single threaded
