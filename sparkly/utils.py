@@ -13,6 +13,7 @@ from zipfile import ZipFile
 import psutil
 import pandas as pd
 import numpy as np
+from joblib.externals.loky import get_reusable_executor
 
 from pyspark import SparkContext
 from pyspark import StorageLevel
@@ -282,11 +283,17 @@ def kill_loky_workers():
     used to prevent joblib from sitting on resources after using 
     joblib.Parallel to do computation
     """
+    '''
+    get_reusable_executor().shutdown(wait=True, kill_workers=True)
+    return 
+    '''
+
     proc_killed = False
     parent_proc = psutil.Process()    
     for c in parent_proc.children(recursive=True):    
         if _is_loky(c):    
             c.terminate()    
+            c.wait()
             proc_killed = True
 
     if not proc_killed:
