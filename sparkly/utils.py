@@ -218,6 +218,13 @@ def init_jvm(vmargs=[]):
     if not lucene.getVMEnv():
         lucene.initVM(vmargs=['-Djava.awt.headless=true'] + vmargs)
 
+def attach_current_thread_jvm():
+    """
+    attach the current thread to the jvm for PyLucene
+    """
+    env = lucene.getVMEnv()
+    env.attachCurrentThread()
+
 def invoke_task(task):
     """
     invoke a task created by joblib.delayed
