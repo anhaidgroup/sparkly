@@ -147,6 +147,10 @@ class LuceneIndex(Index):
 
         # write the config
         self._write_meta_data(config)
+    
+    @property
+    def index_path(self):
+        return self._index_path
 
     @property
     def config(self):
