@@ -8,7 +8,7 @@ from sparkly.analysis import Gram4Analyzer, Gram2Analyzer, UnfilteredGram3Analyz
 from sparkly.query_generator import QuerySpec, LuceneQueryGenerator, LuceneWeightedQueryGenerator
 from sparkly.analysis import get_standard_analyzer_no_stop_words, Gram3Analyzer, StandardEdgeGram36Analyzer, UnfilteredGram5Analyzer, get_shingle_analyzer
 from sparkly.analysis import StrippedGram3Analyzer
-from sparkly.utils import Timer, init_jvm, zip_dir, atomic_unzip, kill_loky_workers, spark_to_pandas_stream
+from sparkly.utils import Timer, init_jvm, zip_dir, atomic_unzip, kill_loky_workers, spark_to_pandas_stream, attach_current_thread_jvm
 from pathlib import Path
 from tempfile import TemporaryDirectory
 import numpy as np
@@ -176,6 +176,7 @@ class LuceneIndex(Index):
     
     def _init_jvm(self):
         init_jvm(['-Xmx256m'])
+        attach_current_thread_jvm()
         
     def init(self):
         """
