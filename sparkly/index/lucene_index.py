@@ -176,7 +176,7 @@ class LuceneIndex(Index):
     
     def _init_jvm(self):
         init_jvm(['-Xmx256m'])
-        attach_current_thread_jvm()
+        #attach_current_thread_jvm()
         
     def init(self):
         """
@@ -544,7 +544,7 @@ class LuceneIndex(Index):
 
     
 
-    def upsert_docs(self, df, disable_distributed=False):
+    def upsert_docs(self, df, disable_distributed=False, force_distributed=False):
         """
         build the index, indexing df according to self.config
 
@@ -557,7 +557,12 @@ class LuceneIndex(Index):
 
         disable_distributed : bool, default=False
             disable using spark for building the index even for large tables
+
+        force_distributed : bool, default=False
+            force using spark for building the index even for smaller tables
         """
+        if disable_distributed and force_distributed:
+            raise ValueError('disable_distributed and force_distributed both set to True, only one can be set')
         self._arg_check_upsert(df)
 
         # verify the index is correct
@@ -578,15 +583,15 @@ class LuceneIndex(Index):
 
             if isinstance(df, sql.DataFrame):
                 # project out unused columns
-                df = df.select(self.config.id_col, *self.config.get_analyzed_fields())
                 df_size = df.count()
+                df = df.select(self.config.id_col, *self.config.get_analyzed_fields())
                 if df_size > self._index_build_chunk_size * 10:
                     # build large tables in parallel
                     # put temp indexes in temp dir for easy deleting later
                     with TemporaryDirectory() as tmp_dir_base:
                         tmp_dir_base = Path(tmp_dir_base)
                         
-                        if df_size > self._index_build_chunk_size * 50 and not disable_distributed:
+                        if force_distributed or (df_size > self._index_build_chunk_size * 50 and not disable_distributed):
                             # build with spark if very large and disributed build is allowed
                             dirs = self._build_spark(df, df_size, self.config, tmp_dir_base)
                         else:
@@ -613,6 +618,7 @@ class LuceneIndex(Index):
             raise 
         else:
             index_writer.commit()
+        finally:
             index_writer.close()
 
         self._is_built = True
