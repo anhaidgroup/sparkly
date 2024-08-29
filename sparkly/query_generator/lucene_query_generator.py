@@ -1,7 +1,8 @@
 import pandas as pd
 from sparkly.utils import is_null, type_check_call
 from sparkly.query_generator.query_spec import QuerySpec
-from sparkly.index.index_config import IndexConfig
+#import sparkly
+from sparkly.index_config import IndexConfig
 import lucene
 from org.apache.lucene.util import QueryBuilder
 from org.apache.lucene.search import BooleanQuery, BooleanClause, BoostQuery

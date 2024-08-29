@@ -5,7 +5,8 @@ from pyspark import SparkContext
 import pyspark.sql.functions as F
 import pyspark
 import numpy as np
-from sparkly.index import Index, IndexConfig
+from sparkly.index import Index
+from sparkly.index_config import IndexConfig
 from sparkly.query_generator import QuerySpec
 import pandas as pd
 import math

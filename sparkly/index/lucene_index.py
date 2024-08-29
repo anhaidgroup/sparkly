@@ -51,7 +51,7 @@ from org.apache.lucene.store import  FSDirectory
 from org.apache.lucene.document import FieldType, SortedNumericDocValuesField
 from org.apache.lucene.index import IndexOptions
 
-from .index_config import IndexConfig
+from sparkly.index_config import IndexConfig
 from .index_base import Index, QueryResult, EMPTY_QUERY_RESULT
 
 

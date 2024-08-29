@@ -1,6 +1,7 @@
 import sys
 sys.path.append('.')
-from sparkly.index import IndexConfig, LuceneIndex
+from sparkly.index import  LuceneIndex
+from sparkly.index_config import IndexConfig
 from sparkly.search import Searcher
 from pathlib import Path
 import pandas as pd
