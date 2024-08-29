@@ -1,6 +1,8 @@
 from copy import deepcopy
 import pandas as pd
-from sparkly.utils import type_check
+from sparkly.utils import type_check_call
+from typing_extensions import Self
+from typing import Tuple, Iterable
 
 class QuerySpec(dict):
     """
@@ -40,7 +42,7 @@ class QuerySpec(dict):
         return self._filter
 
     @filter.setter
-    def filter(self, fil):
+    def filter(self, fil: Iterable[Tuple[str, str]]):
         for k in fil:
             if not isinstance(k, tuple):
                 raise TypeError(f'all keys must be tuple (got {type(k)})')
@@ -65,8 +67,8 @@ class QuerySpec(dict):
         return self._boost_map
 
     @boost_map.setter
-    def boost_map(self, boost_map):
-        type_check(boost_map, 'boost_map', (pd.Series, dict))
+    @type_check_call
+    def boost_map(self, boost_map: dict | pd.Series):
         for k,v in boost_map.items():
             if not isinstance(k, tuple):
                 raise TypeError(f'all keys must be tuples (got {type(k)})')
@@ -78,20 +80,22 @@ class QuerySpec(dict):
 
         self._boost_map = {k : float(v) for k,v in boost_map.items()}
 
-    def union(self, other):
+    @type_check_call
+    def union(self, other: Self) -> Self:
         self = deepcopy(self)
         for k,v in other.items():
             self[k] = self.get(k, set()) | v
 
         return self
 
-    def is_subset(self, other):
+    @type_check_call
+    def is_subset(self, other: Self) -> bool:
         for k,v in other.items():
             if k not in self or self[k].issuperset(v):
                 return False
         return True
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
         return {
                 'boost_map' : deepcopy(self._boost_map),
                 'spec' : {k : list(v) for k,v in self.items()},
