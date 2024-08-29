@@ -5,6 +5,7 @@ from pyspark import SparkContext
 import pyspark.sql.functions as F
 import pyspark
 import numpy as np
+from sparkly.index import Index, IndexConfig
 from sparkly.query_generator import QuerySpec
 import pandas as pd
 import math
@@ -12,7 +13,6 @@ from copy import deepcopy
 
 from sparkly.utils import  get_logger, invoke_task, type_check, type_check_call
 from sparkly.index_optimizer.query_scorer import AUCQueryScorer, QueryScorer
-from sparkly.index import Index, IndexConfig
 from sparkly.search import search
 from typing import Annotated
 from pydantic import Field
