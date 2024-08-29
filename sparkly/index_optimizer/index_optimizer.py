@@ -10,10 +10,12 @@ import pandas as pd
 import math
 from copy import deepcopy
 
-from sparkly.utils import  get_logger, invoke_task, type_check
+from sparkly.utils import  get_logger, invoke_task, type_check, type_check_call
 from sparkly.index_optimizer.query_scorer import AUCQueryScorer, QueryScorer
 from sparkly.index import Index, IndexConfig
 from sparkly.search import search
+from typing import Annotated
+from pydantic import Field
 
 pd.set_option('display.width', 150)
 
@@ -33,8 +35,17 @@ class IndexOptimizer():
     """
     a class for optimizing the search columns and analyzers for indexes
     """
-
-    def __init__(self, is_dedupe, scorer=None, conf=.99, init_top_k=10, max_combination_size=3, opt_query_limit=250, sample_size=10000, use_early_pruning=True):
+    @type_check_call
+    def __init__(self, 
+            is_dedupe: bool,
+            scorer: QueryScorer | None=None,
+            conf: Annotated[float, Field(ge=0, lt=1.0)]=.99, 
+            init_top_k: int=10,
+            max_combination_size: int=3,
+            opt_query_limit: int=250,
+            sample_size: int=10000,
+            use_early_pruning: bool=True
+        ):
         """
         Parameters
         ----------
@@ -48,9 +59,6 @@ class IndexOptimizer():
         conf : float, default=.99
             the confidence score cut off during optimization
         """
-        type_check(is_dedupe, 'is_dedupe', bool)
-        type_check(scorer, 'scorer', (type(None), QueryScorer))
-        type_check(conf, 'conf', float)
 
         if conf < 0 or conf >= 1:
             raise ValueError(f'conf must be in the interval [0, 1), (got {conf})')
@@ -78,8 +86,8 @@ class IndexOptimizer():
         return self._index
 
     @index.setter
-    def index(self, i):
-        type_check(i, 'index', Index)
+    @type_check_call
+    def index(self, i: Index):
         self._index = i
         self._index.to_spark()
 
@@ -295,7 +303,8 @@ class IndexOptimizer():
         df = df.where(df >= 0)
         return df.mean()
 
-    def make_index_config(self, df, id_col='_id') -> IndexConfig:
+    @type_check_call
+    def make_index_config(self, df: pyspark.sql.DataFrame, id_col='_id') -> IndexConfig:
         """
         create the starting index config which can then be used to for optimization
         throws out any columns where the average number of 
@@ -337,8 +346,9 @@ class IndexOptimizer():
         index_config.sim = deepcopy(self._auc_sim)
         return index_config
 
-
-    def optimize(self, index : Index, search_df) -> QuerySpec:
+    
+    @type_check_call
+    def optimize(self, index : Index, search_df: pyspark.sql.DataFrame) -> QuerySpec:
         """
 
         Parameters
@@ -357,7 +367,6 @@ class IndexOptimizer():
             a query spec optimized for searching for `search_df` using `index`
 
         """
-        type_check(search_df, 'search_df', pyspark.sql.DataFrame)
         self.index = index
         nulls = self._get_nulls(search_df)
         search_df = self._sample_df(search_df, nulls)
