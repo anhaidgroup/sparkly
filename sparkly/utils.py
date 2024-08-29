@@ -36,7 +36,7 @@ logger = logging.getLogger(__name__)
 
 
 
-type_check_call = validate_call(config=ConfigDict(arbitrary_types_allowed=True)
+type_check_call = validate_call(config=ConfigDict(arbitrary_types_allowed=True))
 
 def get_index_name(n, *postfixes):
     """
