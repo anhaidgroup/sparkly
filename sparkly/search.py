@@ -3,7 +3,12 @@ sys.path.append('.')
 import pyspark.sql.types as T
 import pyspark
 import pandas as pd
-from sparkly.index import QueryResult
+from sparkly.index import QueryResult, Index
+from sparkly.query_generator import QuerySpec
+from sparkly.utils import type_check_call
+from pydantic import (
+        PositiveInt,
+)
 
 
 CHUNK_SIZE=500
@@ -13,16 +18,14 @@ class Searcher:
     """
     class for performing bulk search over a dataframe
     """
-
-    def __init__(self, index, search_chunk_size=CHUNK_SIZE):
+    @type_check_call
+    def __init__(self, index: Index, search_chunk_size: PositiveInt=CHUNK_SIZE):
         """
 
         Parameters
         ----------
         index : Index
             The index that will be used for search
-        limit : int
-            the limit per query
         search_chunk_size : int
             the number of records is each partition for searching
         """
@@ -34,9 +37,9 @@ class Searcher:
         get a query spec that searches on all indexed fields
         """
         return self._index.get_full_query_spec()
-
-
-    def search(self, search_df, query_spec, limit, id_col='_id'):
+    
+    @type_check_call
+    def search(self, search_df: pyspark.sql.DataFrame, query_spec: QuerySpec, limit: PositiveInt, id_col: str='_id'):
         """
         perform search for all the records in search_df according to
         query_spec
@@ -58,10 +61,7 @@ class Searcher:
         pyspark DataFrame
             a pyspark dataframe with the schema (`id_col`, ids array<long> , scores array<float>, search_time float)
         """
-        if isinstance(search_df, pyspark.sql.DataFrame):
-            return self._search_spark(search_df, query_spec, limit, id_col)
-        else:
-            raise TypeError(f'search_df must be dataframe not {type(search_df)}')
+        return self._search_spark(search_df, query_spec, limit, id_col)
 
 
 
