@@ -1,10 +1,12 @@
 from copy import deepcopy
 import json
-from sparkly.utils import type_check, type_check_iterable
+from sparkly.utils import type_check, type_check_iterable, type_check_call
+from typing import Iterable
 
 class IndexConfig:
 
-    def __init__(self, *, store_vectors=False, id_col='_id', weighted_queries=False):
+    @type_check_call
+    def __init__(self, *, store_vectors: bool=False, id_col: str='_id', weighted_queries: bool=False):
         self.field_to_analyzers = {}
         self.concat_fields = {}
         self._id_col = id_col
@@ -44,9 +46,9 @@ class IndexConfig:
         return self._weighted_queries
 
     @weighted_queries.setter
-    def weighted_queries(self, o):
+    @type_check_call
+    def weighted_queries(self, o: bool):
         self._raise_if_frozen()
-        type_check(o, 'weighted_queries', bool)
         self._weighted_queries = o
 
     @property
@@ -57,9 +59,9 @@ class IndexConfig:
         return self._store_vectors
 
     @store_vectors.setter
-    def store_vectors(self, o):
+    @type_check_call
+    def store_vectors(self, o: bool):
         self._raise_if_frozen()
-        type_check(o, 'store_vectors', bool)
         self._store_vectors = o
     
     @property
@@ -70,9 +72,9 @@ class IndexConfig:
         return self._id_col
 
     @id_col.setter
-    def id_col(self, o):
+    @type_check_call
+    def id_col(self, o: str):
         self._raise_if_frozen()
-        type_check(o, 'id_col', str)
         self._id_col = o
 
     @classmethod
@@ -128,7 +130,8 @@ class IndexConfig:
         """
         return json.dumps(self.to_dict())
 
-    def add_field(self, field : str, analyzers):
+    @type_check_call
+    def add_field(self, field : str, analyzers: Iterable[str]):
         """
         Add a new field to be indexed with this config
 
@@ -142,14 +145,12 @@ class IndexConfig:
             The names of the analyzers that will be used to index the field
         """
         self._raise_if_frozen()
-        type_check(field, 'field', str)
-        type_check_iterable(analyzers, 'analyzers', (list, tuple, set), str)
-
         self.field_to_analyzers[field] = list(analyzers)
 
         return self
 
-    def remove_field(self, field):
+    @type_check_call
+    def remove_field(self, field: str):
         """
         remove a field from the config
 
@@ -174,8 +175,8 @@ class IndexConfig:
         else:
             return False
 
-
-    def add_concat_field(self, field : str, concat_fields, analyzers):
+    @type_check_call
+    def add_concat_field(self, field : str, concat_fields: Iterable[str], analyzers: Iterable[str]):
         """
         Add a new concat field to be indexed with this config
 
@@ -192,10 +193,6 @@ class IndexConfig:
             The names of the analyzers that will be used to index the field
         """
         self._raise_if_frozen()
-        type_check(field, 'field', str)
-        type_check_iterable(analyzers, 'analyzers', (list, tuple, set), str)
-        type_check_iterable(concat_fields, 'concat_fields', (list, tuple, set), str)
-
         self.concat_fields[field] = list(concat_fields)
         self.field_to_analyzers[field] = list(analyzers)
 

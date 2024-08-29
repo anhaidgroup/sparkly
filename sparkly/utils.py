@@ -25,6 +25,7 @@ import pyarrow as pa
 from pyarrow.parquet import ParquetFile
 import lucene
 import numba as nb
+from pydantic import validate_call, ConfigDict
 
 
 logging.basicConfig(
@@ -34,6 +35,8 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
+
+type_check_call = validate_call(config=ConfigDict(arbitrary_types_allowed=True)
 
 def get_index_name(n, *postfixes):
     """
