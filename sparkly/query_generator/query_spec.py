@@ -1,7 +1,6 @@
 from copy import deepcopy
 import pandas as pd
 from sparkly.utils import type_check_call
-from typing_extensions import Self
 from typing import Tuple, Iterable
 
 class QuerySpec(dict):
@@ -81,7 +80,7 @@ class QuerySpec(dict):
         self._boost_map = {k : float(v) for k,v in boost_map.items()}
 
     @type_check_call
-    def union(self, other: Self) -> Self:
+    def union(self, other):
         self = deepcopy(self)
         for k,v in other.items():
             self[k] = self.get(k, set()) | v
@@ -89,7 +88,7 @@ class QuerySpec(dict):
         return self
 
     @type_check_call
-    def is_subset(self, other: Self) -> bool:
+    def is_subset(self, other) -> bool:
         for k,v in other.items():
             if k not in self or self[k].issuperset(v):
                 return False
