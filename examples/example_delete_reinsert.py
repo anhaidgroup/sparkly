@@ -2,7 +2,8 @@ import sys
 sys.path.append('.')
 from pyspark.sql import SparkSession
 import pyspark.sql.functions as F
-from sparkly.index import IndexConfig, LuceneIndex
+from sparkly.index import  LuceneIndex
+from sparkly.index_config import IndexConfig
 from sparkly.query_generator import QuerySpec
 from sparkly.search import Searcher
 from pathlib import Path

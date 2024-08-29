@@ -3,7 +3,8 @@ sys.path.append('.')
 import pandas as pd
 from pyspark.sql import SparkSession
 import pyspark.sql.functions as F
-from sparkly.index import IndexConfig, LuceneIndex
+from sparkly.index import  LuceneIndex
+from sparkly.index_config import IndexConfig
 from sparkly.search import Searcher
 from sparkly.utils import local_parquet_to_spark_df
 from argparse import ArgumentParser
