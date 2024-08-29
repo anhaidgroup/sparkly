@@ -1,5 +1,7 @@
 import pandas as pd
-from sparkly.utils import is_null
+from sparkly.utils import is_null, type_check_call
+from sparkly.query_generator.query_spec import QuerySpec
+from sparkly.index.index_config import IndexConfig
 import lucene
 from org.apache.lucene.util import QueryBuilder
 from org.apache.lucene.search import BooleanQuery, BooleanClause, BoostQuery
@@ -9,8 +11,8 @@ class LuceneQueryGenerator:
     """
     A class for generating queries for Lucene based indexes
     """
-
-    def __init__(self, analyzer, config, index_reader):
+    @type_check_call
+    def __init__(self, analyzer, config: IndexConfig, index_reader):
         """
         Parameters
         ----------
@@ -25,7 +27,8 @@ class LuceneQueryGenerator:
         self._query_builder = QueryBuilder(analyzer)
         self._query_builder.setEnableGraphQueries(False)
     
-    def generate_query(self, doc, query_spec):
+    @type_check_call
+    def generate_query(self, doc: dict | pd.Series, query_spec: QuerySpec):
         """
         Generate a query for doc given the query spec
 
@@ -84,7 +87,8 @@ class LuceneQueryGenerator:
 
         return query.build()
 
-    def generate_query_clauses(self, doc, query_spec):
+    @type_check_call
+    def generate_query_clauses(self, doc: dict | pd.Series, query_spec: QuerySpec):
         """
         generate the clauses for each field -> analyzer pair, filters are ignored
 

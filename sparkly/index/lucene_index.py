@@ -8,7 +8,12 @@ from sparkly.analysis import Gram4Analyzer, Gram2Analyzer, UnfilteredGram3Analyz
 from sparkly.query_generator import QuerySpec, LuceneQueryGenerator, LuceneWeightedQueryGenerator
 from sparkly.analysis import get_standard_analyzer_no_stop_words, Gram3Analyzer, StandardEdgeGram36Analyzer, UnfilteredGram5Analyzer, get_shingle_analyzer
 from sparkly.analysis import StrippedGram3Analyzer
-from sparkly.utils import Timer, init_jvm, zip_dir, atomic_unzip, kill_loky_workers, spark_to_pandas_stream, attach_current_thread_jvm
+from sparkly.utils import (
+        Timer, init_jvm, zip_dir, 
+        atomic_unzip, kill_loky_workers, 
+        spark_to_pandas_stream, attach_current_thread_jvm,
+        type_check_call,
+)
 from pathlib import Path
 from tempfile import TemporaryDirectory
 import numpy as np
@@ -20,6 +25,10 @@ import pyspark.sql.functions as F
 from sparkly.utils import type_check, type_check_iterable
 import time
 from itertools import islice
+from pydantic import (
+        FilePath,
+        PositiveInt
+)
 
 from pyspark import SparkFiles
 from pyspark import SparkContext
@@ -47,9 +56,8 @@ from .index_base import Index, QueryResult, EMPTY_QUERY_RESULT
 
 
 class _DocumentConverter:
-
-    def __init__(self, config):
-        type_check(config, 'config', IndexConfig)
+    @type_check_call
+    def __init__(self, config : IndexConfig):
 
         self._field_to_doc_fields = {}
         self._config = deepcopy(config)
@@ -100,8 +108,8 @@ class _DocumentConverter:
 
         return doc
 
-    def convert_docs(self, df):
-        type_check(df, 'df', pd.DataFrame)
+    @type_check_call
+    def convert_docs(self, df : pd.DataFrame):
         # index of df is expected to be _id column
         df = self._format_columns(df)
         docs = df.apply(self._row_to_lucene_doc, axis=1)
@@ -126,7 +134,8 @@ class LuceneIndex(Index):
     PY_META_FILE = 'PY_META.json'
     LUCENE_DIR = 'LUCENE_INDEX'
 
-    def __init__(self, index_path, config, delete_if_exists=True):
+    @type_check_call
+    def __init__(self, index_path: FilePath | str, config: IndexConfig, delete_if_exists: bool=True):
         self._init_jvm()
         self._index_path = Path(index_path).absolute()
         self._config = config.freeze()
@@ -356,12 +365,10 @@ class LuceneIndex(Index):
 
     
     def _arg_check_config(self, config):
-        type_check(config, 'config', IndexConfig)
         if len(config.field_to_analyzers) == 0:
             raise ValueError('config with no fields passed to build')
 
     def _arg_check_upsert(self, df : Union[pd.DataFrame, sql.DataFrame]):
-        type_check(df, 'df', (pd.DataFrame, sql.DataFrame))
 
         config = self.config
         if config.id_col not in df.columns:
@@ -543,8 +550,8 @@ class LuceneIndex(Index):
         return cnt
 
     
-
-    def upsert_docs(self, df, disable_distributed=False, force_distributed=False):
+    @type_check_call
+    def upsert_docs(self, df: Union[pd.DataFrame, sql.DataFrame], disable_distributed: bool=False, force_distributed: bool=False):
         """
         build the index, indexing df according to self.config
 
@@ -639,7 +646,8 @@ class LuceneIndex(Index):
 
         return n
 
-    def get_full_query_spec(self, cross_fields=False):
+    @type_check_call
+    def get_full_query_spec(self, cross_fields: bool=False):
         """
         get a query spec that uses all indexed columns
 
@@ -655,7 +663,6 @@ class LuceneIndex(Index):
         QuerySpec
 
         """
-        type_check(cross_fields, 'cross_fields', bool)
 
         if self._config is None:
             self._config = self._read_meta_data()
@@ -675,7 +682,8 @@ class LuceneIndex(Index):
 
         return QuerySpec(search_to_index_fields)
 
-    def search(self, doc, query_spec, limit):
+    @type_check_call
+    def search(self, doc: pd.Series | dict, query_spec: QuerySpec, limit: PositiveInt):
         """
         perform search for `doc` according to `query_spec` return at most `limit` docs
 
@@ -696,14 +704,6 @@ class LuceneIndex(Index):
         QueryResult
             the documents matching the `doc`
         """
-        type_check(query_spec, 'query_spec', QuerySpec)
-        type_check(limit, 'limit', int)
-        type_check(doc, 'doc', (pd.Series, dict))
-
-        if limit <= 0:
-            raise ValueError('limit must be > 0 (limit passed was {limit})')
-
-        
         load_fields = HashSet()
         load_fields.add(self.config.id_col)
         query = self._query_gen.generate_query(doc, query_spec)
@@ -728,7 +728,8 @@ class LuceneIndex(Index):
                     search_time = t,
                 )
         
-    def search_many(self, docs, query_spec, limit):
+    @type_check_call
+    def search_many(self, docs: pd.DataFrame, query_spec: QuerySpec, limit: PositiveInt):
         """
         perform search for the documents in `docs` according to `query_spec` return at most `limit` docs
         per document `docs`.
@@ -751,11 +752,7 @@ class LuceneIndex(Index):
             the search results for each document in `docs`, indexed by `docs`.index
             
         """
-        type_check(query_spec, 'query_spec', QuerySpec)
-        type_check(limit, 'limit', int)
-        type_check(docs, 'docs', (pd.DataFrame))
-        if limit <= 0:
-            raise ValueError('limit must be > 0 (limit passed was {limit})')
+
         self.init()
         id_col = self.config.id_col
         load_fields = HashSet()
