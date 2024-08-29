@@ -12,6 +12,13 @@ Subpackages
 
 Submodules
 ----------
+sparkly\.index_config module
+------------------------
+
+.. automodule:: sparkly.index_config
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
 sparkly\.analysis module
 ------------------------
