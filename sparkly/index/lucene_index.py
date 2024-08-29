@@ -135,7 +135,7 @@ class LuceneIndex(Index):
     LUCENE_DIR = 'LUCENE_INDEX'
 
     @type_check_call
-    def __init__(self, index_path: FilePath | str, config: IndexConfig, delete_if_exists: bool=True):
+    def __init__(self, index_path: Path | str, config: IndexConfig, delete_if_exists: bool=True):
         self._init_jvm()
         self._index_path = Path(index_path).absolute()
         self._config = config.freeze()
