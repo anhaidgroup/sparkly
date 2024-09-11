@@ -6,6 +6,6 @@ numpydoc>=1.5.0
 pandas>=1.5.2
 psutil>=5.9.0
 pyarrow>=10.0.1
-pyspark>=3.5.0
+pyspark>=3.3.1
 scipy>=1.8.0
 tqdm>=4.64.1
