@@ -1,5 +1,3 @@
-import sys
-sys.path.append('.')
 from sparkly.index import  LuceneIndex
 from sparkly.index_config import IndexConfig
 from sparkly.search import Searcher
@@ -9,7 +7,7 @@ import pandas as pd
 # the number of candidates returned per record
 limit = 50
 # path to the test data
-data_path = Path('./examples/data/abt_buy/').absolute()
+data_path = (Path(__file__).parent / 'data' / 'abt_buy').absolute()
 # table to be indexed
 table_a_path = data_path / 'table_a.parquet'
 # table for searching
