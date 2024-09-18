@@ -61,3 +61,7 @@ recall = true_positives / len(gold)
 print(f'true_positives : {true_positives}')
 print(f'recall : {recall}')
 
+# uncomment to save results to file
+# candidates.toPandas().to_parquet('./candidates.parquet')
+
+candidates.unpersist()
