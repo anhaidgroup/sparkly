@@ -60,13 +60,10 @@ tested with PyLucene 9.4.1.
 
 ### Other Requirements
 
-This repo has a requirements file which will install the 
-other dependencies for Sparkly, to install these dependencies simply use pip
+Once PyLucene has been installed, Sparkly can be installed with pip by running the following
+command in the root directory of this repository.
 
-`$ python3 -m pip install -r ./requirements.txt`
-
-The requirements file will install PySpark 3.3.1 with pip but any PySpark installation can be used 
-as long as version 3.1.2 or greater is used.
+`$ python3 -m pip install .`
 
 ## Tutorials
 
