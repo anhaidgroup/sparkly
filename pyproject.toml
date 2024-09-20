@@ -3,7 +3,7 @@ requires = ["hatchling", "hatch-requirements-txt"]
 build-backend = "hatchling.build"
 
 [project]
-name = "sparkly"
+name = "sparkly-em"
 version = "0.1.0"
 dynamic = ["dependencies"]
 
@@ -43,6 +43,9 @@ classifiers = [
 Homepage = "https://github.com/anhaidgroup/sparkly"
 Repository = "https://github.com/anhaidgroup/sparkly.git"
 Issues = "https://github.com/anhaidgroup/sparkly/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["sparkly"]
 
 [tool.hatch.metadata.hooks.requirements_txt]
 files = ["requirements.txt"]
