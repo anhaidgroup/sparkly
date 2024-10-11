@@ -19,7 +19,7 @@ python3 -m pip install sparkly-em
 
 This command will install Sparkly and all of its dependencies, such as Joblib, mmh3, Numba, Numpy, Numpydoc, Pandas, Psutil, Pyarrow, Pyspark, Scipy, and Tqdm, *except Java, JCC, and PyLucene*. 
 
-Java, JCC and PyLucene cannot be pip installed with the above command, because they are not available on PyPI. See [instructions to install Java, JCC, and PyLucene](https://github.com/anhaidgroup/sparkly/blob/main/doc/install-java-jcc-pylucene.md).
+Java, JCC and PyLucene cannot be pip installed with the above command, because they are not available on PyPI. See [instructions to install Java, JCC, and PyLucene](https://github.com/anhaidgroup/sparkly/blob/docs-update/doc/install-java-jcc-pylucene.md).
 
 You have now completed the installation of Sparkly on a single machine. See [how to use Sparkly on a single machine](). 
 
