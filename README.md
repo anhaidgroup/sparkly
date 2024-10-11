@@ -25,7 +25,7 @@ Sparkly can block tables of tens of millions of tuples in hours on relatively sm
 
 ## Installation
 
-See instructions to install Sparkly on [a single machine](https://github.com/anhaidgroup/sparkly/blob/main/doc/install-single-machine.md), [an on-premise cluster](), or [a cloud-based cluster](). 
+See instructions to install Sparkly on [a single machine](https://github.com/anhaidgroup/sparkly/blob/docs-update/doc/install-single-machine.md), [an on-premise cluster](), or [a cloud-based cluster](). 
 
 ## How to Use
 
