@@ -65,10 +65,21 @@ Installing Pylucene requires Make. The following command will install Make, if i
 sudo apt install make
 ```
 
-The following commands will install Pylucene. Note that these assume that your Python installation is in the default location. If it is not, you will have to change the value of the PYTHON= argument (in the commands below) to reflect it.
+In order to install Pylucene, you first have to build it. You can do so with the following command. Note that this and following commands assume that your Python installation is in the default location. If it is not, you will have to change the value of the PYTHON= argument (in the commands below) to reflect it.
 
 ```
 sudo make PYTHON='/usr/bin/python3' JCC='$(PYTHON) -m jcc.__main__ --shared --arch x86_64' NUM_FILES=16
+```
+
+Once the command has finished running, you should check that Pylucene is built properly. You can do so with the following command.
+
+```
+sudo make test PYTHON='/usr/bin/python3' JCC='$(PYTHON) -m jcc.__main__ --shared --arch x86_64' NUM_FILES=16
+```
+
+Once you have verified that there are no errors, the following command will install Pylucene. 
+
+```
 sudo make install PYTHON='/usr/bin/python3' JCC='$(PYTHON) -m jcc.__main__ --shared --arch x86_64' NUM_FILES=16
 ```
 
