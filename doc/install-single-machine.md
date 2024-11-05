@@ -23,7 +23,7 @@ Java, JCC and PyLucene cannot be pip installed with the above command, because t
 
 You have now completed the installation of Sparkly on a single machine. See [how to use Sparkly on a single machine](). 
 
-### Pip Install from Github
+### Pip Install from GitHub
 
 Instead of pip installing from PyPI, you may want to pip install Sparkly from its GitHub repo. This happens if you want to install the latest Sparkly version compared to the version on PyPI. For example, the GitHub version may contain bug fixes that the PyPI version does not. To install Sparkly directly from its GitHub repo, use the following command:
 
