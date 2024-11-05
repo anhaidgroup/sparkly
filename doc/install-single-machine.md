@@ -25,10 +25,10 @@ You have now completed the installation of Sparkly on a single machine. See [how
 
 ### Pip Install from Github
 
-((Explain why you want to do this)). You can install Sparkly directly from its Github repo using the following command: 
+Instead of pip installing from PyPI, you may want to pip install Sparkly from its GitHub repo. This happens if you want to install the latest Sparkly version compared to the version on PyPI. For example, the GitHub version may contain bug fixes that the PyPI version does not. To install Sparkly directly from its GitHub repo, use the following command:
 
 ```
 python3 -m pip install git+https://github.com/anhaidgroup/sparkly.git@clean_up
 ```
 
-Similar to pip installing from PyPI, the above command will install Sparkly and all of its dependencies, except Java, JCC, and Pylucene. Refer back to the case of pip installing from PyPI on how to install these. 
+Similar to pip installing from PyPI, the above command will install Sparkly and all of its dependencies, *except Java, JCC, and Pylucene*. Refer back to the case of pip installing from PyPI on how to install these. 
