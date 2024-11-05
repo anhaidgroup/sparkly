@@ -29,7 +29,7 @@ See instructions to install Sparkly on [a single machine](https://github.com/anh
 
 ### How to Use
 
-See examples on [using Sparkly on a single machine and a cluster](). 
+See examples on [using Sparkly on a single machine]() and a cluster. 
 
 ### Further Pointers
 
