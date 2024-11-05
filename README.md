@@ -21,7 +21,7 @@ Implementation-wise, Sparkly builds an index over the tuples in Table A, then us
 
 ### Case Studies and Performance Statistics
 
-Sparkly can block tables of tens of millions of tuples in hours on relatively small clusters of machines. It scales to hundreds of millions of tuples. See [this page]() for details. 
+Sparkly can block tables of tens of millions of tuples in hours on relatively small clusters of machines. It scales to hundreds of millions of tuples. See [this page](https://github.com/anhaidgroup/sparkly/blob/docs-update/doc/case-studies-n-performance-stats.md) for details. 
 
 ### Installation
 
