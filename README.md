@@ -34,5 +34,5 @@ See examples on [using Sparkly on a single machine]() and a cluster.
 ### Further Pointers
 
 See [API documentation](https://derekpaulsen.github.io/sparkly/html/). 
-For questions / comments, contact [anhai@cs.wisc.edu](mailto:anhai@cs.wisc.edu).
+For questions / comments, contact [AnHai Doan](mailto:anhai@cs.wisc.edu).
 
