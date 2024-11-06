@@ -12,9 +12,9 @@ If you find installing PyLucene cumbersome, consider using the Docker image of S
 
 In what follows we provide a step-by-step guide for installing PyLucene on Linux Ubuntu 22.04 on machines with x86 architecture, with Python 3.10.
 
-### Installing Java
+### Step 1: Installing Java
 
-((What if Java has been installed? Can we overinstall it?))
+<span style=color:red>((What if Java has been installed? Can we overinstall it?))</span>
 
 PyLucene is rather finicky and we can only confirm that it works with Temurin JDK 17, which is a specific Java release. As that is not available from the Ubuntu package repository, to install Java, you will need to use the following commands, which were taken from the PyLucene installation guide on their website:
 
