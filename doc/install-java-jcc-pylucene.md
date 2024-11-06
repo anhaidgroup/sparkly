@@ -14,9 +14,7 @@ In what follows we provide a step-by-step guide for installing PyLucene on Linux
 
 ### Step 1: Installing Java
 
-<span style="color:red">((What if Java has been installed? Can we overinstall it?))</span>
-
-PyLucene is rather finicky and we can only confirm that it works with Temurin JDK 17, which is a specific Java release. As that is not available from the Ubuntu package repository, to install Java, you will need to use the following commands, which were taken from the PyLucene installation guide on their website:
+We strongly recommend installing Java Temurin JDK 17, which is a specific Java release that we have extensively experimented with. As that is not available from the Ubuntu package repository, to install Java, you will need to use the following commands, which were taken from the PyLucene installation guide on their website:
 
 ```
 sudo -s
@@ -34,7 +32,7 @@ You can check that you have successfully installed java by running this command.
 java --version
 ```
 
-### Installing JCC and PyLucene
+### Step 2: Installing JCC and PyLucene
 
 Next, you must download and unpack PyLucene 9.4.1. You can do so by running these commands:
 
@@ -43,7 +41,7 @@ wget https://dlcdn.apache.org/lucene/pylucene/pylucene-9.4.1-src.tar.gz
 tar -xvf pylucene-9.4.1-src.tar.gz
 ```
 
-This will produce a folder called 'pylucene-9.4.1'. This is the main Pylucene directory. You should switch to it by running the following command:
+This will produce a folder called 'pylucene-9.4.1'. This is the main PyLucene directory. You should switch to it by running the following command:
 
 ```
 cd pylucene-9.4.1
@@ -58,25 +56,25 @@ sudo python3 setup.py install
 popd
 ```
 
-Installing Pylucene requires Make. The following command will install Make, if it is not already installed.
+Installing PyLucene requires Make. The following command will install Make, if it is not already installed.
 
 ```
 sudo apt install make
 ```
 
-In order to install Pylucene, you first have to build it. You can do so with the following command. Note that this and following commands assume that your Python installation is in the default location. If it is not, you will have to change the value of the PYTHON= argument (in the commands below) to reflect it.
+In order to install PyLucene, you first have to build it. You can do so with the following command. Note that this and following commands assume that your Python installation is in the default location. If it is not, you will have to change the value of the PYTHON= argument (in the commands below) to reflect it.
 
 ```
 sudo make PYTHON='/usr/bin/python3' JCC='$(PYTHON) -m jcc.__main__ --shared --arch x86_64' NUM_FILES=16
 ```
 
-Once the command has finished running, you should check that Pylucene is built properly. You can do so with the following command.
+Once the command has finished running, you should check that PyLucene is built properly. You can do so with the following command.
 
 ```
 sudo make test PYTHON='/usr/bin/python3' JCC='$(PYTHON) -m jcc.__main__ --shared --arch x86_64' NUM_FILES=16
 ```
 
-Once you have verified that there are no errors, the following command will install Pylucene. 
+Once you have verified that there are no errors, the following command will install PyLucene. 
 
 ```
 sudo make install PYTHON='/usr/bin/python3' JCC='$(PYTHON) -m jcc.__main__ --shared --arch x86_64' NUM_FILES=16
