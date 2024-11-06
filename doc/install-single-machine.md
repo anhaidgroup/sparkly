@@ -7,9 +7,11 @@ You can install and run Sparkly on a single machine. If you have relatively smal
 A simple way to install Sparkly is to use a Docker image that bundles Sparkly with all of its prerequisites. See here for instructions. 
 
 Otherwise the installation process consists of three main steps: 
-* Install Python (if not already)
-* Pip install Sparkly from either PyPI or GitHub
-* Install PyLucene (and its prerequisites: Java and JCC).
+1. Install Python (if not already)
+2. Pip install Sparkly from either PyPI or GitHub
+3. Install PyLucene (and its prerequisites: Java and JCC).
+
+Among these, Step 3 is trickiest, as PyLucene is rather finicky. We have extensively tested installing PyLucene on Linux Ubuntu 22.04 with Python 3.10, so if you go with this configuration, use the installation instruction below. If you us MacOS, we also provide some tips for installing PyLucene. Otherwise you need to use the installation instructions on PyLucene's website. 
 
 ### Installing Python 3
 
