@@ -13,7 +13,7 @@ Sparkly focuses on the blocking step, and is distinguished in three aspects:
 * It outperforms many state-of-the-art blocking solutions. See [the paper](https://www.vldb.org/pvldb/vol16/p1507-paulsen.pdf) for details. 
 * Variations of Sparkly have been implemented in industry and used by hundreds of enterprises. 
 
-## How It Works
+### How It Works
 
 Let A be the smaller table (the one with fewer tuples). For each tuple b in Table B, Sparkly finds k tuples in Table A that have the highest BM25 similarity score with tuple b. Let these tuples be a<sub>1</sub>, a<sub>2</sub>, ..., a<sub>k</sub>. Then Sparkly returns the tuple pairs (a<sub>1</sub>,b), (a<sub>2</sub>,b), ..., (a<sub>k</sub>,b) as potential matches in its output. BM25 is a similarity score commonly used in text document retrieval and keyword search on the Web. 
 
