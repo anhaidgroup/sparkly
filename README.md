@@ -10,7 +10,7 @@ Sparkly focuses on the blocking step, and is distinguished in three aspects:
 
 
 * It can scale to large tables, for example, with tens of millions or hundreds of millions of tuples. 
-* It outperforms many state-of-the-art blocking solutions. See [the paper](https://www.vldb.org/pvldb/vol16/p1507-paulsen.pdf) for details. 
+* It outperforms many state-of-the-art blocking solutions. See [this paper](https://www.vldb.org/pvldb/vol16/p1507-paulsen.pdf) for details. 
 * Variations of Sparkly have been implemented in industry and used by hundreds of enterprises. 
 
 ### How It Works
