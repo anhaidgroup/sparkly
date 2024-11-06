@@ -11,7 +11,7 @@ Otherwise the installation process consists of three main steps:
 2. Pip install Sparkly from either PyPI or GitHub
 3. Install PyLucene (and its prerequisites: Java and JCC).
 
-Among these, Step 3 is trickiest, as PyLucene is rather finicky. We have extensively tested installing PyLucene on Linux Ubuntu 22.04 with Python 3.10, so if you go with this configuration, use the installation instruction below. If you us MacOS, we also provide some tips for installing PyLucene. Otherwise you need to use the installation instructions on PyLucene's website. 
+Among these, Step 3 is trickiest, as PyLucene is rather finicky. We have extensively tested installing PyLucene on Linux Ubuntu 22.04 with Python 3.10, so if you go with this configuration, use the installation instruction below. If you us MacOS, we also provide some tips for installing PyLucene. Otherwise you need to use the instructions on PyLucene's website to install PyLucene. 
 
 In what follows we describe the above three installation steps. 
 
