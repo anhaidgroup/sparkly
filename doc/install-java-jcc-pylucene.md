@@ -6,7 +6,7 @@ At the heart of Sparkly are Lucene and Spark. The Lucene library allows us to qu
 
 However, Lucene is written in Java, while the rest of Sparkly is written in Python, to take advantage of many other Python packages. To bridge this Java-Python gap, we use the well-known package PyLucene. Briefly, PyLucene uses JCC to compile Lucene's Java code to C, then compile C code to Python. So we need to install Java, JCC, and PyLucene. 
 
-Installing PyLucene is tricky as it is somewhat finicky. We have extensively tested installing PyLucene on Linux Ubuntu 22.04 on machines with x86 architecture, with Python 3.10, so if you go with this configuration, use the installation instruction below. 
+Installing PyLucene is tricky as it is somewhat finicky. We have extensively tested installing PyLucene on <span style="color: red;">Linux Ubuntu 22.04 on machines with x86 architecture</span>, with Python 3.10, so if you go with this configuration, use the installation instruction below.
 
 If you use MacOS, you can probably still use the instruction below, but read the tips for installing PyLucene on MacOS at the end of this page. If you go with any other configuration, you should refer to the PyLucene website for installation instructions: [https://lucene.apache.org/pylucene/install.html](https://lucene.apache.org/pylucene/install.html)
 
@@ -28,10 +28,10 @@ apt install temurin-17-jdk
 exit
 ```
 
-You can check that you have successfully installed java by running this command. If java is installed, it should display a version number.
+You can check that you have successfully installed Java by running this command. If Java is installed, it should display a version number.
 
 ```
-java --version
+Java --version
 ```
 
 ### Step 2: Installing JCC and PyLucene
