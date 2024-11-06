@@ -17,7 +17,7 @@ In what follows we describe the above three installation steps.
 
 ### Step 1: Installing Python 3
 
-To install and run Sparkly on a single machine, first you need to have Python 3 installed (if not already). You can find instructions for downloading and installing Python 3 here:
+You need to start by installing Python 3 (if not already). You can find instructions here:
 [https://wiki.python.org/moin/BeginnersGuide/Download](https://wiki.python.org/moin/BeginnersGuide/Download)
 
 We strongly recommend installing Python 3.10 if possible, as we have tested Sparkly extensively with Python 3.10. 
