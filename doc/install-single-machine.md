@@ -44,7 +44,7 @@ python3 -m pip install git+https://github.com/anhaidgroup/sparkly.git@clean_up
 
 Similar to pip installing from PyPI, the above command will install Sparkly and all of its dependencies, *except Java, JCC, and PyLucene*. 
 
-### Step 3: Install PyLucene and Its Prerequisites (Java and JCC)
+### Step 3: Install PyLucene and Its Dependencies (Java and JCC)
 
 See [instructions to install Java, JCC, and PyLucene](https://github.com/anhaidgroup/sparkly/blob/docs-update/doc/install-java-jcc-pylucene.md).
 
