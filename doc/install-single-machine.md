@@ -2,25 +2,27 @@
 
 You can install and run Sparkly on a single machine. If you have relatively small tables, or just want to experiment with Sparkly, this is often sufficient. Otherwise you may consider installing and running Sparkly on [an on-premise cluster]() or [a cluster on cloud]() (such as AWS). 
 
-### Overview
+### Installing Using Docker
 
 A simple way to install Sparkly is to use a Docker image that bundles Sparkly with all of its dependencies. See here for instructions. 
 
-Otherwise the installation process consists of three main steps: 
+### Installing for Linux
+
+The installation process consists of three main steps: 
 1. Install Python 3 (if not already)
 2. Pip install Sparkly from either PyPI or GitHub
 3. Install PyLucene (and its dependencies: C++ compiler, Java, and JCC).
 
-In what follows we describe the above three installation steps. 
+In what follows we describe the above installation steps. 
 
-### Step 1: Installing Python 3
+#### Step 1: Installing Python 3
 
 You need to start by installing Python 3 (if not already). You can find instructions here:
 [https://wiki.python.org/moin/BeginnersGuide/Download](https://wiki.python.org/moin/BeginnersGuide/Download)
 
 We recommend installing Python 3.10 if possible, as we have tested Sparkly extensively with Python 3.10. 
 
-### Step 2 - Option 1: Pip Install from PyPI
+#### Step 2 - Option 1: Pip Install from PyPI
 
 Next, you can install Sparkly from PyPI, using the following command: 
 
