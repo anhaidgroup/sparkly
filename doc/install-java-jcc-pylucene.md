@@ -34,7 +34,22 @@ You can check that you have successfully installed Java by running this command.
 Java --version
 ```
 
-### Step 2: Installing JCC and PyLucene
+### Step 2: Installing g++
+
+JCC requires a C++ compiler to work. For Ubuntu, it is recommended that you use the g++ compiler. Most versions of Ubuntu come with it included, but you can check if it is installed with the following command:
+
+```
+g++ --version
+```
+
+If it is installed, a version number will be displayed. If it is not installed, you can do so with the following commands:
+
+```
+sudo apt update
+sudo apt install g++
+```
+
+### Step 3: Installing JCC and PyLucene
 
 Next, you must download and unpack PyLucene 9.4.1. You can do so by running these commands:
 
