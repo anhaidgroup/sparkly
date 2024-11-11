@@ -9,7 +9,7 @@ The installation process consists of three main steps:
 2. Pip install Sparkly from either PyPI or GitHub. This installs Sparkly in its entirety, except PyLucene and its dependencies, as they generally cannot be pip installed.
 3. Install PyLucene and its dependencies: C++ compiler, Java, and JCC.
 
-See here for an explanation of why Sparkly needs PyLucene. 
+See here for [an explanation of why Sparkly needs PyLucene[(./why-pylucene.md).
 
 ### Options
 
