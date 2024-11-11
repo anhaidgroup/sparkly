@@ -1,5 +1,6 @@
-## How to Install Sparkly on a Single Machine: Linux
+## How to Install Sparkly on a Linux Machine
 
+The following step-by-step guide describes how to install Sparkly on a single machine running Linux Ubuntu 22.04 (with x86 architecture), Python 3.10, g++ compiler, Java Temurin JDK 17, and PyLucene 9.4.1. You can adapt this guide for other similar configurations. 
 
 ### Step 1: Installing Python 3
 
