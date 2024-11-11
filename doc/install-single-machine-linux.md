@@ -1,10 +1,10 @@
 ## How to Install Sparkly on a Linux Machine
 
-The following step-by-step guide describes how to install Sparkly on a single machine running Linux Ubuntu 22.04 (with x86 architecture), Python 3.10, g++ compiler, Java Temurin JDK 17, and PyLucene 9.4.1. You can adapt this guide for other similar configurations. 
+The following step-by-step guide describes how to install Sparkly on a single machine running Linux Ubuntu 22.04 (with x86 architecture), Python 3.10, g++ compiler, Java Temurin JDK 17, and PyLucene 9.4.1. You can adapt this guide for other similar configurations using Linux on x86 architecture. 
 
 ### Step 1: Installing Python 3
 
-You need to start by installing Python 3 (if not already). You can find instructions here:
+Start by installing Python 3 (if not already). You can find instructions here:
 [https://wiki.python.org/moin/BeginnersGuide/Download](https://wiki.python.org/moin/BeginnersGuide/Download)
 
 We recommend installing Python 3.10 if possible, as we have tested Sparkly extensively with Python 3.10. 
@@ -31,7 +31,7 @@ python3 -m pip install git+https://github.com/anhaidgroup/sparkly.git@clean_up
 
 Similar to pip installing from PyPI, the above command will install Sparkly and all of its dependencies, *except Java, JCC, and PyLucene*. 
 
-### Step 3: Installing PyLucene and Its Dependencies (C++ Compiler, Java, and JCC)
+### Step 3: Installing PyLucene and Its Dependencies
 
 #### Step 3.1: Installing Java
 
@@ -149,6 +149,6 @@ If an error message does not appear, that means PyLucene is installed properly.
 
 [This page](https://github.com/anhaidgroup/sparkly/blob/main/tips/pylucene.md) lists more tips for installing PyLucene.
 
-You have now completed the installation of Sparkly on a single machine. See [how to use Sparkly on a single machine](). 
+You have now completed the installation of Sparkly on a single Linux machine. See [how to use Sparkly on a single machine](). 
 
 
