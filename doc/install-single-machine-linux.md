@@ -70,6 +70,12 @@ sudo apt install g++
 
 #### Step 3.3: Installing JCC and PyLucene
 
+You will need to install Setuptools in order to install JCC and PyLucene. You can do so with the following command:
+
+```
+python3 -m pip install setuptools
+```
+
 Next, you must download and unpack PyLucene 9.4.1. You can do so by running these commands:
 
 ```
