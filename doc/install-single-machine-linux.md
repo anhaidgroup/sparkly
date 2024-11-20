@@ -113,7 +113,47 @@ sudo make test PYTHON='/usr/bin/python3' JCC='$(PYTHON) -m jcc.__main__ --shared
 If PyLucene is built properly, the output of this command will end with several blocks that look like this:
 
 ```
-example goes here
+----------------------------------------------------------------------
+Ran 10 tests in 1.980s
+
+OK
+/usr/bin/python3 test3/test_StopAnalyzer.py
+...
+----------------------------------------------------------------------
+Ran 3 tests in 0.007s
+
+OK
+/usr/bin/python3 test3/test_Similarity.py
+.
+----------------------------------------------------------------------
+Ran 1 test in 0.311s
+
+OK
+/usr/bin/python3 test3/test_Not.py
+.
+----------------------------------------------------------------------
+Ran 1 test in 0.330s
+
+OK
+/usr/bin/python3 test3/test_ThaiAnalyzer.py
+...
+----------------------------------------------------------------------
+Ran 3 tests in 0.010s
+
+OK
+/usr/bin/python3 test3/test_PythonException.py
+.
+----------------------------------------------------------------------
+Ran 1 test in 0.012s
+
+OK
+/usr/bin/python3 test3/test_bug1564.py
+.
+----------------------------------------------------------------------
+Ran 1 test in 0.307s
+
+OK
+
 ```
 
 Once you have verified that there are no errors, the following command will install PyLucene. 
