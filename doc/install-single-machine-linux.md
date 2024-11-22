@@ -70,7 +70,7 @@ sudo apt install g++
 
 #### Step 3.3: Installing JCC and PyLucene
 
-You will need to install Setuptools in order to install JCC and PyLucene. You can do so with the following command:
+You will need to install Setuptools in order to install JCC and PyLucene. Setuptools is a Python package that simplifies building, distributing, and installing Python packages. You can install Setuptools with the following command:
 
 ```
 python3 -m pip install setuptools
@@ -191,10 +191,12 @@ ModuleNotFoundError: No module named 'lucene'
 
 If an error message does not appear, that means PyLucene is installed properly.
 
+You have now completed the installation of Sparkly on a single Linux machine. See [how to use Sparkly on a single machine](). 
+
 #### Further Pointers
 
 [This page](https://github.com/anhaidgroup/sparkly/blob/main/tips/pylucene.md) lists more tips for installing PyLucene.
 
-You have now completed the installation of Sparkly on a single Linux machine. See [how to use Sparkly on a single machine](). 
+
 
 
