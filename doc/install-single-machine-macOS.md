@@ -157,7 +157,7 @@ This section deals with the International Components for Unicode (ICU) download 
 #### Step 3A: ICU Download
 First, download **icu4c-74_2-src.tgz** by using this link:
 ```
-    https://github.com/unicode-org/icu/releases/tag/release-74-2 
+	https://github.com/unicode-org/icu/releases/tag/release-74-2 
 ```
 and clicking 
 ```
