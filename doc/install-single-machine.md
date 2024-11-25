@@ -16,6 +16,6 @@ See here for [an explanation of why Sparkly needs PyLucene](./why-pylucene.md).
 We currently offer the following ways to install Sparkly: 
 * A simple way to install Sparkly is to use a Docker image that bundles Sparkly with all of its dependencies. See here for instructions.
 * [Installing on Linux](./install-single-machine-linux.md)
-* Installing on MacOS
+* [Installing on MacOS](./install-single-machine-macOS.md)
 * Installing on other OS environments 
 
