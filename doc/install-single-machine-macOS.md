@@ -4,7 +4,7 @@ This is a step-by-step guide to install Sparkly and its necessary dependencies o
 
 This guide also assumes your profile uses a .zshrc profile for environment variables. To check if this is the case, open up a terminal and run 
 ```
-cat ~/.zshrc
+	cat ~/.zshrc
 ```
 If the output does not have one line containing 
 ```
@@ -14,7 +14,7 @@ then you can proceed with the guide.
 
 Otherwise, your profile may be a bash profile. To check this, run 
 ```
-cat ~/.bash-profile
+	cat ~/.bash-profile
 ```
 in your terminal.  If the output does not have one line containing 
 ```
@@ -66,7 +66,7 @@ If the output path says
 ```
 run:
 ```
-    python --version
+	python --version
 ```
 If the output of this is 
 ```
@@ -88,7 +88,7 @@ Before installing Python, we need to ensure we have Homebrew installed. Homebrew
 
 To check if Homebrew is installed, open up a terminal. Then, type 
 ```
-    brew info
+brew info
 ```
 If the output contains kegs, files, and GB, then Homebrew is installed and you can go to Step 2B. Otherwise, you need to install Homebrew. 
 
@@ -108,18 +108,18 @@ in the output, the download was successful.
 #### Step 2B: Python Installation
 To download Python environments, we will use Homebrew. Run the following in the terminal to install Python 3.12:
 ```
-    brew install python@3.12
+	brew install python@3.12
 ```
 
 ##### Step 2C: Python Environment Setup
 Now, we will create a Python environment with Python 3.12. This step is necessary to make sure we use the correct version of Python with the correct dependencies for the PyLucene and JCC installation.  In your terminal, run:
 ```
-    python -m venv sparkly
+	python -m venv sparkly
 ```
 
 This will create a virtual environment named sparkly. To activate this environment, run the following:
 ```
-    source sparkly/bin/activate
+	source sparkly/bin/activate
 ```
 To make sure everything is correct, run:
 ```
@@ -134,7 +134,7 @@ where x ≥ 4, then the Python environment setup was successful.
 #### Step 2D: Python Package Installation
 We will be downloading two packages: setuptools and build. These packages are used to build and install JCC. Before installing, make sure you are in the virtual environment. If you have just finished Step 2C, you are in the virtual environment. Otherwise, to make sure your virtual environment is active, you can run:
 ```
-    source sparkly/bin/activate
+	source sparkly/bin/activate
 ```
 To install setuptools, run:
 ```
@@ -148,7 +148,7 @@ To install build, run:
 
 If at any point during the installation you close your terminal, you will need to reactivate your virtual environment by running:
 ```
-    source sparkly/bin/activate
+	source sparkly/bin/activate
 ```
 
 ### Step 3: ICU Installation
@@ -161,7 +161,7 @@ First, download **icu4c-74_2-src.tgz** by using this link:
 ```
 and clicking 
 ```
-    icu4c-74_2-src.tgz
+	icu4c-74_2-src.tgz
 ```
 
 To check if the download was successful, navigate to your Downloads folder in Finder by running:
@@ -183,19 +183,19 @@ Next, go into your Downloads folder (where the ICU download is) using the comman
 ```
 Then, extract the files from the download using the command:
 ```
-    tar -xf icu4c-74_2-src.tgz
+	tar -xf icu4c-74_2-src.tgz
 ```
 If there is no output, then this step was successful.
 
 Then, go into the icu/source folder by using the command:
 ```
-    cd icu/source
+	cd icu/source
 ```
 Stay in this folder for the rest of Step 3B.
 
 The next command we are going to run is to configure ICU specifically for MacOS:
 ```
-    ./runConfigureICU MacOSX
+	./runConfigureICU MacOSX
 ```
 If there is output, and the output includes 
 ```
@@ -206,13 +206,13 @@ then this step was successful.
 The following two steps will build and install ICU.
 First, to build ICU so it is ready to be installed, run the following:
 ```
-    make
+	make
 ```
 If there is output, and no error messages, then this step was successful.
 
 Finally, to install ICU, run the following:
 ```
-    sudo make install
+	sudo make install
 ```
 This should prompt you for your password, and the password should be the same as what you use to log-in to your machine. If there is output, and no error messages, this step was successful.
 
@@ -223,7 +223,7 @@ To download Sparkly, use one of the following options:
 #### Option 1: Pip Installing from PyPI
 You can install Sparkly from PyPI, using the following command:
 ```
-    pip install sparkly-em
+	pip install sparkly-em
 ```
 This command will install Sparkly and all of its dependencies, such as Joblib, mmh3, Numba, Numpy, Numpydoc, Pandas, Psutil, Pyarrow, Pyspark, Scipy, and Tqdm, except Java, JCC, and PyLucene.
 
@@ -234,7 +234,7 @@ Instead of pip installing from PyPI, you may want to pip install Sparkly from it
 
 To install Sparkly directly from its GitHub repo, use the following command:
 ```
-    pip install git+https://github.com/anhaidgroup/sparkly.git@clean_up
+	pip install git+https://github.com/anhaidgroup/sparkly.git@clean_up
 ```
 Similar to pip installing from PyPI, the above command will install Sparkly and all of its dependencies, except Java, JCC, and PyLucene.
 
@@ -262,7 +262,7 @@ where x and y are numbers, the installation was successful.
 #### Step 5B: Setting JAVA_HOME/JCC_JDK Environment Variables
 We need to set this version of Java as the default for our machine.  To do so, open up a terminal and make sure you are in the root directory (if you are unsure if you are in the root directory or not, run cd to get back to the root directory). Next, run:
 ```
-    echo 'export JAVA_HOME=$(/usr/libexec/java_home -v17)' >> ~/.zshrc
+	echo 'export JAVA_HOME=$(/usr/libexec/java_home -v17)' >> ~/.zshrc
 ```
 To enact these changes, run:
 ```
@@ -276,7 +276,7 @@ If the installation was successful, you will see a file path output.
 
 Additionally, for JCC, we need to set the environment variable JCC_JDK. This environment variable is used to build JCC with our version of JDK. To do so,  run:
 ```
-    echo 'export JCC_JDK=$(/usr/libexec/java_home -v17)' >> ~/.zshrc
+	echo 'export JCC_JDK=$(/usr/libexec/java_home -v17)' >> ~/.zshrc
 ```
 To enact these changes, run:
 ```
@@ -296,29 +296,29 @@ This step installs JCC and PyLucene, which are both necessary for Sparkly. Befor
 #### Step 6A: Download PyLucene
 We are going to use pylucene-9.12.0. This version is compatible with the M1 chip on Mac. To download this version, go to:
 ```
-    https://dlcdn.apache.org/lucene/pylucene/
+	https://dlcdn.apache.org/lucene/pylucene/
 ```
-Download **pylucene-9.12.0-src.tar.gz**  by clicking on the hyperlink
+and download **pylucene-9.12.0-src.tar.gz**  by clicking on the hyperlink
 ```
-    pylucene-9.12.0-src.tar.gz
+	pylucene-9.12.0-src.tar.gz
 ```
 This will download a compressed folder to your Downloads folder. To verify the download, first open up your terminal. Then, navigate to your Downloads folder by typing:
 ```
-    cd ~/Downloads 
+	cd ~/Downloads 
 ```
 Next, run:
 ```
- ls
+ls
 ```
 This command shows you all of the items in your Downloads folder, sorted alphabetically. If you see **pylucene-9.12.0-src.tar.gz**, then this step was successful.
 
 Next, we will extract the files from this compressed folder. To do so, run the following command:
 ```
-	tar -xf pylucene-9.12.0-src.tar.gz\
+	tar -xf pylucene-9.12.0-src.tar.gz
 ```
 Then, navigate to this new directory by running 
 ```
-    cd ~/Downloads/pylucene-9.12.0
+	cd ~/Downloads/pylucene-9.12.0
 ```
 
 #### Step 6B: Building & Installing JCC
@@ -336,7 +336,7 @@ If there are several lines of output, and the last few lines do not include the 
 
 Then, to install JCC run:
 ```
-    sudo -E python setup.py install
+	sudo -E python setup.py install
 ```
 You will be prompted to enter a password, and it will be the password you use to login to your computer. 
 
@@ -357,14 +357,14 @@ Now, we can go back the the pylucene-9.12.0 folder by running the following:
 #### Step 6C: PyLucene Installation
 Now, we just need to finish installing PyLucene. Make sure you are still in the pylucene-9.12.0 directory. If you just finished Step 6B, you should already be there. Otherwise, open up your terminal and run:
 ```
-    cd ~/Downloads/pylucene-9.12.0
+	cd ~/Downloads/pylucene-9.12.0
 ```
 
 Next, to build PyLucene so it is ready to be installed, run the following command where username is the user you have been completing this installation under. If you are unsure what your username is, in your terminal, run the command whoami and this will output your username. 
 
 Once you have replaced the two instances of username in the following command, run it:
 ```
-    sudo make PYTHON='/Users/username/sparkly/bin/python' JCC='$(PYTHON) -m jcc --arch aarch64' NUM_FILES=16 MODERN_PACKAGING='true' ICUSBIN='/Users/username/Downloads/icu/source/bin'
+	sudo make PYTHON='/Users/username/sparkly/bin/python' JCC='$(PYTHON) -m jcc --arch aarch64' NUM_FILES=16 MODERN_PACKAGING='true' ICUSBIN='/Users/username/Downloads/icu/source/bin'
 ```
 
 If this was successful, the last line of output will say “**build of pylucene 9.12.0 complete**”. 
@@ -372,7 +372,7 @@ If this was successful, the last line of output will say “**build of pylucene 
 
 The last step to install will be running a very similar command to the last. Make sure to change two instances of username again before running the command:
 ```
-    sudo make install PYTHON='/Users/username/sparkly/bin/python' JCC='$(PYTHON) -m jcc --arch aarch64' NUM_FILES=16 MODERN_PACKAGING='true' ICUSBIN='/Users/username/Downloads/icu/source/bin'
+	sudo make install PYTHON='/Users/username/sparkly/bin/python' JCC='$(PYTHON) -m jcc --arch aarch64' NUM_FILES=16 MODERN_PACKAGING='true' ICUSBIN='/Users/username/Downloads/icu/source/bin'
 ```
 
 If this was successful, the output will say “**Successfully installed lucene-9.12.0**”.
@@ -386,7 +386,7 @@ If the output is “**9.12.0**”, then you are ready to use Sparkly!
 ### Additional Tips/FAQ’s
 If at any time you have to take a break from the installation after Step 2, when you reopen your terminal, make sure to run 
 ```
-    source sparkly/bin/activate
+	source sparkly/bin/activate
 ``` 
 to ensure the correct Python environment. Using a different environment could lead to missing packages, or using the wrong version of Python, which can cause issues during JCC installation.
 If anything else arises, refer to the source documentation for the specific software. 
