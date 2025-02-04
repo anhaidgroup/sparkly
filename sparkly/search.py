@@ -9,10 +9,12 @@ from sparkly.utils import type_check_call
 from pydantic import (
         PositiveInt,
 )
-
+from sparkly.thread_progress import ThreadProgress
+from pyspark import SparkContext
 
 CHUNK_SIZE=500
 JSON_DATA = {}
+
 
 class Searcher:
     """
@@ -39,7 +41,7 @@ class Searcher:
         return self._index.get_full_query_spec()
     
     @type_check_call
-    def search(self, search_df: pyspark.sql.DataFrame, query_spec: QuerySpec, limit: PositiveInt, id_col: str='_id'):
+    def search(self, search_df: pyspark.sql.DataFrame, query_spec: QuerySpec, limit: PositiveInt, id_col: str='_id', track_progress: bool = False):
         """
         perform search for all the records in search_df according to
         query_spec
@@ -59,23 +61,31 @@ class Searcher:
         Returns
         -------
         pyspark DataFrame
-            a pyspark dataframe with the schema (`id_col`, ids array<long> , scores array<float>, search_time float)
+            a pyspark dataframe with the schema (id_col, ids array<long> , scores array<float>, search_time float)
         """
-        return self._search_spark(search_df, query_spec, limit, id_col)
+        return self._search_spark(search_df, query_spec, limit, id_col, track_progress)
 
 
 
-    def _search_spark(self, search_df, query_spec, limit, id_col='_id'):
+    def _search_spark(self, search_df, query_spec, limit, id_col='_id', track_progress = False):
         # set data to spark workers
         self._index.to_spark()
 
+        # create progress tracker
+        sc = SparkContext.getOrCreate()
+        acc = sc.accumulator(0)
+        if track_progress:
+            total = search_df.count()
+            prog = ThreadProgress("Search", total, acc)
+            prog.start()
+            
         projection = self._index.config.get_analyzed_fields(query_spec)
         if id_col not in projection:
             projection.append(id_col)
         search_df = search_df.select(projection)\
                         .repartition(max(1, search_df.count() // self._search_chunk_size), id_col)
-
-        f = lambda x : _search_spark(self._index, query_spec, limit, x, id_col)
+        f = lambda x : _search_spark(self._index, query_spec, limit, x, id_col, acc)
+            
 
         query_result_fields = [id_col] + list(QueryResult._fields)
         query_result_types = [ T.LongType(), T.ArrayType(T.LongType()), T.ArrayType(T.FloatType()), T.FloatType()]
@@ -85,14 +95,16 @@ class Searcher:
         return res
 
 
-def _search_spark(index, query_spec, limit, partition_itr, id_col):
+def _search_spark(index, query_spec, limit, partition_itr, id_col, acc):
     index.init()
+
     for part in partition_itr:
+        num_docs = len(part)
+        acc.add(num_docs)
         part = part.set_index(id_col)
         yield _search_many(index, query_spec, limit, part)
 
 def _search_many(index, query_spec, limit, df):
-
     res = index.search_many(df, query_spec, limit)
     return res.reset_index(drop=False)
 
