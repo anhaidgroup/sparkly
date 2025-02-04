@@ -355,7 +355,7 @@ class LuceneIndex(Index):
             acc.add(1)
 
     
-    def _merge_index_segments(self, index_writer, dirs, pbar=None):
+    def _merge_index_segments(self, index_writer, dirs):
         # merge segments 
         index_writer.addIndexes(dirs)
         index_writer.forceMerge(1)
