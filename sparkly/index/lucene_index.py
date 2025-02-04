@@ -52,7 +52,7 @@ from org.apache.lucene.document import FieldType, SortedNumericDocValuesField
 from org.apache.lucene.index import IndexOptions
 
 from sparkly.index_config import IndexConfig
-from sparkly.threadprogressbar import ThreadProgressBar
+from sparkly.thread_progress import ThreadProgress
 from .index_base import Index, QueryResult, EMPTY_QUERY_RESULT
 
 
@@ -601,7 +601,7 @@ class LuceneIndex(Index):
                     acc = sc.accumulator(0)
                     if track_progress:
                         total = df_size
-                        prog = ThreadProgressBar("Index building", total, acc)
+                        prog = ThreadProgress("Index building", total, acc)
                         prog.start()
                     # build large tables in parallel
                     # put temp indexes in temp dir for easy deleting later
@@ -632,7 +632,7 @@ class LuceneIndex(Index):
                 acc = sc.accumulator(0)
                 if track_progress:
                     total = df_size
-                    prog = ThreadProgressBar("Index building", total, acc)
+                    prog = ThreadProgress("Index building", total, acc)
                     prog.start()
                 # if table is small just build directly
                 self._add_docs(df, index_writer, acc)
