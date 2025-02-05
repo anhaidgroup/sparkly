@@ -41,7 +41,7 @@ class Searcher:
         return self._index.get_full_query_spec()
     
     @type_check_call
-    def search(self, search_df: pyspark.sql.DataFrame, query_spec: QuerySpec, limit: PositiveInt, id_col: str='_id', track_progress: bool = False):
+    def search(self, search_df: pyspark.sql.DataFrame, query_spec: QuerySpec, limit: PositiveInt, id_col: str='_id', show_progress_bar: bool = False):
         """
         perform search for all the records in search_df according to
         query_spec
@@ -63,21 +63,20 @@ class Searcher:
         pyspark DataFrame
             a pyspark dataframe with the schema (id_col, ids array<long> , scores array<float>, search_time float)
         """
-        return self._search_spark(search_df, query_spec, limit, id_col, track_progress)
+        return self._search_spark(search_df, query_spec, limit, id_col, show_progress_bar)
 
 
 
-    def _search_spark(self, search_df, query_spec, limit, id_col='_id', track_progress = False):
+    def _search_spark(self, search_df, query_spec, limit, id_col='_id', show_progress_bar = False):
         # set data to spark workers
         self._index.to_spark()
 
-        # create progress tracker
+        # create progress tracke
         sc = SparkContext.getOrCreate()
         acc = sc.accumulator(0)
-        if track_progress:
-            total = search_df.count()
-            prog = ThreadProgress("Search", total, acc)
-            prog.start()
+        total = search_df.count()
+        prog = ThreadProgress("Search", total, acc, show_progress_bar)
+        prog.start()
             
         projection = self._index.config.get_analyzed_fields(query_spec)
         if id_col not in projection:
