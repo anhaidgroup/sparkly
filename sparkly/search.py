@@ -11,10 +11,11 @@ from pydantic import (
 )
 from sparkly.thread_progress import ThreadProgress
 from pyspark import SparkContext
+from pyspark.sql import SparkSession
 
+import time
 CHUNK_SIZE=500
 JSON_DATA = {}
-
 
 class Searcher:
     """
@@ -71,13 +72,15 @@ class Searcher:
         # set data to spark workers
         self._index.to_spark()
 
-        # create progress tracke
+        # create progress tracker
         sc = SparkContext.getOrCreate()
         acc = sc.accumulator(0)
+        app_id = sc.applicationId
+        spark_ui_url = sc.uiWebUrl
         total = search_df.count()
-        prog = ThreadProgress("Search", total, acc, show_progress_bar)
+        prog = ThreadProgress("Search", total, acc, show_progress_bar, spark_ui_url, app_id, max_failures=3)
         prog.start()
-            
+
         projection = self._index.config.get_analyzed_fields(query_spec)
         if id_col not in projection:
             projection.append(id_col)
