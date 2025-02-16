@@ -3,7 +3,16 @@ from threading import Event, Thread
 from sparkly.utils import get_logger
 from tqdm import tqdm
 import time
+import logging
+import sys
+import os
+from tqdm.contrib.logging import tqdm_logging_redirect
 
+#ncols = os.get_terminal_size().columns
+logging.basicConfig(
+    stream=sys.stdout,
+    level=logging.DEBUG
+)
 logger = get_logger(__name__)
 
 
@@ -37,16 +46,19 @@ class ThreadProgressBar:
         last_val = 0
         logger.debug(f"Starting {self.purpose}...")
         if self.show_progress_bar:
-            with tqdm(total=self.total, desc=self.purpose) as pbar:
-                while not self.event.is_set():
-                    current_val = self.acc.value
-                    if type(current_val) is not int:
-                        delta = current_val.iloc[0] - last_val
-                        pbar.update(delta)
-                        last_val = current_val.iloc[0]
-                        logger.debug(f"{self.purpose} progress updated: {current_val.iloc[0]}/{self.total}")
-                        time.sleep(5)
+            with tqdm_logging_redirect():
+                with tqdm(total=self.total, desc=self.purpose, leave=True, position=1) as pbar:
+                    while not self.event.is_set():
+                        current_val = self.acc.value
+                        if type(current_val) is not int:
+                            delta = current_val.iloc[0] - last_val
+                            logger.debug(f"{self.purpose} progress updated: {current_val.iloc[0]}/{self.total}")
+                            pbar.update(delta)
+                            last_val = current_val.iloc[0]
+                            time.sleep(5)
+                    pbar.update(self.acc.value.iloc[0] - last_val)
             logger.debug(f"{self.purpose} done.")
+            return
         else:
             while not self.event.is_set():
                 current_val = self.acc.value
