@@ -410,7 +410,7 @@ class LuceneIndex(Index):
                 index_writer = index._get_index_writer(index.config, index_path)
 
             index._add_docs(df, index_writer, False)
-            acc.add(df.count())
+            acc.add(len(df))
 
         index_writer.commit()
         index_writer.close()
@@ -561,7 +561,7 @@ class LuceneIndex(Index):
 
     
     @type_check_call
-    def upsert_docs(self, df: Union[pd.DataFrame, sql.DataFrame], disable_distributed: bool=False, force_distributed: bool=False, show_progress_bar: bool=False):
+    def upsert_docs(self, df: Union[pd.DataFrame, sql.DataFrame], disable_distributed: bool=False, force_distributed: bool=False, show_progress_bar: bool=True):
         """
         build the index, indexing df according to self.config
 
