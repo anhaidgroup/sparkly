@@ -36,7 +36,7 @@ give unhelpful compiler or linker errors.
 ## MacOS
 
 In MacOS High Sierra and later sometimes MacOS will kill pyspark workers when the JVM is initialized for PyLucene. If 
-`examples/local_example.py` runs but `examples/basic_example.py` crashes, try modifying the enviorment variables 
+`examples/local_example.py` runs but `examples/basic_example.py` crashes, try modifying the environment variables 
 as described in this [stack overflow post](https://stackoverflow.com/questions/50168647/multiprocessing-causes-python-to-crash-and-gives-an-error-may-have-been-in-progr).
 
 
