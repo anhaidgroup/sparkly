@@ -1,13 +1,8 @@
 ## Sparkly: Blocking for Entity Matching
 
-Sparkly is an open-source tool for the blocking step of entity matching. Entity matching finds tuples from two tables A and B that match, that is, refer to the same real-world entity. It typically proceeds in two steps: 
-
-
-* The blocking step uses heuristics to quickly identify a relatively small set of tuple pairs that can be matches.
-* The matching step applies a (rule- or learning-based) matcher to each surviving pair to predict match/no-match. 
+Sparkly is an open-source tool for the blocking step of entity matching. Entity matching finds tuples from two tables A and B that match, that is, refer to the same real-world entity. It typically proceeds in two steps. The blocking step uses heuristics to quickly identify a relatively small set of tuple pairs that can be matches. The matching step applies a (rule- or learning-based) matcher to each surviving pair to predict match/no-match. 
 
 Sparkly focuses on the blocking step, and is distinguished in three aspects: 
-
 
 * It can scale to large tables, for example, with tens of millions or hundreds of millions of tuples. 
 * It outperforms many state-of-the-art blocking solutions. See [this paper](https://www.vldb.org/pvldb/vol16/p1507-paulsen.pdf) for details. 
