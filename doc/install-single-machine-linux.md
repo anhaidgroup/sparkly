@@ -189,9 +189,7 @@ If PyLucene *is not* installed properly, you will get an error message that look
 ModuleNotFoundError: No module named 'lucene'
 ```
 
-If an error message does not appear, that means PyLucene is installed properly.
-
-You have now completed the installation of Sparkly on a single Linux machine. 
+If an error message does not appear, that means PyLucene is installed properly. Congratulations. You have now completed the installation of Sparkly on a single Linux machine. 
 
 #### Further Pointers
 
