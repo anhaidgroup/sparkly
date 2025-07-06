@@ -13,7 +13,6 @@ See here for [an explanation of why Sparkly needs PyLucene](./why-pylucene.md).
 
 ### Options
 
-We currently offer the following ways to install Sparkly: 
 * [Installing on Linux](./install-single-machine-linux.md)
 * [Installing on MacOS](./install-single-machine-macOS.md)
 * Installing on other OS environments
