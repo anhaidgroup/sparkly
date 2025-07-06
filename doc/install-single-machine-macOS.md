@@ -22,7 +22,7 @@ in your terminal.  If the output does not have one line containing
 ```
 then you have a bash profile. In that case, wherever you see .zshrc in this guide, replace it with .bash-profile. Note: The default on macOS with an M1 chip is .zshrc, so this should be the case for most users. 
 
-This guide has been tested on a 2020 MacBook Pro with an Apple M1 Chip, 8GB Memory, macOS version Sequoia 15.0.1, and a .zshrc profile. The following software versions were installed on the test machine using the steps in this guide: Python 3.12, ICU4C 74.2, Java Temurin 17 JDK, and PyLucene 9.12.0. You can try to adapt this guide to other configurations. 
+*This guide has been tested only on a 2020 MacBook Pro with an Apple M1 Chip, 8GB Memory, macOS version Sequoia 15.0.1, and a .zshrc profile.* The following software versions were installed on the test machine using the steps in this guide: Python 3.12, ICU4C 74.2, Java Temurin 17 JDK, and PyLucene 9.12.0. You can try to adapt this guide to other configurations. 
 
 If your machine has an Intel chip, this installation guide will not work for you.
 If your machine has an M2, M3, or M4 chip, this installation guide may work for you, but we have not tested it, and we can not guarantee that it will work.
@@ -31,13 +31,15 @@ If your machine has an M2, M3, or M4 chip, this installation guide may work for 
 ### Step 1: Xcode Tools Installation
 Our first step will be installing Xcode command line tools. This is a set of tools and utilities provided by Apple that allow developers to perform software development tasks from the command line. 
 
-Xcode command line tools include g++  (a C++ compiler which we need for JCC installation), make (which we need for ICU and PyLucene installations), as well as other tools that we will not use today (such as git, gcc, etc.). It is necessary to download all of the Xcode command line tools, however, to ensure correct setup. Note: We only need to download Xcode command line tools. This is different from the Xcode IDE, which is used for code development. We DO NOT need the Xcode IDE.
+Xcode command line tools include g++  (a C++ compiler which we need for JCC installation), make (which we need for ICU and PyLucene installations), as well as other tools that we will not use today (such as git, gcc, etc.). It is necessary to download all of the Xcode command line tools, however, to ensure correct setup. 
+
+Note: We only need to download Xcode command line tools. This is different from the Xcode IDE, which is used for code development. We DO NOT need the Xcode IDE.
 
 To install Xcode command line tools, open a terminal window. Then, run the command:
 ```
 	xcode-select --install
 ```
-If a popup window appears with the text: “The xcode-select command requires the command line developer tools. Would you like to install the tools now?”. Click Install. After it finishes installing (the popup will go away), you can make sure it was correctly installed by running:
+If a popup window appears with the text: “The xcode-select command requires the command line developer tools. Would you like to install the tools now?”, click Install. After it finishes installing (the popup will go away), you can make sure it was correctly installed by running:
 ```
 	xcode-select --version
 ```
@@ -111,7 +113,7 @@ To download Python environments, we will use Homebrew. Run the following in the 
 	brew install python@3.12
 ```
 
-##### Step 2C: Python Environment Setup
+#### Step 2C: Python Environment Setup
 Now, we will create a Python environment with Python 3.12. This step is necessary to make sure we use the correct version of Python with the correct dependencies for the PyLucene and JCC installation.  In your terminal, run:
 ```
 	python -m venv sparkly
@@ -225,7 +227,7 @@ You can install Sparkly from PyPI, using the following command:
 ```
 	pip install sparkly-em
 ```
-This command will install Sparkly and all of its dependencies, such as Joblib, mmh3, Numba, Numpy, Numpydoc, Pandas, Psutil, Pyarrow, Pyspark, Scipy, and Tqdm, except Java, JCC, and PyLucene.
+This command will install Sparkly and all of its dependencies, such as Joblib, mmh3, Numba, Numpy, Numpydoc, Pandas, Psutil, Pyarrow, Pyspark, Scipy, and Tqdm, *except Java, JCC, and PyLucene.*
 
 
 Java, JCC and PyLucene cannot be pip installed with the above command, because they are not available on PyPI.
@@ -236,14 +238,14 @@ To install Sparkly directly from its GitHub repo, use the following command:
 ```
 	pip install git+https://github.com/anhaidgroup/sparkly.git@clean_up
 ```
-Similar to pip installing from PyPI, the above command will install Sparkly and all of its dependencies, except Java, JCC, and PyLucene.
+Similar to pip installing from PyPI, the above command will install Sparkly and all of its dependencies, *except Java, JCC, and PyLucene.*
 
 ### Step 5: Java Installation
 We will now install Java Temurin 17 JDK onto your machine. Again, it is absolutely necessary to use this version of Java, or you will face issues building JCC. Using a non-Temurin version, or any other version number, can cause problems with JCC and PyLucene installations. 
 
 Also, not using Homebrew for the installation could lead to downloading a version of Java that is not supported by an arm64 architecture, which would likely also cause problems with JCC and PyLucene installations.
 
-##### Step 5A: Java Installation
+#### Step 5A: Java Installation
 We are going to download the Temurin 17 JDK that is optimized for your machine running on an M1 chip. To install Java, open a terminal and run the following:
 ```
 	brew install --cask temurin@17
@@ -391,5 +393,5 @@ If at any time you have to take a break from the installation after Step 2, when
 to ensure the correct Python environment. Using a different environment could lead to missing packages, or using the wrong version of Python, which can cause issues during JCC installation.
 If anything else arises, refer to the source documentation for the specific software. 
 
-To continue testing Sparkly, head over to the repository at https://github.com/anhaidgroup/sparkly/tree/main/examples to have some fun, and enjoy!
+See also more tips in [this page](https://github.com/anhaidgroup/sparkly/blob/main/tips/pylucene.md)
 
