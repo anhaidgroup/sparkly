@@ -393,5 +393,5 @@ If at any time you have to take a break from the installation after Step 2, when
 to ensure the correct Python environment. Using a different environment could lead to missing packages, or using the wrong version of Python, which can cause issues during JCC installation.
 If anything else arises, refer to the source documentation for the specific software. 
 
-See also more tips in [this page](https://github.com/anhaidgroup/sparkly/blob/main/tips/pylucene.md)
+See also more tips on [this page](https://github.com/anhaidgroup/sparkly/blob/main/tips/pylucene.md).
 
