@@ -17,7 +17,7 @@ We currently offer the following ways to install Sparkly:
 * [Installing on Linux](./install-single-machine-linux.md)
 * [Installing on MacOS](./install-single-machine-macOS.md)
 
-Additional ways to install Sparkly for which we have not yet provided detailed instructions: 
-* [Installing on other OS environments](./install-single-machine-otherOS.md)
-* Preliminary instructions to install Sparkly using a Docker image that bundles Sparkly with all dependencies.  
+Additional ways to install Sparkly: 
+* [Installing on other OS environments](./install-single-machine-otherOS.md) (no detailed instructions yet)
+* [Installing using Docker](./install-single-machine-docker.md) (preliminary instructions)
 
