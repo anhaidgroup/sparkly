@@ -26,7 +26,7 @@ You can check that the image has been downloaded successfully with this command:
 docker images
 ```
 
-If you have downloaded the image properly, you will get an output that looks like this.
+If you have downloaded the image properly, you will get an output that looks like this:
 
 ```
 REPOSITORY           TAG       IMAGE ID       CREATED          SIZE
@@ -204,6 +204,3 @@ If you don't need the Sparkly container anymore, you can completely remove it wi
 ```
 docker rm sparkly
 ```
-
-If you need further help running Sparkly, you can refer to our examples for [using Sparkly on a single machine]().
-
