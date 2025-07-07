@@ -1,6 +1,6 @@
 ## How to Use Sparkly
 
-### How Sparkly Works
+### How It Works
 
 If you want to start by understanding the conceptual working of Sparkly, then read the following [technical report](https://pages.cs.wisc.edu/~anhai/papers1/sparkly-tr22.pdf) (a shorter version of which appears in the VLDB-2023 conference). We recommend reading Section 1, Section 2, and Section 3.3 (and quickly scan the other sections if you are interested). 
 
