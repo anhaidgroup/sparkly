@@ -5,7 +5,7 @@ Sparkly is an open-source tool for the blocking step of entity matching. Entity 
 Sparkly focuses on the blocking step, and is distinguished in three aspects: 
 
 * It can scale to large tables, for example, with tens of millions or hundreds of millions of tuples per table. 
-* It outperforms many state-of-the-art blocking solutions. See [this paper](https://www.vldb.org/pvldb/vol16/p1507-paulsen.pdf) for details. 
+* It outperforms many state-of-the-art blocking solutions. See [this paper](https://pages.cs.wisc.edu/~anhai/papers1/sparkly-vldb2023.pdf) for details. 
 * Variations of Sparkly have been implemented in industry and used by hundreds of enterprises. 
 
 ### How It Works
