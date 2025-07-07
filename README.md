@@ -24,7 +24,7 @@ See instructions to install Sparkly on [a single machine](https://github.com/anh
 
 ### How to Use
 
-See [this page](./using-sparkly.md), which points to a technical report, slides, a tutorial, and examples.
+See [this page](https://github.com/anhaidgroup/sparkly/blob/docs-update/doc/using-sparkly.md), which points to a technical report, slides, a tutorial, and examples.
 
 ### Further Pointers
 
