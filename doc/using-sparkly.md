@@ -8,6 +8,6 @@ You can also quickly scan the [pptx slides](https://pages.cs.wisc.edu/~anhai/pap
 
 ### Tutorial and Examples
 
-Here's a tutorial written by Dev Ahluwalia in case you want a step-by-step guide of using Sparkly. REFER TO EXAMPLES HERE.
+Here's a tutorial written by Dev Ahluwalia in case you want a step-by-step guide of using Sparkly, and here are multiple Jupyter Notebooks showing [examples of running Sparkly[(https://github.com/anhaidgroup/sparkly/tree/docs-update/examples). 
 
 
