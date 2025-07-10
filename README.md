@@ -16,15 +16,15 @@ Implementation-wise, Sparkly builds an index over the tuples in Table A, then us
 
 ### Case Studies and Performance Statistics
 
-Sparkly can block tables of tens of millions of tuples in hours on relatively small clusters of machines. It scales to hundreds of millions of tuples. See [this page](https://github.com/anhaidgroup/sparkly/blob/docs-update/doc/case-studies-n-performance-stats.md) for details. 
+Sparkly can block tables of tens of millions of tuples in hours on relatively small clusters of machines. It scales to hundreds of millions of tuples. See [this page](https://github.com/anhaidgroup/sparkly/blob/main/doc/case-studies-n-performance-stats.md) for details. 
 
 ### Installation
 
-See instructions to install Sparkly on [a single machine](https://github.com/anhaidgroup/sparkly/blob/docs-update/doc/install-single-machine.md) or on [a cluster of machines](https://github.com/anhaidgroup/sparkly/blob/docs-update/doc/install-cluster-machines.md). 
+See instructions to install Sparkly on [a single machine](https://github.com/anhaidgroup/sparkly/blob/main/doc/install-single-machine.md) or on [a cluster of machines](https://github.com/anhaidgroup/sparkly/blob/main/doc/install-cluster-machines.md). 
 
 ### How to Use
 
-See [this page](https://github.com/anhaidgroup/sparkly/blob/docs-update/doc/using-sparkly.md), which points to a technical report, slides, a tutorial, and examples.
+See [this page](https://github.com/anhaidgroup/sparkly/blob/main/doc/using-sparkly.md), which points to a technical report, slides, a tutorial, and examples.
 
 ### Further Pointers
 
