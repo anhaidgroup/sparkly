@@ -8,7 +8,7 @@ You can also quickly scan the [pptx slides](https://pages.cs.wisc.edu/~anhai/pap
 
 ### Tutorial and Examples
 
-Here's a [tutorial](https://pages.cs.wisc.edu/~anhai/papers1/sparkly-tutorial.pdf) written by Dev Ahluwalia in case you want a step-by-step guide of using Sparkly, and here are multiple [examples of running Sparkly](https://github.com/anhaidgroup/sparkly/tree/docs-update/examples). 
+Here's a [tutorial](https://pages.cs.wisc.edu/~anhai/papers1/sparkly-tutorial.pdf) written by Dev Ahluwalia in case you want a step-by-step guide of using Sparkly, and here are multiple [examples of running Sparkly](https://github.com/anhaidgroup/sparkly/tree/main/examples). 
 
 We strongly recommend reading the tutorial first, then check out the examples. But if you are impatient, then you can also jump directly to trying to run the examples. 
 
