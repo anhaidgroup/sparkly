@@ -52,7 +52,11 @@ from org.apache.lucene.document import FieldType, SortedNumericDocValuesField
 from org.apache.lucene.index import IndexOptions
 
 from sparkly.index_config import IndexConfig
+from sparkly.thread_progress_bar import ThreadProgressBar
+from sparkly.utils import get_logger
 from .index_base import Index, QueryResult, EMPTY_QUERY_RESULT
+
+logger = get_logger(__name__)
 
 
 class _DocumentConverter:
@@ -329,27 +333,27 @@ class LuceneIndex(Index):
         self.deinit()
         return super().__reduce__()
 
-    def _build_segment(self, df, config, tmp_dir_path):
+    def _build_segment(self, df, config, tmp_dir_path, show_progress_bar):
 
         # use pid to decide which tmp index to write to
         path = tmp_dir_path/ str(multiprocessing.current_process().pid)
         self._init_jvm()
         index_writer = self._get_index_writer(config, path)
-        self._add_docs(df, index_writer)
+        self._add_docs(df, index_writer, show_progress_bar)
         index_writer.commit()
         index_writer.close()
 
         return path
 
-    def _add_docs(self, df, index_writer):
+    def _add_docs(self, df, index_writer, show_progress_bar):
         if len(df.columns) == 0:
             raise ValueError('dataframe with no columns passed to build')
         self._init_jvm()
 
         doc_conv = _DocumentConverter(self.config)
         docs = doc_conv.convert_docs(df)
-        
-        for d in docs.values:
+        itr = docs.values if not show_progress_bar else tqdm(docs.values, desc="Adding documents")
+        for d in itr:
             index_writer.addDocument(d)
 
     
@@ -388,7 +392,7 @@ class LuceneIndex(Index):
                 raise TypeError(f'id_col must be integer type (got {dtype})')
     
     @classmethod
-    def _build_spark_worker_local(cls, df_itr, config):
+    def _build_spark_worker_local(cls, df_itr, config, acc):
         index = None
         index_path = None
         index_writer = None
@@ -405,7 +409,8 @@ class LuceneIndex(Index):
                 index = cls(index_path, config)
                 index_writer = index._get_index_writer(index.config, index_path)
 
-            index._add_docs(df, index_writer)
+            index._add_docs(df, index_writer, False)
+            acc.add(len(df))
 
         index_writer.commit()
         index_writer.close()
@@ -475,7 +480,7 @@ class LuceneIndex(Index):
             yield pd.DataFrame(rows, columns=df_columns)
             rows.clear()
                 
-    def _build_spark(self, df, df_size, config, tmp_dir_path):
+    def _build_spark(self, df, df_size, config, tmp_dir_path, show_progress_bar):
         nparts = df_size // self._index_build_chunk_size
         df = df.repartition(nparts, config.id_col)
         
@@ -485,26 +490,31 @@ class LuceneIndex(Index):
             T.StructField('data', T.BinaryType(), False),
         ])
         
-        
-        df = df.mapInPandas(lambda x : LuceneIndex._build_spark_worker_local(x, config), schema=schema)\
-                .withColumn('file', F.concat( F.lit(str(tmp_dir_path) + '/'), F.col('file')) )\
-                .persist()
-        # index stuff
-        df.count()
-        itr = df.toLocalIterator(True)
+        # start progress tracking
+        sc = SparkContext.getOrCreate()
+        acc = sc.accumulator(0)
+        total = df_size
+        with ThreadProgressBar("Index building", total, acc, show_progress_bar):
+            df = df.mapInPandas(lambda x : LuceneIndex._build_spark_worker_local(x, config, acc), schema=schema)\
+                    .withColumn('file', F.concat( F.lit(str(tmp_dir_path) + '/'), F.col('file')) )\
+                    .persist()
+            # index stuff
+            df.count()
+            itr = df.toLocalIterator(True)
 
         # write with threads 
         Parallel(n_jobs=-1, backend='threading')(delayed(self._write_file_chunk)(*row) for row in itr)
         df.unpersist()
         return list(tmp_dir_path.iterdir())
 
-    def _build_parallel_local(self, df, config, tmp_dir_base):
+    def _build_parallel_local(self, df, config, tmp_dir_base, show_progress_bar):
         # slice the dataframe into a local iterator of pandas dataframes
         slices = spark_to_pandas_stream(df, self._index_build_chunk_size)
         # use all available threads
         pool = Parallel(n_jobs=-1)
         # build in parallel in sub dirs of tmp dir
-        dirs = pool(delayed(self._build_segment)(s, config, tmp_dir_base) for s in tqdm(slices))
+        slices = slices if not show_progress_bar else tqdm(slices, desc="Building Index")
+        dirs = pool(delayed(self._build_segment)(s, config, tmp_dir_base) for s in slices)
         # dedupe the dirs
         dirs = set(dirs)
         # kill the threadpool to prevent them from sitting on resources
@@ -551,7 +561,7 @@ class LuceneIndex(Index):
 
     
     @type_check_call
-    def upsert_docs(self, df: Union[pd.DataFrame, sql.DataFrame], disable_distributed: bool=False, force_distributed: bool=False):
+    def upsert_docs(self, df: Union[pd.DataFrame, sql.DataFrame], disable_distributed: bool=False, force_distributed: bool=False, show_progress_bar: bool=True):
         """
         build the index, indexing df according to self.config
 
@@ -567,6 +577,9 @@ class LuceneIndex(Index):
 
         force_distributed : bool, default=False
             force using spark for building the index even for smaller tables
+
+        show_progress_bar: bool, default=False
+            show the progress bar in addition to debug logs
         """
         if disable_distributed and force_distributed:
             raise ValueError('disable_distributed and force_distributed both set to True, only one can be set')
@@ -574,6 +587,7 @@ class LuceneIndex(Index):
 
         # verify the index is correct
         index_writer = self._get_index_writer(self.config, self._index_path)
+
         try:
             start_index_size = 0 
             num_docs_deleted = 0
@@ -600,16 +614,15 @@ class LuceneIndex(Index):
                         
                         if force_distributed or (df_size > self._index_build_chunk_size * 50 and not disable_distributed):
                             # build with spark if very large and disributed build is allowed
-                            dirs = self._build_spark(df, df_size, self.config, tmp_dir_base)
+                            dirs = self._build_spark(df, df_size, self.config, tmp_dir_base, show_progress_bar)
                         else:
                             # else just use local threads
-                            dirs = self._build_parallel_local(df, self.config, tmp_dir_base)
+                            dirs = self._build_parallel_local(df, self.config, tmp_dir_base, show_progress_bar)
                         # get the name of the index dir in each tmp sub dir
                         dirs = [self._get_index_dir(d) for d in dirs]
 
                         # merge the segments 
                         self._merge_index_segments(index_writer, dirs)
-                        # 
                         #kill_loky_workers()
                     # temp indexes deleted here
                 else:
@@ -619,7 +632,7 @@ class LuceneIndex(Index):
             if isinstance(df, pd.DataFrame):
                 df_size = len(df)
                 # if table is small just build directly
-                self._add_docs(df, index_writer)
+                self._add_docs(df, index_writer, show_progress_bar)
         except:
             index_writer.rollback()
             raise 

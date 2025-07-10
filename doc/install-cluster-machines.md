@@ -26,7 +26,7 @@ You will need to create at least two EC2 instances to serve as nodes in your clu
     * You can now connect to your instance from your local machine. This will allow you to execute terminal commands on it. The exact method of connection will depend on your personal machine’s OS, but regardless of which method you use you will need to tell it to connect to ‘ubuntu@{the instance’s public IP address}’. You should wait for an instance to pass all checks under the ‘Status check’ column before connecting to it. Note that you may need to reload the AWS page in order for this column to update.
 
 ### Installing Sparkly
-Next you need to install Sparkly. You can find instructions for installing Sparkly and its prerequisites (Python, Java, JCC, PyLucene, Joblib, mmh3, Numba, Numpy, Numpydoc, Pandas, Psutil, Pyarrow, Pyspark, Scipy, and Tqdm) [here](https://github.com/anhaidgroup/sparkly/blob/main/doc/install-single-machine.md).
+Next you need to install Sparkly. You can find instructions for installing Sparkly and its prerequisites (Python, Java, JCC, PyLucene, Joblib, mmh3, Numba, Numpy, Numpydoc, Pandas, Psutil, Pyarrow, Pyspark, Scipy, and Tqdm) [here](https://github.com/anhaidgroup/sparkly/blob/main/doc/install-single-machine-linux.md).
 
 You will have to install Sparkly and its prerequisites on every node in your cluster.
 
