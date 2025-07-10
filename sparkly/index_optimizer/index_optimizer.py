@@ -206,7 +206,7 @@ class IndexOptimizer():
             # convert that to a dataframe
             res = pd.DataFrame(res.to_dict(), dtype=np.float64)
             # add to current scores
-            scores = scores.append(res, ignore_index=True)
+            scores = pd.concat([scores, res], ignore_index=True)
             # drop the columns that contain missing values
             # compute the mean score and stddev
             score_stats = scores.apply(lambda x : pd.Series({
