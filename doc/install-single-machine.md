@@ -1,6 +1,7 @@
 ## How to Install Sparkly on a Single Machine
 
-You can install and run Sparkly on a single machine. If you have relatively small tables, or just want to experiment with Sparkly, this is often sufficient. Otherwise you may consider installing and running Sparkly on a [cluster of machines](https://github.com/anhaidgroup/sparkly/blob/main/doc/install-cluster-machines.md) (such as on Amazon Web Services). 
+You can install and run Sparkly on a single machine. If you have relatively small tables, or just want to experiment with Sparkly, this is often sufficient. Otherwise you may consider installing and running Sparkly on a [cluster of machines](https://github.com/anhaidgroup/sparkly/blob/main/doc/install-cluster-machines.md) (such as on Amazon Web Services).
+
 
 ### Overview
 
