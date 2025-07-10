@@ -1,106 +1,33 @@
-![license](https://img.shields.io/github/license/anhaidgroup/sparkly)
+## Sparkly: Blocking for Entity Matching
 
-# Sparkly
+Sparkly is an open-source tool for the blocking step of entity matching. Entity matching finds tuples from two tables A and B that match, that is, refer to the same real-world entity. It typically proceeds in two steps. *The blocking step* uses heuristics to quickly identify a relatively small set of tuple pairs that can be matches. *The matching step* applies a (rule- or learning-based) matcher to each surviving pair to predict match/no-match. (See [this page](https://anhaidgroup.github.io/magellan/about) for details.)
 
-Welcome to Sparkly! Sparkly is a TF/IDF top-k blocking for entity matching system built on
-top of Apache Spark and PyLucene. 
+Sparkly focuses on the blocking step, and is distinguished in three aspects: 
 
-## Paper and Data
+* It can scale to large tables, for example, with tens of millions or hundreds of millions of tuples per table. 
+* It outperforms many state-of-the-art blocking solutions. See [this paper](https://pages.cs.wisc.edu/~anhai/papers1/sparkly-vldb2023.pdf) for details. 
+* Variations of Sparkly have been implemented in industry and used by hundreds of enterprises. 
 
-A link to our paper can be found [here](https://pages.cs.wisc.edu/~anhai/papers1/sparkly-tr22.pdf).
-Data used in the paper can be found [here](https://pages.cs.wisc.edu/~dpaulsen/sparkly_datasets/).
+### How It Works
 
+Let A be the smaller table (the one with fewer tuples). For each tuple b in Table B, Sparkly finds k tuples in Table A that have the highest BM25 similarity score with tuple b. Let these tuples be a<sub>1</sub>, a<sub>2</sub>, ..., a<sub>k</sub>. Then Sparkly returns the tuple pairs (a<sub>1</sub>,b), (a<sub>2</sub>,b), ..., (a<sub>k</sub>,b) as potential matches in its output. BM25 is a similarity score commonly used in text document retrieval and keyword search on the Web. 
 
+Implementation-wise, Sparkly builds an index over the tuples in Table A, then uses this index and a Spark cluster to perform the top-k tuple findings fast. See [the paper](https://www.vldb.org/pvldb/vol16/p1507-paulsen.pdf) for details. 
 
-## Quick Start: Sparkly in 30 Seconds
+### Case Studies and Performance Statistics
 
+Sparkly can block tables of tens of millions of tuples in hours on relatively small clusters of machines. It scales to hundreds of millions of tuples. See [this page](https://github.com/anhaidgroup/sparkly/blob/docs-update/doc/case-studies-n-performance-stats.md) for details. 
 
-There are three main steps to running Sparkly, 
+### Installation
 
-1. Reading Data
+See instructions to install Sparkly on [a single machine](https://github.com/anhaidgroup/sparkly/blob/docs-update/doc/install-single-machine.md) or on [a cluster of machines](https://github.com/anhaidgroup/sparkly/blob/docs-update/doc/install-cluster-machines.md). 
 
+### How to Use
 
-```python
-spark = SparkSession.builder.getOrCreate()
+See [this page](https://github.com/anhaidgroup/sparkly/blob/docs-update/doc/using-sparkly.md), which points to a technical report, slides, a tutorial, and examples.
 
-table_a = spark.read.parquet('./examples/data/abt_buy/table_a.parquet')
-table_b = spark.read.parquet('./examples/data/abt_buy/table_b.parquet')
-```
+### Further Pointers
 
-2. Index Building
+See [API documentation](https://derekpaulsen.github.io/sparkly/html/). 
+For questions / comments, contact [AnHai Doan](mailto:anhai@cs.wisc.edu).
 
-```python
-config = IndexConfig(id_col='_id')
-config.add_field('name', ['3gram'])
-
-index = LuceneIndex('/tmp/example_index/', config)
-index.upsert_docs(table_a)
-```
-
-3. Blocking 
-
-```python
-query_spec = index.get_full_query_spec()
-
-candidates = Searcher(index).search(table_b, query_spec, id_col='_id', limit=50)
-candidates.show()
-```
-
-## Installing Dependencies 
-
-### Python
-
-Sparkly has been tested for Python 3.10 on Ubuntu 22.04.
-
-### PyLucene 
-
-Unfortunately PyLucene is not available in PyPI, to install PyLucene see 
-[PyLucene docs](https://lucene.apache.org/pylucene/install.html). Sparkly has been 
-tested with PyLucene 9.4.1.
-
-### Other Requirements
-
-Once PyLucene has been installed, Sparkly can be installed with pip by running the following
-command in the root directory of this repository.
-
-`$ python3 -m pip install .`
-
-## Tutorials
-
-To get started with Sparkly we recommend starting with the IPython notebook included with 
-the repository [examples/example.ipynb](https://github.com/anhaidgroup/sparkly/blob/main/examples/example.ipynb).
-
-Additional examples of how to use Sparkly are provided under the
-[examples/](https://github.com/anhaidgroup/sparkly/tree/main/examples)
-directory in this repository. 
-
-## How It Works 
-
-Sparkly is built to do blocking for [entity matching](https://en.wikipedia.org/wiki/Record_linkage).
-There have been many solutions developed to address this problem, from basic SQL joins to deep learning based approaches. 
-Sparkly takes a top-k approach to blocking, in particular, each search record is 
-paired with the top-k records with the highest [BM25](https://en.wikipedia.org/wiki/Okapi_BM25) scores.
-In terms of SQL this might look something like executing this query for each record,
-
-```SQL 
-SELECT id, BM25(<QUERY>, name) AS score 
-FROM table_a 
-ORDER BY score DESC
-LIMIT <K>;
-```
-
-where `QUERY` derived from the search record. 
-
-This kind of search is very common in information retrieval and keyword search applications. In fact, this is 
-exactly what Apache Lucene is designed to do. While this form of search produces high quality results, it can also be very 
-compute intensive, hence to speed up search, we leverage PySpark to distribute the computation. By using PySpark
-we can easily leverage a large number of machines to perform search without having to rely on approximation algorithms.
-
-
-## API Docs
-
-API docs can be found [here](https://derekpaulsen.github.io/sparkly/html/)
-
-## Tips for Installing PyLucene
-
-For tips on installing PyLucene take a look at this [readme](https://github.com/anhaidgroup/sparkly/blob/main/tips/pylucene.md).
