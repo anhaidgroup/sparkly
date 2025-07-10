@@ -1,0 +1,300 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>sparkly.query_generator package &mdash; Sparkly 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=2709fde1"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Sparkly
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">sparkly.query_generator package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-sparkly.query_generator.lucene_query_generator">sparkly.query_generator.lucene_query_generator module</a><ul>
+<li><a class="reference internal" href="#sparkly.query_generator.lucene_query_generator.LuceneQueryGenerator"><code class="docutils literal notranslate"><span class="pre">LuceneQueryGenerator</span></code></a><ul>
+<li><a class="reference internal" href="#sparkly.query_generator.lucene_query_generator.LuceneQueryGenerator.generate_query"><code class="docutils literal notranslate"><span class="pre">LuceneQueryGenerator.generate_query()</span></code></a></li>
+<li><a class="reference internal" href="#sparkly.query_generator.lucene_query_generator.LuceneQueryGenerator.generate_query_clauses"><code class="docutils literal notranslate"><span class="pre">LuceneQueryGenerator.generate_query_clauses()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-sparkly.query_generator.query_spec">sparkly.query_generator.query_spec module</a><ul>
+<li><a class="reference internal" href="#sparkly.query_generator.query_spec.QuerySpec"><code class="docutils literal notranslate"><span class="pre">QuerySpec</span></code></a><ul>
+<li><a class="reference internal" href="#sparkly.query_generator.query_spec.QuerySpec.boost_map"><code class="docutils literal notranslate"><span class="pre">QuerySpec.boost_map</span></code></a></li>
+<li><a class="reference internal" href="#sparkly.query_generator.query_spec.QuerySpec.filter"><code class="docutils literal notranslate"><span class="pre">QuerySpec.filter</span></code></a></li>
+<li><a class="reference internal" href="#sparkly.query_generator.query_spec.QuerySpec.is_subset"><code class="docutils literal notranslate"><span class="pre">QuerySpec.is_subset()</span></code></a></li>
+<li><a class="reference internal" href="#sparkly.query_generator.query_spec.QuerySpec.size"><code class="docutils literal notranslate"><span class="pre">QuerySpec.size</span></code></a></li>
+<li><a class="reference internal" href="#sparkly.query_generator.query_spec.QuerySpec.to_dict"><code class="docutils literal notranslate"><span class="pre">QuerySpec.to_dict()</span></code></a></li>
+<li><a class="reference internal" href="#sparkly.query_generator.query_spec.QuerySpec.union"><code class="docutils literal notranslate"><span class="pre">QuerySpec.union()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-sparkly.query_generator">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Sparkly</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">sparkly.query_generator package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/sparkly.query_generator.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="sparkly-query-generator-package">
+<h1>sparkly.query_generator package<a class="headerlink" href="#sparkly-query-generator-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-sparkly.query_generator.lucene_query_generator">
+<span id="sparkly-query-generator-lucene-query-generator-module"></span><h2>sparkly.query_generator.lucene_query_generator module<a class="headerlink" href="#module-sparkly.query_generator.lucene_query_generator" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="sparkly.query_generator.lucene_query_generator.LuceneQueryGenerator">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">sparkly.query_generator.lucene_query_generator.</span></span><span class="sig-name descname"><span class="pre">LuceneQueryGenerator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">analyzer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="sparkly.html#sparkly.index_config.IndexConfig" title="sparkly.index_config.IndexConfig"><span class="pre">IndexConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">index_reader</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.query_generator.lucene_query_generator.LuceneQueryGenerator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class for generating queries for Lucene based indexes</p>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#sparkly.query_generator.lucene_query_generator.LuceneQueryGenerator.generate_query" title="sparkly.query_generator.lucene_query_generator.LuceneQueryGenerator.generate_query"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_query</span></code></a>(doc, query_spec)</p></td>
+<td><p>Generate a query for doc given the query spec</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#sparkly.query_generator.lucene_query_generator.LuceneQueryGenerator.generate_query_clauses" title="sparkly.query_generator.lucene_query_generator.LuceneQueryGenerator.generate_query_clauses"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_query_clauses</span></code></a>(doc, query_spec)</p></td>
+<td><p>generate the clauses for each field -&gt; analyzer pair, filters are ignored</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="sparkly.query_generator.lucene_query_generator.LuceneQueryGenerator.generate_query">
+<span class="sig-name descname"><span class="pre">generate_query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query_spec</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#sparkly.query_generator.query_spec.QuerySpec" title="sparkly.query_generator.query_spec.QuerySpec"><span class="pre">QuerySpec</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.query_generator.lucene_query_generator.LuceneQueryGenerator.generate_query" title="Link to this definition"></a></dt>
+<dd><p>Generate a query for doc given the query spec</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>doc</strong><span class="classifier">dict | pd.Series</span></dt><dd><p>a record that will be used to generate the query</p>
+</dd>
+<dt><strong>query_spec</strong><span class="classifier">QuerySpec</span></dt><dd><p>the template for the query being built</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>A lucene query which can be passed to an index searcher</dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sparkly.query_generator.lucene_query_generator.LuceneQueryGenerator.generate_query_clauses">
+<span class="sig-name descname"><span class="pre">generate_query_clauses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query_spec</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#sparkly.query_generator.query_spec.QuerySpec" title="sparkly.query_generator.query_spec.QuerySpec"><span class="pre">QuerySpec</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.query_generator.lucene_query_generator.LuceneQueryGenerator.generate_query_clauses" title="Link to this definition"></a></dt>
+<dd><p>generate the clauses for each field -&gt; analyzer pair, filters are ignored</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>doc</strong><span class="classifier">dict | pd.Series</span></dt><dd><p>a record that will be used to generate the clauses</p>
+</dd>
+<dt><strong>query_spec</strong><span class="classifier">QuerySpec</span></dt><dd><p>the template for the query being built</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>A dict of ((field, indexed_fields) -&gt; BooleanQuery)</dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-sparkly.query_generator.query_spec">
+<span id="sparkly-query-generator-query-spec-module"></span><h2>sparkly.query_generator.query_spec module<a class="headerlink" href="#module-sparkly.query_generator.query_spec" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="sparkly.query_generator.query_spec.QuerySpec">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">sparkly.query_generator.query_spec.</span></span><span class="sig-name descname"><span class="pre">QuerySpec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.query_generator.query_spec.QuerySpec" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></p>
+<p>A specification for generating queries</p>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><a class="reference internal" href="#sparkly.query_generator.query_spec.QuerySpec.boost_map" title="sparkly.query_generator.query_spec.QuerySpec.boost_map"><code class="xref py py-obj docutils literal notranslate"><span class="pre">boost_map</span></code></a></dt><dd><p>The boosting weights for each (search_field -&gt; indexed_field) pair.</p>
+</dd>
+<dt><strong>filter</strong></dt><dd></dd>
+<dt><strong>size</strong></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">clear</span></code>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy</span></code>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">fromkeys</span></code>(iterable[, value])</p></td>
+<td><p>Create a new dictionary with keys from iterable and values set to value.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get</span></code>(key[, default])</p></td>
+<td><p>Return the value for key if key is in the dictionary, else default.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">items</span></code>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">keys</span></code>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pop</span></code>(key[, default])</p></td>
+<td><p>If the key is not found, return the default if given; otherwise, raise a KeyError.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">popitem</span></code>(/)</p></td>
+<td><p>Remove and return a (key, value) pair as a 2-tuple.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">setdefault</span></code>(key[, default])</p></td>
+<td><p>Insert key with a value of default if key is not in the dictionary.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">update</span></code>([E, ]**F)</p></td>
+<td><p>If E is present and has a .keys() method, then does:  for k in E: D[k] = E[k] If E is present and lacks a .keys() method, then does:  for k, v in E: D[k] = v In either case, this is followed by: for k in F:  D[k] = F[k]</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">values</span></code>()</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><strong>is_subset</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>to_dict</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><strong>union</strong></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<dl class="py property">
+<dt class="sig sig-object py" id="sparkly.query_generator.query_spec.QuerySpec.boost_map">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">boost_map</span></span><a class="headerlink" href="#sparkly.query_generator.query_spec.QuerySpec.boost_map" title="Link to this definition"></a></dt>
+<dd><p>The boosting weights for each (search_field -&gt; indexed_field) 
+pair. If a pair doesn’t exist in the map, the boost weight is 1</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="sparkly.query_generator.query_spec.QuerySpec.filter">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">filter</span></span><a class="headerlink" href="#sparkly.query_generator.query_spec.QuerySpec.filter" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sparkly.query_generator.query_spec.QuerySpec.is_subset">
+<span class="sig-name descname"><span class="pre">is_subset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#sparkly.query_generator.query_spec.QuerySpec.is_subset" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="sparkly.query_generator.query_spec.QuerySpec.size">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">size</span></span><a class="headerlink" href="#sparkly.query_generator.query_spec.QuerySpec.size" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sparkly.query_generator.query_spec.QuerySpec.to_dict">
+<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#sparkly.query_generator.query_spec.QuerySpec.to_dict" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sparkly.query_generator.query_spec.QuerySpec.union">
+<span class="sig-name descname"><span class="pre">union</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.query_generator.query_spec.QuerySpec.union" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-sparkly.query_generator">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-sparkly.query_generator" title="Link to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Derek Paulsen.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
