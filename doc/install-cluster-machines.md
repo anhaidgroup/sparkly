@@ -1,8 +1,8 @@
 ## How to Install Sparkly on a Cluster of Machines
 
-These instructions for obtaining a set of EC2 nodes on Amazon Web Service (AWS), setting up a Spark cluster on these nodes, and testing that the Spark cluster is working properly. 
-
-We have tested installation with Ubuntu 22.04, Java Temurin JDK 17, Python 3.10, and Spark 3.5.1. We cannot guarantee successful installation on other versions.
+Here we provide instructions for installing Sparkly on a cluster of machines on the cloud, specifically on Amazon Web Services (AWS).You can adapt this guide to install Sparkly on a cluster of local machines. 
+ 
+We have tested these installation instructions with Ubuntu 22.04, Java Temurin JDK 17, Python 3.10, and Spark 3.5.1. We cannot guarantee successful installation using other software versions.
 
 ### Creating EC2 Nodes
 
