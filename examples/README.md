@@ -16,7 +16,7 @@ single analyzer and a single column to do blocking on the example dataset.
 
 ### example.py
 
-A slightly more complex example, this code creates an index on two fields (`name' and `description') 
+A slightly more complex example, this code creates an index on two fields (`name` and `description`) 
 using multiple analyzers (`3gram` and `standard`). The example then demonstrates how to search using 
 multiple sub indexes and columns.
 
