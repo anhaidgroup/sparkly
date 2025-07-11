@@ -28,6 +28,6 @@ See [this page](https://github.com/anhaidgroup/sparkly/blob/main/doc/using-spark
 
 ### Further Pointers
 
-See [API documentation](https://derekpaulsen.github.io/sparkly/html/). 
+See [API documentation](https://anhaidgroup.github.io/sparkly/). 
 For questions / comments, contact [AnHai Doan](mailto:anhai@cs.wisc.edu).
 
