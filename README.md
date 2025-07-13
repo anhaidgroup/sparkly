@@ -11,7 +11,7 @@ Sparkly focuses on the blocking step, and is distinguished in four aspects:
 
 Under some conditions, you may want to use Delex, an even more powerful blocking solution, which allows you to combine multiple blocking strategies, including TF/IDF. See the [Delex homepage](https://github.com/anhaidgroup/delex/tree/main) for more details, including when to use Sparkly versus Delex. 
 
-### How It Works
+### How Sparkly Works
 
 Let A be the smaller table (the one with fewer tuples). For each tuple b in Table B, Sparkly finds k tuples in Table A that have the highest TF/IDF similarity score with tuple b. Let these tuples be a<sub>1</sub>, a<sub>2</sub>, ..., a<sub>k</sub>. Then Sparkly returns the tuple pairs (a<sub>1</sub>,b), (a<sub>2</sub>,b), ..., (a<sub>k</sub>,b) as potential matches in its output. TF/IDF is a similarity score commonly used in text document retrieval and keyword search on the Web. Many TF/IDF variations exist. Sparkly uses the well-known BM25 variation. 
 
