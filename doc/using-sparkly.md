@@ -12,4 +12,6 @@ Here's a [tutorial](https://pages.cs.wisc.edu/~anhai/papers1/sparkly-tutorial.pd
 
 We strongly recommend reading the tutorial first, then check out the examples. But if you are impatient, then you can also jump directly to trying to run the examples. 
 
+When trying to run Sparkly on a cluster of machines, you should also read this [short note](https://github.com/anhaidgroup/sparkly/blob/main/doc/note-on-input-sparkly-delex.md) about the location of the input for Sparkly. 
+
 
