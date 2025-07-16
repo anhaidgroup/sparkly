@@ -9,4 +9,4 @@ To enable the reading of the data files, we should store the data files somewher
 
 The last option (storing the data files on all nodes in the cluster) is a bit cumbersome but is the simplest option. You can use this option to experiment with Sparkly. 
 
-Delex is a more complex blocking solution than Sparkly, and the above note also applies to running Delex on a cluster of machines. 
+[Delex](https://github.com/anhaidgroup/delex) is a more complex blocking solution than Sparkly, and the above note also applies to running Delex on a cluster of machines. 
