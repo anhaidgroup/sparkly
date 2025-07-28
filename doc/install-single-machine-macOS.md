@@ -113,10 +113,18 @@ To download Python environments, we will use Homebrew. Run the following in the 
 	brew install python@3.12
 ```
 
+Then, we need to make sure we can use this version of Python. To do so, in the terminal run:
+```
+	echo 'alias python3="python3.12"' >> ~/.zshrc
+```
+This will allow us to use 'python3' for running python commands. To enact these changes, in the terminal run:
+```
+	source ~/.zshrc
+```
 #### Step 2C: Python Environment Setup
 Now, we will create a Python environment with Python 3.12. This step is necessary to make sure we use the correct version of Python with the correct dependencies for the PyLucene and JCC installation.  In your terminal, run:
 ```
-	python -m venv sparkly
+	python3 -m venv sparkly
 ```
 
 This will create a virtual environment named sparkly. To activate this environment, run the following:
@@ -125,7 +133,7 @@ This will create a virtual environment named sparkly. To activate this environme
 ```
 To make sure everything is correct, run:
 ```
-	python --version
+	python3 --version
 ```
 If the output says 
 ```
@@ -332,13 +340,13 @@ First, run the command:
 ```
 Next, to build JCC, run:
 ```
-	python setup.py build
+	python3 setup.py build
 ```
 If there are several lines of output, and the last few lines do not include the word “**error**”, then this step was successful.
 
 Then, to install JCC run:
 ```
-	sudo -E python setup.py install
+	sudo -E python3 setup.py install
 ```
 You will be prompted to enter a password, and it will be the password you use to login to your computer. 
 
@@ -366,7 +374,7 @@ Next, to build PyLucene so it is ready to be installed, run the following comman
 
 Once you have replaced the two instances of username in the following command, run it:
 ```
-	sudo make PYTHON='/Users/username/sparkly/bin/python' JCC='$(PYTHON) -m jcc --arch aarch64' NUM_FILES=16 MODERN_PACKAGING='true' ICUSBIN='/Users/username/Downloads/icu/source/bin'
+	sudo make PYTHON='/Users/username/sparkly/bin/python3' JCC='$(PYTHON) -m jcc --arch aarch64' NUM_FILES=16 MODERN_PACKAGING='true' ICUSBIN='/Users/username/Downloads/icu/source/bin'
 ```
 
 If this was successful, the last line of output will say “**build of pylucene 9.12.0 complete**”. 
@@ -374,14 +382,14 @@ If this was successful, the last line of output will say “**build of pylucene 
 
 The last step to install will be running a very similar command to the last. Make sure to change two instances of username again before running the command:
 ```
-	sudo make install PYTHON='/Users/username/sparkly/bin/python' JCC='$(PYTHON) -m jcc --arch aarch64' NUM_FILES=16 MODERN_PACKAGING='true' ICUSBIN='/Users/username/Downloads/icu/source/bin'
+	sudo make install PYTHON='/Users/username/sparkly/bin/python3' JCC='$(PYTHON) -m jcc --arch aarch64' NUM_FILES=16 MODERN_PACKAGING='true' ICUSBIN='/Users/username/Downloads/icu/source/bin'
 ```
 
 If this was successful, the output will say “**Successfully installed lucene-9.12.0**”.
 
 To make sure everything was installed correctly, run this command:
 ```
-	python -c "import lucene; print(lucene.VERSION)"
+	python3 -c "import lucene; print(lucene.VERSION)"
 ```
 If the output is “**9.12.0**”, then you are ready to use Sparkly!
 
