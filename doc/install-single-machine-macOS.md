@@ -261,11 +261,11 @@ We are going to download the Temurin 17 JDK that is optimized for your machine r
 
 To check if this was successful, run the following command:
 ```
-	java -version
+	/usr/libexec/java_home -V
 ```
 If the output contains 
 ```
-“openjdk version 17.x.y”
+“OpenJDK version 17.x.y”
 ```
 where x and y are numbers, the installation was successful.
 
