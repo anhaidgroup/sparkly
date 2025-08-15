@@ -9,7 +9,7 @@ Start by installing Python 3 (if not already). You can find instructions here:
 
 We recommend installing Python 3.10 if possible, as we have tested Sparkly extensively with Python 3.10. 
 
-### Step 2 
+### Step 2: Installing Sparkly 
 
 In the future you can install Sparkly using one of the following two options. **As of now, since Sparkly is still in testing, we do not yet enable Option 1 (Pip installing from PyPI). Thus you should use Option 2 (Pip installing from GitHub).**
 
