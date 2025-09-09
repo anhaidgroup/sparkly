@@ -15,7 +15,7 @@ Under some conditions, you may want to use Delex, an even more powerful blocking
 
 Let A be the smaller table (the one with fewer tuples). For each tuple b in Table B, Sparkly finds k tuples in Table A that have the highest TF/IDF similarity score with tuple b. Let these tuples be a<sub>1</sub>, a<sub>2</sub>, ..., a<sub>k</sub>. Then Sparkly returns the tuple pairs (a<sub>1</sub>,b), (a<sub>2</sub>,b), ..., (a<sub>k</sub>,b) as potential matches in its output. TF/IDF is a similarity score commonly used in text document retrieval and keyword search on the Web. Many TF/IDF variations exist. Sparkly uses the well-known BM25 variation. 
 
-Implementation-wise, Sparkly builds an index over the tuples in Table A, then uses this index and a Spark cluster to perform the top-k tuple findings fast. Sparly uses Lucene to build indexes and perform top-k search. See [the paper](https://www.vldb.org/pvldb/vol16/p1507-paulsen.pdf) for details. 
+Implementation-wise, Sparkly builds an index over the tuples in Table A, then uses this index and a Spark cluster to perform the top-k tuple findings fast. Sparkly uses Lucene to build indexes and perform top-k search. See [the paper](https://www.vldb.org/pvldb/vol16/p1507-paulsen.pdf) for details. 
 
 ### Case Studies and Performance Statistics
 
