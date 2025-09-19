@@ -31,7 +31,7 @@ classifiers = [
   "Intended Audience :: Developers",
 
   # Pick your license as you wish (see also "license" above)
-  "License :: OSI Approved :: Apache Software License",
+  "License :: OSI Approved :: BSD License",
 
   # Specify the Python versions you support here.
   "Programming Language :: Python :: 3",
