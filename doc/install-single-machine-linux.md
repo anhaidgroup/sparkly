@@ -56,7 +56,7 @@ exit
 You can check that you have successfully installed Java by running this command. If Java is installed, it should display a version number.
 
 ```
-Java --version
+java --version
 ```
 
 #### Step 3.2: Installing g++
