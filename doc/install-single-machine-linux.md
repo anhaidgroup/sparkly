@@ -298,11 +298,7 @@ Once you have verified that there are no errors, the following command will inst
 sudo make install PYTHON='/usr/bin/python3' JCC='$(PYTHON) -m jcc.__main__ --shared --arch x86_64' NUM_FILES=16
 ```
 
-A simple way to test that PyLucene is installed is to open Python using one of the following commands:
-
-```
-python
-```
+A simple way to test that PyLucene is installed is to open Python using the following:
 
 ```
 python3
