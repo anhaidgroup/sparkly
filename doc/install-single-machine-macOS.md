@@ -129,7 +129,7 @@ Now, we will create a Python environment with Python 3.12. This step is necessar
 
 This will create a virtual environment named sparkly. To activate this environment, run the following:
 ```
-	source sparkly/bin/activate
+	source ~/sparkly/bin/activate
 ```
 To make sure everything is correct, run:
 ```
@@ -144,7 +144,7 @@ where x ≥ 4, then the Python environment setup was successful.
 #### Step 2D: Python Package Installation
 We will be downloading two packages: setuptools and build. These packages are used to build and install JCC. Before installing, make sure you are in the virtual environment. If you have just finished Step 2C, you are in the virtual environment. Otherwise, to make sure your virtual environment is active, you can run:
 ```
-	source sparkly/bin/activate
+	source ~/sparkly/bin/activate
 ```
 To install setuptools, run:
 ```
@@ -158,7 +158,7 @@ To install build, run:
 
 If at any point during the installation you close your terminal, you will need to reactivate your virtual environment by running:
 ```
-	source sparkly/bin/activate
+	source ~/sparkly/bin/activate
 ```
 
 ### Step 3: ICU Installation
@@ -400,7 +400,7 @@ If the output is “**9.12.0**”, then you are ready to use Sparkly!
 ### Additional Tips/FAQ’s
 If at any time you have to take a break from the installation after Step 2, when you reopen your terminal, make sure to run 
 ```
-	source sparkly/bin/activate
+	source ~/sparkly/bin/activate
 ``` 
 to ensure the correct Python environment. Using a different environment could lead to missing packages, or using the wrong version of Python, which can cause issues during JCC installation.
 If anything else arises, refer to the source documentation for the specific software. 
