@@ -234,16 +234,16 @@ Installing PyLucene requires Make. The following command will install Make, if i
 sudo apt install make
 ```
 
-In order to install PyLucene, you first have to build it. You can do so with the following command. Note that this and following commands assume that your Python installation is in the default location for Ubuntu. If it is not, you will have to change the value of the PYTHON= argument (in the commands below) to reflect it.
+In order to install PyLucene, you first have to build it. You can do so with the following command. Note that this and following commands assume that your Python environment is in the same location that this script assumues (inside your HOME directory). If it is not, you will have to change the value of the PYTHON= argument (in the commands below) to reflect it.
 
 ```
-sudo make PYTHON='/usr/bin/python3' JCC='$(PYTHON) -m jcc.__main__ --shared --arch x86_64' NUM_FILES=16
+sudo make PYTHON='$HOME/sparkly-venv/bin/python3' JCC='$(PYTHON) -m jcc.__main__ --shared --arch x86_64' NUM_FILES=16
 ```
 
 Once the command has finished running, you should check that PyLucene is built properly. You can do so with the following command.
 
 ```
-sudo make test PYTHON='/usr/bin/python3' JCC='$(PYTHON) -m jcc.__main__ --shared --arch x86_64' NUM_FILES=16
+sudo make test PYTHON='$HOME/sparkly-venv/bin/python3' JCC='$(PYTHON) -m jcc.__main__ --shared --arch x86_64' NUM_FILES=16
 ```
 
 If PyLucene is built properly, the output of this command will end with several blocks that look like this:
