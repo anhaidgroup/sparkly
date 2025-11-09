@@ -168,13 +168,13 @@ This will allow us to use 'python3' for running python commands. To enact these 
 Now, we will create a Python environment with Python 3.12. This step is necessary to make sure we use the correct version of Python with the correct dependencies for the PyLucene and JCC installation. In your terminal, run:
 
 ```
-	python3 -m venv sparkly
+	python3 -m venv sparkly-venv
 ```
 
 This will create a virtual environment named sparkly. To activate this environment, run the following:
 
 ```
-	source ~/sparkly/bin/activate
+	source ~/sparkly-venv/bin/activate
 ```
 
 To make sure everything is correct, run:
@@ -196,7 +196,7 @@ where x ≥ 4, then the Python environment setup was successful.
 We will be downloading two packages: setuptools and build. These packages are used to build and install JCC. Before installing, make sure you are in the virtual environment. If you have just finished Step 2C, you are in the virtual environment. Otherwise, to make sure your virtual environment is active, you can run:
 
 ```
-	source ~/sparkly/bin/activate
+	source ~/sparkly-venv/bin/activate
 ```
 
 To install setuptools, run:
@@ -214,7 +214,7 @@ To install build, run:
 If at any point during the installation you close your terminal, you will need to reactivate your virtual environment by running:
 
 ```
-	source ~/sparkly/bin/activate
+	source ~/sparkly-venv/bin/activate
 ```
 
 ### Step 3: ICU Installation
@@ -514,7 +514,7 @@ Once you have replaced the two instances of username in the following command, r
 ICUROOT="/Users/username/Downloads/icu/source"
 sudo make \
   ICUSBIN="/usr/bin/env DYLD_FALLBACK_LIBRARY_PATH=$ICUROOT/lib $ICUROOT/bin" \
-  PYTHON="/Users/username/sparkly/bin/python3" \
+  PYTHON="/Users/username/sparkly-venv/bin/python3" \
   JCC='$(PYTHON) -m jcc --arch aarch64' \
   NUM_FILES=16 \
   MODERN_PACKAGING=true
@@ -528,7 +528,7 @@ The last step to install will be running a very similar command to the last. Mak
 ICUROOT="/Users/username/Downloads/icu/source"
 sudo make install \
  ICUSBIN="/usr/bin/env DYLD_FALLBACK_LIBRARY_PATH=$ICUROOT/lib $ICUROOT/bin" \
-  PYTHON="/Users/username/sparkly/bin/python3" \
+  PYTHON="/Users/username/sparkly-venv/bin/python3" \
   JCC='$(PYTHON) -m jcc --arch aarch64' \
  NUM_FILES=16 \
  MODERN_PACKAGING=true
@@ -552,7 +552,7 @@ If the output is “**9.12.0**”, then you are ready to use Sparkly!
 If at any time you have to take a break from the installation after Step 2, when you reopen your terminal, make sure to run
 
 ```
-	source ~/sparkly/bin/activate
+	source ~/sparkly-venv/bin/activate
 ``` 
 to ensure the correct Python environment. Using a different environment could lead to missing packages, or using the wrong version of Python, which can cause issues during JCC installation.
 If anything else arises, refer to the source documentation for the specific software.
