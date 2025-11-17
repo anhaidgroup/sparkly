@@ -1,10 +1,10 @@
 ## How to Install Sparkly on a Linux Machine
 
-The following step-by-step guide describes how to install Sparkly on a single machine running Linux Ubuntu 22.04 (with x86 architecture), Python 3.12, g++ compiler, Java Temurin JDK 17, and PyLucene 9.4.1. You can adapt this guide for other similar configurations using Linux on x86 architecture.
+The following step-by-step guide describes how to install Sparkly on a single machine running Linux Ubuntu 22.04 (with x86 architecture), Python 3.10, g++ compiler, Java Temurin JDK 17, and PyLucene 9.4.1. You can adapt this guide for other similar configurations using Linux on x86 architecture.
 
 ### Step 1: Installing Python
 
-We now install Python 3.12, create a virtual environment, and install two Python packages setuptools and build. Other versions of Python, other environments, or incorrect installations of the setuptools and build packages can cause issues with Sparkly installation.
+We now install Python 3.10, create a virtual environment, and install two Python packages setuptools and build. Other versions of Python, other environments, or incorrect installations of the setuptools and build packages can cause issues with Sparkly installation.
 
 If you suspect that you may have Python downloaded on your machine already, open up your terminal. Then run the command:
 
@@ -24,7 +24,7 @@ run:
 
 If the output of this is
 
-“Python 3.12.x”
+“Python 3.10.x”
 
 where x is a number, you can go to Step 1B (you do not need to complete Step 1A).
 
@@ -42,36 +42,36 @@ python3 --version
 
 do not have the outputs listed above, continue to step 1A.
 
-#### Step 1A: Installing Python 3.12
+#### Step 1A: Installing Python 3.10
 
-Here we download Python 3.12, install it, and make it the default verison.
-Run the following commands in the terminal to install Python 3.12:
+Here we download Python 3.10, install it, and make it the default version.
+Run the following commands in the terminal to install Python 3.10:
 
 ```
     cd /usr/src
-    sudo curl -O https://www.python.org/ftp/python/3.12.3/Python-3.12.3.tgz
-    sudo tar xzf Python-3.12.3.tgz
+    sudo curl -O https://www.python.org/ftp/python/3.10.12/Python-3.10.12.tgz
+    sudo tar xzf Python-3.10.12.tgz
 ```
 
 ```
-    cd Python-3.12.3
+    cd Python-3.10.12
     sudo make clean
     sudo ./configure --enable-optimizations --with-system-ffi
     sudo make -j$(nproc)
     sudo make altinstall
 ```
 
-Now run the following commands to make Python 3.12 the default:
+Now run the following commands to make Python 3.10 the default:
 
 ```
-sudo update-alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.12 1
-python3.12 -m ensurepip --default-pip
-python3.12 -m pip install --upgrade pip setuptools
+    sudo update-alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.10 1
+    python3.10 -m ensurepip --default-pip
+    python3.10 -m pip install --upgrade pip setuptools
 ```
 
 #### Step 1B: Setting Up the Python Environment
 
-Now we will create a Python environment with Python 3.12. This step is necessary to make sure we use the correct version of Python with the correct dependencies. First, we install the venv module with the following command:
+Now we will create a Python environment with Python 3.10. This step is necessary to make sure we use the correct version of Python with the correct dependencies. First, we install the venv module with the following command:
 
 ```
     sudo apt install python3-venv
@@ -97,7 +97,7 @@ To make sure everything is correct, run:
 
 If the output says
 
-“Python 3.12.x”
+“Python 3.10.x”
 
 where x ≥ 0, then the Python environment setup was successful.
 
@@ -112,7 +112,7 @@ Before installing these two packages, make sure you are in the virtual environme
 To install setuptools, run:
 
 ```
-    pip install setuptools
+    pip install 'setuptools<58'
 ```
 
 To install build, run:
@@ -174,13 +174,19 @@ Similar to pip installing from PyPI, the above command will install Sparkly and 
 We strongly recommend installing Java Temurin JDK 17, which is a specific Java release that we have extensively experimented with. As that is not available from the Ubuntu package repository, to install Java, you will need to use the following commands, which were taken from the PyLucene installation guide on their website:
 
 ```
-sudo -s
-apt install wget apt-transport-https gnupg
-wget -O - https://packages.adoptium.net/artifactory/api/gpg/key/public | apt-key add -
-echo "deb https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release)     main" | tee /etc/apt/sources.list.d/adoptium.list
-apt update
-apt install temurin-17-jdk
-exit
+sudo apt install wget apt-transport-https gnupg
+wget -O - https://packages.adoptium.net/artifactory/api/gpg/key/public | sudo apt-key add -
+echo "deb https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | sudo tee /etc/apt/sources.list.d/adoptium.list
+sudo apt update
+sudo apt-get install -y temurin-17-jdk
+```
+
+Next, we need to set Java Temurin 17 as our default Java. To do so, we will add it to our path. We will make this change persist over terminal sessions by saving it in the '~/.bashrc' file.
+
+```
+echo 'export JAVA_HOME="/usr/lib/jvm/temurin-17-jdk-amd64"' >> ~/.bashrc
+echo 'export PATH="${JAVA_HOME}/bin:${PATH}"' >> ~/.bashrc
+source ~/.bashrc
 ```
 
 You can check that you have successfully installed Java by running this command. If Java is installed, it should display a version number.
@@ -219,12 +225,18 @@ This will produce a folder called 'pylucene-9.4.1'. This is the main PyLucene di
 cd pylucene-9.4.1
 ```
 
+Next, we will explicitly set the location of our virtual environment to avoid any issues with installation.
+
+```
+PYTHON_BIN="~/sparkly-venv/bin/python3"
+```
+
 The source code for JCC is distributed with the PyLucene source code and must be installed before you can install PyLucene. The following commands will switch to the 'jcc' subdirectory, build and install JCC, then return to the main PyLucene directory.
 
 ```
 pushd jcc
-sudo python3 setup.py build
-sudo python3 setup.py install
+"${PYTHON_BIN}" setup.py build
+"${PYTHON_BIN}" setup.py install
 popd
 ```
 
@@ -237,13 +249,13 @@ sudo apt install make
 In order to install PyLucene, you first have to build it. You can do so with the following command. Note that this and following commands assume that your Python environment is in the same location that this script assumues (inside your HOME directory). If it is not, you will have to change the value of the PYTHON= argument (in the commands below) to reflect it.
 
 ```
-sudo make PYTHON='$HOME/sparkly-venv/bin/python3' JCC='$(PYTHON) -m jcc.__main__ --shared --arch x86_64' NUM_FILES=16
+make PYTHON="${PYTHON_BIN}" JCC="${PYTHON_BIN} -m jcc.__main__ --shared --arch x86_64" NUM_FILES=16
 ```
 
 Once the command has finished running, you should check that PyLucene is built properly. You can do so with the following command.
 
 ```
-sudo make test PYTHON='$HOME/sparkly-venv/bin/python3' JCC='$(PYTHON) -m jcc.__main__ --shared --arch x86_64' NUM_FILES=16
+make test PYTHON="${PYTHON_BIN}" JCC="${PYTHON_BIN} -m jcc.__main__ --shared --arch x86_64" NUM_FILES=16
 ```
 
 If PyLucene is built properly, the output of this command will end with several blocks that look like this:
@@ -295,7 +307,7 @@ OK
 Once you have verified that there are no errors, the following command will install PyLucene.
 
 ```
-sudo make install PYTHON='/usr/bin/python3' JCC='$(PYTHON) -m jcc.__main__ --shared --arch x86_64' NUM_FILES=16
+make install PYTHON="${PYTHON_BIN}" JCC="${PYTHON_BIN} -m jcc.__main__ --shared --arch x86_64" NUM_FILES=16
 ```
 
 A simple way to test that PyLucene is installed is to open Python using the following:
