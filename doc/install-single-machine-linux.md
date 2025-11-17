@@ -246,7 +246,7 @@ Installing PyLucene requires Make. The following command will install Make, if i
 sudo apt install make
 ```
 
-In order to install PyLucene, you first have to build it. You can do so with the following command. Note that this and following commands assume that your Python installation is in the default location for Ubuntu. If it is not, you will have to change the value of the PYTHON= argument (in the commands below) to reflect it.
+In order to install PyLucene, you first have to build it. You can do so with the following command. Note that this and following commands assume that your Python environment is in the same location that this script assumues (inside your HOME directory). If it is not, you will have to change the value of the PYTHON= argument (in the commands below) to reflect it.
 
 ```
 make PYTHON="${PYTHON_BIN}" JCC="${PYTHON_BIN} -m jcc.__main__ --shared --arch x86_64" NUM_FILES=16
