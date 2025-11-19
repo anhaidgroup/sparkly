@@ -14,7 +14,7 @@ If you suspect that you may have Python downloaded on your machine already, open
 
 If the output path says
 
-“/usr/local/bin/python3”
+“/usr/bin/python3”
 
 run:
 
@@ -44,7 +44,7 @@ do not have the outputs listed above, continue to step 1A.
 
 #### Step 1A: Installing Python 3.10
 
-Here we download Python 3.10, install it, and make it the default version.
+Here we download Python 3.10 and install it.
 Run the following commands in the terminal to install Python 3.10:
 
 ```
@@ -61,13 +61,16 @@ Run the following commands in the terminal to install Python 3.10:
     sudo make altinstall
 ```
 
-Now run the following commands to make Python 3.10 the default:
+To confirm this step was successful, you should run:
 
 ```
-    sudo update-alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.10 1
-    python3.10 -m ensurepip --default-pip
-    python3.10 -m pip install --upgrade pip setuptools
+    python3.10 --version
 ```
+and ensure the output says:
+
+“Python 3.10.x”
+
+where x is a number.
 
 #### Step 1B: Setting Up the Python Environment
 
@@ -80,7 +83,7 @@ Now we will create a Python environment with Python 3.10. This step is necessary
 Next, in your terminal, run:
 
 ```
-    python3 -m venv ~/sparkly-venv
+    python3.10 -m venv ~/sparkly-venv
 ```
 
 This will create a virtual environment named sparkly-venv. To activate this environment, run the following:
@@ -92,7 +95,7 @@ This will create a virtual environment named sparkly-venv. To activate this envi
 To make sure everything is correct, run:
 
 ```
-    python3 --version
+    python --version
 ```
 
 If the output says
@@ -228,7 +231,7 @@ cd pylucene-9.4.1
 Next, we will explicitly set the location of our virtual environment to avoid any issues with installation.
 
 ```
-PYTHON_BIN="~/sparkly-venv/bin/python3"
+PYTHON_BIN="~/sparkly-venv/bin/python"
 ```
 
 The source code for JCC is distributed with the PyLucene source code and must be installed before you can install PyLucene. The following commands will switch to the 'jcc' subdirectory, build and install JCC, then return to the main PyLucene directory.
@@ -265,37 +268,37 @@ If PyLucene is built properly, the output of this command will end with several 
 Ran 10 tests in 1.980s
 
 OK
-/usr/bin/python3 test3/test_StopAnalyzer.py
+/usr/bin/python test3/test_StopAnalyzer.py
 ...
 ----------------------------------------------------------------------
 Ran 3 tests in 0.007s
 
 OK
-/usr/bin/python3 test3/test_Similarity.py
+/usr/bin/python test3/test_Similarity.py
 .
 ----------------------------------------------------------------------
 Ran 1 test in 0.311s
 
 OK
-/usr/bin/python3 test3/test_Not.py
+/usr/bin/python test3/test_Not.py
 .
 ----------------------------------------------------------------------
 Ran 1 test in 0.330s
 
 OK
-/usr/bin/python3 test3/test_ThaiAnalyzer.py
+/usr/bin/python test3/test_ThaiAnalyzer.py
 ...
 ----------------------------------------------------------------------
 Ran 3 tests in 0.010s
 
 OK
-/usr/bin/python3 test3/test_PythonException.py
+/usr/bin/python test3/test_PythonException.py
 .
 ----------------------------------------------------------------------
 Ran 1 test in 0.012s
 
 OK
-/usr/bin/python3 test3/test_bug1564.py
+/usr/bin/python test3/test_bug1564.py
 .
 ----------------------------------------------------------------------
 Ran 1 test in 0.307s
@@ -313,7 +316,7 @@ make install PYTHON="${PYTHON_BIN}" JCC="${PYTHON_BIN} -m jcc.__main__ --shared 
 A simple way to test that PyLucene is installed is to open Python using the following:
 
 ```
-python3
+python
 ```
 
 You can then import the PyLucene package like so:
