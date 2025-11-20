@@ -74,7 +74,13 @@ where x is a number.
 
 #### Step 1B: Setting Up the Python Environment
 
-Now we will create a Python environment with Python 3.10. This step is necessary to make sure we use the correct version of Python with the correct dependencies. First, we install the venv module with the following command:
+Now we will create a Python environment with Python 3.10. This step is necessary to make sure we use the correct version of Python with the correct dependencies. First, we need to make sure the Ubuntu package manager is updated. We can do this using:
+
+```
+    sudo apt update
+```
+
+Then, we install the venv module with the following command:
 
 ```
     sudo apt install python3-venv
