@@ -235,6 +235,11 @@ This will produce a folder called 'pylucene-9.4.1'. This is the main PyLucene di
 cd pylucene-9.4.1
 ```
 
+Then, we will install two packages that we need for the JCC installation:
+```
+sudo apt install python3-dev build-essential
+```
+
 Next, we will explicitly set the location of our virtual environment to avoid any issues with installation.
 
 ```
