@@ -238,7 +238,7 @@ cd pylucene-9.4.1
 Next, we will explicitly set the location of our virtual environment to avoid any issues with installation.
 
 ```
-PYTHON_BIN="~/sparkly-venv/bin/python"
+PYTHON_BIN=~/sparkly-venv/bin/python
 ```
 
 The source code for JCC is distributed with the PyLucene source code and must be installed before you can install PyLucene. The following commands will switch to the 'jcc' subdirectory, build and install JCC, then return to the main PyLucene directory.
