@@ -333,7 +333,7 @@ class LuceneIndex(Index):
         self.deinit()
         return super().__reduce__()
 
-    def _build_segment(self, df, config, tmp_dir_path, show_progress_bar):
+    def _build_segment(self, df, config, tmp_dir_path, show_progress_bar=False):
 
         # use pid to decide which tmp index to write to
         path = tmp_dir_path/ str(multiprocessing.current_process().pid)
