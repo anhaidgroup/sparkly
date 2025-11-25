@@ -4,13 +4,14 @@ build-backend = "hatchling.build"
 
 [project]
 name = "sparkly-em"
-version = "0.1.1"
+version = "0.1.0"
 dynamic = ["dependencies"]
 
 requires-python = ">= 3.8"
 
 authors = [
 	{name = "Derek Paulsen", email = "derekpaulsensi@gmail.com"},
+	{name = "Dev Ahluwalia", email = "dahluwalia@wisc.edu"}
 ]
 
 description = "Sparkly is a TF/IDF top-k blocking for entity matching system built on top of Apache Spark and PyLucene."
