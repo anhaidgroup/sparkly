@@ -9,7 +9,7 @@ Sparkly focuses on the blocking step, and is distinguished in four aspects:
 * It outperforms many state-of-the-art blocking solutions. See [this paper](https://pages.cs.wisc.edu/~anhai/papers1/sparkly-vldb2023.pdf) for details. 
 * Variations of Sparkly have been implemented in industry and used by hundreds of enterprises.
 
-Under some conditions, you may want to use Delex, an even more powerful blocking solution, which allows you to combine multiple blocking strategies, including TF/IDF. See the [Delex homepage](https://github.com/anhaidgroup/delex/tree/main) for more details, including when to use Sparkly versus Delex. 
+If you have blocking heuristics you want to use, you may want to consider Delex, an even more powerful blocking solution, which allows you to combine multiple blocking heuristics, including TF/IDF. See the [Delex homepage](https://github.com/anhaidgroup/delex/tree/main) for more details, including when to use Sparkly versus Delex. 
 
 ### How Sparkly Works
 
