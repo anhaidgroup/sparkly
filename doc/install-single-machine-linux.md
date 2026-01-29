@@ -2,6 +2,14 @@
 
 The following step-by-step guide describes how to install Sparkly on a single machine running Linux Ubuntu 22.04 (with x86 architecture), Python 3.10, g++ compiler, Java Temurin JDK 17, and PyLucene 9.4.1. You can adapt this guide for other similar configurations using Linux on x86 architecture.
 
+### Step 0: Installing System Dependencies
+
+Before installing Python, Sparkly, or PyLucene, install the required system packages with the following two commands:
+
+`sudo apt-get update`
+
+`sudo apt-get install -y build-essential wget apt-transport-https gnupg curl make libssl-dev openssl zlib1g zlib1g-dev libffi-dev python3-dev libicu-dev libbz2-dev libreadline-dev libsqlite3-dev xz-utils tk-dev liblzma-dev`
+
 ### Step 1: Installing Python
 
 We now install Python 3.10, create a virtual environment, and install two Python packages setuptools and build. Other versions of Python, other environments, or incorrect installations of the setuptools and build packages can cause issues with Sparkly installation.
@@ -66,6 +74,7 @@ To confirm this step was successful, you should run:
 ```
     python3.10 --version
 ```
+
 and ensure the output says:
 
 “Python 3.10.x”
@@ -74,13 +83,7 @@ where x is a number.
 
 #### Step 1B: Setting Up the Python Environment
 
-Now we will create a Python environment with Python 3.10. This step is necessary to make sure we use the correct version of Python with the correct dependencies. First, we need to make sure the Ubuntu package manager is updated. We can do this using:
-
-```
-    sudo apt update
-```
-
-Then, we install the venv module with the following command:
+Now we will create a Python environment with Python 3.10. This step is necessary to make sure we use the correct version of Python with the correct dependencies. First, we install the venv module with the following command:
 
 ```
     sudo apt install python3-venv
@@ -184,7 +187,6 @@ Similar to pip installing from PyPI, the above command will install Sparkly and 
 We strongly recommend installing Java Temurin JDK 17, which is a specific Java release that we have extensively experimented with. As that is not available from the Ubuntu package repository, to install Java, you will need to use the following commands, which were taken from the PyLucene installation guide on their website:
 
 ```
-sudo apt install wget apt-transport-https gnupg
 wget -O - https://packages.adoptium.net/artifactory/api/gpg/key/public | sudo apt-key add -
 echo "deb https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | sudo tee /etc/apt/sources.list.d/adoptium.list
 sudo apt update
@@ -235,11 +237,6 @@ This will produce a folder called 'pylucene-9.4.1'. This is the main PyLucene di
 cd pylucene-9.4.1
 ```
 
-Then, we will install two packages that we need for the JCC installation:
-```
-sudo apt install python3-dev build-essential
-```
-
 Next, we will explicitly set the location of our virtual environment to avoid any issues with installation.
 
 ```
@@ -253,12 +250,6 @@ pushd jcc
 "${PYTHON_BIN}" setup.py build
 "${PYTHON_BIN}" setup.py install
 popd
-```
-
-Installing PyLucene requires Make. The following command will install Make, if it is not already installed.
-
-```
-sudo apt install make
 ```
 
 In order to install PyLucene, you first have to build it. You can do so with the following command. Note that this and following commands assume that your Python environment is in the same location that this script assumues (inside your HOME directory). If it is not, you will have to change the value of the PYTHON= argument (in the commands below) to reflect it.

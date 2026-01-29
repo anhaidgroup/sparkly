@@ -2,15 +2,13 @@
 
 ### Motivation
 
-At the heart of Sparkly are Lucene and Spark. The Lucene library allows us to quickly perform information retrieval (IR) style search, that is, find tuple pairs with high BM25 similarity score. Spark allows us to quickly perform this search for large tables in a distributed and parallel fashion. 
+At the heart of Sparkly are Lucene and Spark. The Lucene library allows us to quickly perform information retrieval (IR) style search, that is, find tuple pairs with high BM25 similarity score. Spark allows us to quickly perform this search for large tables in a distributed and parallel fashion.
 
-However, Lucene is written in Java, while the rest of Sparkly is written in Python, to take advantage of many other Python packages. To bridge this Java-Python gap, we use the well-known package PyLucene. Briefly, PyLucene uses JCC to compile Lucene's Java code to C, then compile C code to Python. So we need to install Java, JCC, and PyLucene. 
+However, Lucene is written in Java, while the rest of Sparkly is written in Python, to take advantage of many other Python packages. To bridge this Java-Python gap, we use the well-known package PyLucene. Briefly, PyLucene uses JCC to compile Lucene's Java code to C, then compile C code to Python. So we need to install Java, JCC, and PyLucene.
 
 Installing PyLucene is tricky as it is somewhat finicky. We have extensively tested installing PyLucene on <span style="color: red;">Linux Ubuntu 22.04 on machines with x86 architecture</span>, with Python 3.10, so if you go with this configuration, use the installation instruction below.
 
 If you use MacOS, you can probably still use the instruction below, but read the tips for installing PyLucene on MacOS at the end of this page. If you go with any other configuration, you should refer to the PyLucene website for installation instructions: [https://lucene.apache.org/pylucene/install.html](https://lucene.apache.org/pylucene/install.html)
-
-If you find installing PyLucene cumbersome, consider using the Docker image of Sparkly, as mentioned earlier. 
 
 In what follows we provide a step-by-step guide for installing PyLucene on Linux Ubuntu 22.04 on machines with x86 architecture, with Python 3.10.
 
@@ -97,7 +95,7 @@ If PyLucene is built properly, the output of this command will end with several 
 example goes here
 ```
 
-Once you have verified that there are no errors, the following command will install PyLucene. 
+Once you have verified that there are no errors, the following command will install PyLucene.
 
 ```
 sudo make install PYTHON='/usr/bin/python3' JCC='$(PYTHON) -m jcc.__main__ --shared --arch x86_64' NUM_FILES=16
@@ -108,6 +106,7 @@ A simple way to test that PyLucene is installed is to open Python using one of t
 ```
 python
 ```
+
 ```
 python3
 ```
@@ -118,7 +117,7 @@ You can then import the PyLucene package like so:
 import lucene
 ```
 
-If PyLucene *is not* installed properly, you will get an error message that looks like this:
+If PyLucene _is not_ installed properly, you will get an error message that looks like this:
 
 ```
 ModuleNotFoundError: No module named 'lucene'
