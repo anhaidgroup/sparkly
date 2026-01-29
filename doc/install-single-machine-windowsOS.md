@@ -67,6 +67,6 @@ To do so, open a new PowerShell window (or a new tab in Windows Terminal), then 
 
 After this, running `wsl` from PowerShell will launch the Ubuntu distribution by default.
 
-### Step 2
+### Step 2: Installing Sparkly and its Dependencies
 
-Now that WSL is installed, open an Ubuntu (WSL) terminal by running wsl from PowerShell. All remaining commands in the Linux guide should be run inside the Ubuntu (WSL) terminal. Now, follow the [Linux single machine installation instructions](https://github.com/anhaidgroup/sparkly/blob/main/doc/install-single-machine-linux.md).
+Now that WSL is installed, open an Ubuntu (WSL) terminal by running `wsl` from PowerShell. All remaining commands in the Linux guide should be run inside the Ubuntu (WSL) terminal. Now, follow the [Linux single machine installation instructions](https://github.com/anhaidgroup/sparkly/blob/main/doc/install-single-machine-linux.md).
