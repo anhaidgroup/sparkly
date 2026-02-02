@@ -6,9 +6,13 @@ The following step-by-step guide describes how to install Sparkly on a single ma
 
 Before installing Python, Sparkly, or PyLucene, install the required system packages with the following two commands:
 
-`sudo apt-get update`
+```
+sudo apt-get update
+```
 
-`sudo apt-get install -y build-essential wget apt-transport-https gnupg curl make libssl-dev openssl zlib1g zlib1g-dev libffi-dev python3-dev libicu-dev libbz2-dev libreadline-dev libsqlite3-dev xz-utils tk-dev liblzma-dev`
+```
+sudo apt-get install -y build-essential wget apt-transport-https gnupg curl make libssl-dev openssl zlib1g zlib1g-dev libffi-dev python3-dev libicu-dev libbz2-dev libreadline-dev libsqlite3-dev xz-utils tk-dev liblzma-dev
+```
 
 ### Step 1: Installing Python
 
