@@ -736,7 +736,7 @@ class LuceneIndex(Index):
             # fetch docs and get our id
             ids = np.fromiter((int(self._searcher.doc(h.doc, load_fields).get(self.config.id_col)) for h in res), np.int64, nhits)
             return QueryResult(
-                    ids = ids,
+                    id1_list = ids,
                     scores = scores, 
                     search_time = t,
                 )
@@ -789,12 +789,14 @@ class LuceneIndex(Index):
                 # fetch docs and get our id
                 ids = np.fromiter((int(self._searcher.doc(h.doc, load_fields).get(id_col)) for h in res), np.int64, nhits)
                 search_res.append( QueryResult(
-                        ids = ids,
+                        id1_list = ids,
                         scores = scores, 
                         search_time = t,
                     ) )
-
-        return pd.DataFrame(search_res, index=docs.index)
+        df = pd.DataFrame(search_res, index=docs.index)
+        # Set index name so that reset_index(drop=False) yields column 'id2'
+        df.index.name = 'id2'
+        return df
         
     
     def id_to_lucene_id(self, i):

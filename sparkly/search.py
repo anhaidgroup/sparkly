@@ -59,7 +59,7 @@ class Searcher:
         Returns
         -------
         pyspark DataFrame
-            a pyspark dataframe with the schema (`id_col`, ids array<long> , scores array<float>, search_time float)
+            a pyspark dataframe with the schema (id2, id1_list array<long> , scores array<float>, search_time float)
         """
         return self._search_spark(search_df, query_spec, limit, id_col)
 
@@ -77,7 +77,8 @@ class Searcher:
 
         f = lambda x : _search_spark(self._index, query_spec, limit, x, id_col)
 
-        query_result_fields = [id_col] + list(QueryResult._fields)
+        # Schema using QueryResult._fields with 'id2' prepended (instead of id_col)
+        query_result_fields = ['id2'] + list(QueryResult._fields)
         query_result_types = [ T.LongType(), T.ArrayType(T.LongType()), T.ArrayType(T.FloatType()), T.FloatType()]
         query_result_schema = T.StructType(list(map(T.StructField, query_result_fields, query_result_types)))
 
@@ -89,7 +90,8 @@ def _search_spark(index, query_spec, limit, partition_itr, id_col):
     index.init()
     for part in partition_itr:
         part = part.set_index(id_col)
-        yield _search_many(index, query_spec, limit, part)
+        result = _search_many(index, query_spec, limit, part)
+        yield result
 
 def _search_many(index, query_spec, limit, df):
 
