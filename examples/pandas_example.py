@@ -38,8 +38,8 @@ query_spec = index.get_full_query_spec()
 searcher = Searcher(index)
 # search the index with table b
 # returns a pandas dataframe with the schema
-# (ids, scores, search_time) with the same index of the search dataframe
-# (in this case the '_id' column of table b)
+# (id2,id1_list, scores, search_time) 
+# where id2 is the id of the search record and id1_list is the list of indexed ids for the search record
 candidates = index.search_many(table_b.set_index('_id'), query_spec, limit).reset_index()
 
 print(candidates.head(10))
@@ -48,8 +48,8 @@ print(candidates.head(10))
 #
 # explode the results to compute recall
 pairs = candidates.drop(columns=['scores', 'search_time'])\
-                .explode('ids')\
-                .rename(columns={'ids' : 'a_id', '_id' : 'b_id'})
+                .explode('id1_list')\
+                .rename(columns={'id1_list' : 'a_id', 'id2' : 'b_id'})
 # convert to sets of tuples for computing recall
 blocking_out = set(pairs[['a_id', 'b_id']].itertuples(name=None, index=False))
 gold_set = set(gold.itertuples(name=None, index=False))
