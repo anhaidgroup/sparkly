@@ -87,8 +87,8 @@ candidates.show()
 #
 # explode the results to compute recall
 pairs = candidates.select(
-                    F.explode('ids').alias('a_id'),
-                    F.col('_id').alias('b_id')
+                    F.explode('id1_list').alias('a_id'),
+                    F.col('id2').alias('b_id')
                 )
 # number of matches found
 true_positives = gold.intersect(pairs).count()
@@ -115,8 +115,8 @@ candidates.show()
 #
 # explode the results to compute recall
 pairs = candidates.select(
-                    F.explode('ids').alias('a_id'),
-                    F.col('_id').alias('b_id')
+                    F.explode('id1_list').alias('a_id'),
+                    F.col('id2').alias('b_id')
                 )
 # number of matches found
 true_positives = gold.intersect(pairs).count()
