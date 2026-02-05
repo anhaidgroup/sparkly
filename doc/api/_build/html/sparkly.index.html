@@ -54,7 +54,7 @@
 </ul>
 </li>
 <li><a class="reference internal" href="#sparkly.index.index_base.QueryResult"><code class="docutils literal notranslate"><span class="pre">QueryResult</span></code></a><ul>
-<li><a class="reference internal" href="#sparkly.index.index_base.QueryResult.ids"><code class="docutils literal notranslate"><span class="pre">QueryResult.ids</span></code></a></li>
+<li><a class="reference internal" href="#sparkly.index.index_base.QueryResult.id1_list"><code class="docutils literal notranslate"><span class="pre">QueryResult.id1_list</span></code></a></li>
 <li><a class="reference internal" href="#sparkly.index.index_base.QueryResult.scores"><code class="docutils literal notranslate"><span class="pre">QueryResult.scores</span></code></a></li>
 <li><a class="reference internal" href="#sparkly.index.index_base.QueryResult.search_time"><code class="docutils literal notranslate"><span class="pre">QueryResult.search_time</span></code></a></li>
 </ul>
@@ -180,12 +180,12 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="sparkly.index.index_base.QueryResult">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">sparkly.index.index_base.</span></span><span class="sig-name descname"><span class="pre">QueryResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scores</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">search_time</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.index.index_base.QueryResult" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">sparkly.index.index_base.</span></span><span class="sig-name descname"><span class="pre">QueryResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id1_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scores</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">search_time</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.index.index_base.QueryResult" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></p>
 <dl class="field-list simple">
 <dt class="field-odd">Attributes<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>ids</strong></dt><dd><p>Alias for field number 0</p>
+<dt><strong>id1_list</strong></dt><dd><p>Alias for field number 0</p>
 </dd>
 <dt><strong>scores</strong></dt><dd><p>Alias for field number 1</p>
 </dd>
@@ -206,8 +206,8 @@
 </tbody>
 </table>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="sparkly.index.index_base.QueryResult.ids">
-<span class="sig-name descname"><span class="pre">ids</span></span><a class="headerlink" href="#sparkly.index.index_base.QueryResult.ids" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="sparkly.index.index_base.QueryResult.id1_list">
+<span class="sig-name descname"><span class="pre">id1_list</span></span><a class="headerlink" href="#sparkly.index.index_base.QueryResult.id1_list" title="Link to this definition"></a></dt>
 <dd><p>Alias for field number 0</p>
 </dd></dl>
 
@@ -477,7 +477,7 @@ the index.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="sparkly.index.lucene_index.LuceneIndex.upsert_docs">
-<span class="sig-name descname"><span class="pre">upsert_docs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disable_distributed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_distributed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.index.lucene_index.LuceneIndex.upsert_docs" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">upsert_docs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disable_distributed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_distributed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_progress_bar</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sparkly.index.lucene_index.LuceneIndex.upsert_docs" title="Link to this definition"></a></dt>
 <dd><p>build the index, indexing df according to self.config</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -488,6 +488,8 @@ in parallel for suffciently large tables</p>
 <dt><strong>disable_distributed</strong><span class="classifier">bool, default=False</span></dt><dd><p>disable using spark for building the index even for large tables</p>
 </dd>
 <dt><strong>force_distributed</strong><span class="classifier">bool, default=False</span></dt><dd><p>force using spark for building the index even for smaller tables</p>
+</dd>
+<dt><strong>show_progress_bar: bool, default=False</strong></dt><dd><p>show the progress bar in addition to debug logs</p>
 </dd>
 </dl>
 </dd>
