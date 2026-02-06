@@ -34,5 +34,5 @@ See [this page](https://github.com/anhaidgroup/sparkly/blob/main/doc/using-spark
 ### Further Pointers
 
 See [API documentation](https://anhaidgroup.github.io/sparkly/). 
-For questions / comments, contact [AnHai Doan](mailto:anhai@cs.wisc.edu).
+For questions / comments, contact [our research group](mailto:entitymatchinginfo@gmail.com).
 
