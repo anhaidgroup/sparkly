@@ -529,7 +529,7 @@ class LuceneIndex(Index):
     def _delete_docs(self, index_writer, ids):
         if isinstance(ids, (np.ndarray, pd.Series)):
             ids = ids.tolist()
-        type_check_iterable(ids, 'ids', list, int)
+        type_check_iterable(ids, 'id1_list', list, int)
 
         query = LongPoint.newSetQuery(self.config.id_col, ids)
         cnt = self._count_docs(query)
