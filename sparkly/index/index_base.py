@@ -3,7 +3,7 @@ import pandas as pd
 from collections import namedtuple
 from sparkly.query_generator import QuerySpec
 
-query_result_fields = ['ids', 'scores', 'search_time']
+query_result_fields = ['id1_list', 'scores', 'search_time']
 QueryResult = namedtuple("QueryResult",
                             query_result_fields
                         )

@@ -330,9 +330,9 @@ class TestLuceneIndexWithRealData:
 
         result = index.search(doc, query_spec, limit=5)
 
-        assert result.ids is not None
-        assert len(result.ids) >= 1
-        assert len(result.scores) == len(result.ids)
+        assert result.id1_list is not None
+        assert len(result.id1_list) >= 1
+        assert len(result.scores) == len(result.id1_list)
 
     def test_search_many_dataframe_shape(self, abt_lucene_index):
         index, docs_pdf, query_spec = abt_lucene_index
@@ -342,7 +342,7 @@ class TestLuceneIndexWithRealData:
 
         assert list(result_df.index) == list(docs_subset.index)
         assert all(
-            isinstance(row.ids, np.ndarray)
+            isinstance(row.id1_list, np.ndarray)
             for _, row in result_df.iterrows()
         )
 

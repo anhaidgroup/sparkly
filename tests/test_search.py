@@ -102,8 +102,8 @@ class TestSearcher:
 
         # Check schema
         columns = results.columns
-        assert '_id' in columns
-        assert 'ids' in columns
+        assert 'id2' in columns
+        assert 'id1_list' in columns
         assert 'scores' in columns
         assert 'search_time' in columns
 
@@ -113,13 +113,13 @@ class TestSearcher:
 
         # Check that each row has the expected structure
         sample_row = results.limit(1).collect()[0]
-        assert hasattr(sample_row, '_id')
-        assert hasattr(sample_row, 'ids')
+        assert hasattr(sample_row, 'id2')
+        assert hasattr(sample_row, 'id1_list')
         assert hasattr(sample_row, 'scores')
         assert hasattr(sample_row, 'search_time')
 
         # Check types
-        assert isinstance(sample_row.ids, list)
+        assert isinstance(sample_row.id1_list, list)
         assert isinstance(sample_row.scores, list)
         assert isinstance(sample_row.search_time, float)
 
@@ -150,7 +150,7 @@ class TestSearchFunctions:
         from sparkly.index import QueryResult
         for result in results:
             assert isinstance(result, QueryResult)
-            assert hasattr(result, 'ids')
+            assert hasattr(result, 'id1_list')
             assert hasattr(result, 'scores')
             assert hasattr(result, 'search_time')
 
@@ -179,7 +179,7 @@ class TestSearchFunctions:
         from sparkly.index import QueryResult
         for result in results:
             assert isinstance(result, QueryResult)
-            assert hasattr(result, 'ids')
+            assert hasattr(result, 'id1_list')
             assert hasattr(result, 'scores')
             assert hasattr(result, 'search_time')
 

@@ -63,8 +63,8 @@ def main(args):
         gold = local_parquet_to_spark_df(args.gold)
 
         pairs = candidates.select(
-                            F.explode('ids').alias('a_id'),
-                            F.col('_id').alias('b_id')
+                            F.explode('id1_list').alias('a_id'),
+                            F.col('id2').alias('b_id')
                         )
         # dedupe case
         if args.table_b is None:

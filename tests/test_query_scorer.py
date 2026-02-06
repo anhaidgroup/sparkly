@@ -14,12 +14,12 @@ class TestScoreQueryResults:
         # Create mock query results
         query_results = [
             QueryResult(
-                ids=[1, 2, 3],
+                id1_list=[1, 2, 3],
                 scores=np.array([10.0, 8.0, 5.0], dtype=np.float32),
                 search_time=0.1
             ),
             QueryResult(
-                ids=[4, 5],
+                id1_list=[4, 5],
                 scores=np.array([9.0, 7.0], dtype=np.float32),
                 search_time=0.2
             ),
@@ -234,7 +234,7 @@ class TestAUCQueryScorer:
         """Test AUCQueryScorer score_query_result method."""
         scorer = query_scorer.AUCQueryScorer()
         query_result = QueryResult(
-            ids=[1, 2, 3],
+            id1_list=[1, 2, 3],
             scores=np.array([10.0, 8.0, 5.0], dtype=np.float32),
             search_time=0.1
         )
@@ -250,7 +250,7 @@ class TestAUCQueryScorer:
         """Test AUCQueryScorer score_query_result with drop_first."""
         scorer = query_scorer.AUCQueryScorer()
         query_result = QueryResult(
-            ids=[1, 2, 3],
+            id1_list=[1, 2, 3],
             scores=np.array([10.0, 8.0, 5.0], dtype=np.float32),
             search_time=0.1
         )
@@ -269,12 +269,12 @@ class TestAUCQueryScorer:
         scorer = query_scorer.AUCQueryScorer()
         query_results = [
             QueryResult(
-                ids=[1, 2],
+                id1_list=[1, 2],
                 scores=np.array([10.0, 8.0], dtype=np.float32),
                 search_time=0.1
             ),
             QueryResult(
-                ids=[3, 4],
+                id1_list=[3, 4],
                 scores=np.array([9.0, 7.0], dtype=np.float32),
                 search_time=0.2
             ),
@@ -305,7 +305,7 @@ class TestRankQueryScorer:
         """Test RankQueryScorer score_query_result method."""
         scorer = query_scorer.RankQueryScorer(threshold=0.5, k=10)
         query_result = QueryResult(
-            ids=[1, 2, 3, 4],
+            id1_list=[1, 2, 3, 4],
             scores=np.array([10.0, 8.0, 5.0, 3.0], dtype=np.float32),
             search_time=0.1
         )
@@ -320,7 +320,7 @@ class TestRankQueryScorer:
         """Test RankQueryScorer with empty scores."""
         scorer = query_scorer.RankQueryScorer(threshold=0.5, k=10)
         query_result = QueryResult(
-            ids=[], scores=np.array([], dtype=np.float32), search_time=0.1
+            id1_list=[], scores=np.array([], dtype=np.float32), search_time=0.1
         )
 
         result = scorer.score_query_result(query_result, None)
@@ -332,7 +332,7 @@ class TestRankQueryScorer:
         """Test RankQueryScorer with single score."""
         scorer = query_scorer.RankQueryScorer(threshold=0.5, k=10)
         query_result = QueryResult(
-            ids=[1],
+            id1_list=[1],
             scores=np.array([10.0], dtype=np.float32),
             search_time=0.1
         )
@@ -347,12 +347,12 @@ class TestRankQueryScorer:
         scorer = query_scorer.RankQueryScorer(threshold=0.5, k=10)
         query_results = [
             QueryResult(
-                ids=[1, 2],
+                id1_list=[1, 2],
                 scores=np.array([10.0, 8.0], dtype=np.float32),
                 search_time=0.1
             ),
             QueryResult(
-                ids=[3, 4],
+                id1_list=[3, 4],
                 scores=np.array([9.0, 7.0], dtype=np.float32),
                 search_time=0.2
             ),
