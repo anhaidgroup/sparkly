@@ -9,6 +9,7 @@ import warnings
 import re
 from pathlib import Path
 from zipfile import ZipFile
+from typing import Union
 
 import psutil
 import pandas as pd
@@ -18,7 +19,10 @@ from joblib.externals.loky import get_reusable_executor
 from pyspark import SparkContext
 from pyspark import StorageLevel
 from pyspark.sql import SparkSession
+import pyspark.sql.functions as F
 import pyspark.sql.types as T
+import pyspark.sql as sql
+
 # needed to find the parquet module
 import pyarrow.parquet
 import pyarrow as pa
@@ -310,7 +314,132 @@ def kill_loky_workers():
         warnings.warn('kill_loky_workers invoked but no processes were killed', UserWarning)
 
 
- 
+def check_tables_manual(table_a : Union[pd.DataFrame, sql.DataFrame], id_col_table_a : str, table_b : Union[pd.DataFrame, sql.DataFrame], id_col_table_b : str):
+    """
+    Check that table_a and table_b have valid id columns.
+
+    Parameters
+    ----------
+    table_a : Union[pd.DataFrame, sql.DataFrame]
+        The table A to be indexed.
+    id_col_table_a : str
+        The column name of the id column in table A.
+    table_b : Union[pd.DataFrame, sql.DataFrame]
+        The table B to be searched.
+    id_col_table_b : str
+        The column name of the id column in table B.
+
+    Raises
+    ------
+    ValueError
+        If table_a or table_b do not have a valid id column.
+    """
+    # --- pandas ---
+    if isinstance(table_a, pd.DataFrame):
+        if not isinstance(table_b, pd.DataFrame):
+            raise TypeError("table_a and table_b must both be pandas DataFrames")
+
+        _check_id_pandas(table_a, id_col_table_a, "table_a")
+        _check_id_pandas(table_b, id_col_table_b, "table_b")
+
+        return
+
+    # --- spark ---
+    if isinstance(table_a, sql.DataFrame):
+        if not isinstance(table_b, sql.DataFrame):
+            raise TypeError("table_a and table_b must both be Spark DataFrames")
+
+        _check_id_spark(table_a, id_col_table_a, "table_a")
+        _check_id_spark(table_b, id_col_table_b, "table_b")
+
+        return
+
+    raise TypeError("table_a must be pandas or Spark DataFrame")
+
+
+def check_tables_auto(table_a : Union[pd.DataFrame, sql.DataFrame], id_col_table_a : str, table_b : Union[pd.DataFrame, sql.DataFrame], id_col_table_b : str):
+    """
+    Check that table_a and table_b have valid id columns.
+    Check that table_b columns are a supserset of table_a columns.
+
+    Parameters
+    ----------
+    table_a : Union[pd.DataFrame, sql.DataFrame]
+        The table A to be indexed.
+    id_col_table_a : str
+        The column name of the id column in table A.
+    table_b : Union[pd.DataFrame, sql.DataFrame]
+        The table B to be searched.
+    id_col_table_b : str
+        The column name of the id column in table B.
+
+    Raises
+    ------
+    ValueError
+        If table_a or table_b do not have a valid id column.
+    ValueError
+        If table_b columns are not a supserset of table_a columns.
+    """
+    # --- pandas ---
+    if isinstance(table_a, pd.DataFrame):
+        if not isinstance(table_b, pd.DataFrame):
+            raise TypeError("table_a and table_b must both be pandas DataFrames")
+
+        _check_id_pandas(table_a, id_col_table_a, "table_a")
+        _check_id_pandas(table_b, id_col_table_b, "table_b")
+
+        if not set(table_b.columns).issuperset(table_a.columns):
+            raise ValueError(f"table_b columns: {table_b.columns} must be a superset of table_a columns: {table_a.columns}")
+        return
+
+    # --- spark ---
+    if isinstance(table_a, sql.DataFrame):
+        if not isinstance(table_b, sql.DataFrame):
+            raise TypeError("table_a and table_b must both be Spark DataFrames")
+
+        _check_id_spark(table_a, id_col_table_a, "table_a")
+        _check_id_spark(table_b, id_col_table_b, "table_b")
+
+        if not set(table_b.columns).issuperset(table_a.columns):
+            raise ValueError(f"table_b columns: {table_b.columns} must be a superset of table_a columns: {table_a.columns}")
+        return
+
+    raise TypeError("table_a/table_b must be pandas or Spark DataFrames")
+
+
+def _check_id_pandas(df: pd.DataFrame, id_col: str, name: str) -> None:
+    """
+    Check that the id column is in the dataframe and is a valid id column.
+    """
+    if id_col not in df.columns:
+        raise ValueError(f"{name}: missing id column '{id_col}'")
+    if len(df) == 0:
+        raise ValueError(f"{name}: empty dataframe")
+    s = df[id_col]
+    if s.isna().any():
+        raise ValueError(f"{name}: nulls are present in the id column '{id_col}'")
+    if str(s.dtype) not in ("int32", "int64"):
+        raise ValueError(f"{name}: id column '{id_col}' must be int32/int64 (got {s.dtype})")
+    if not s.is_unique:
+        raise ValueError(f"{name}: id column '{id_col}' must be unique")
+
+
+def _check_id_spark(df: sql.DataFrame, id_col: str, name: str) -> None:
+    """
+    Check that the id column is in the dataframe and is a valid id column.
+    """
+    if id_col not in df.columns:
+        raise ValueError(f"{name}: missing id column '{id_col}'")
+    if len(df.take(1)) == 0:
+        raise ValueError(f"{name}: empty dataframe")
+    if dict(df.dtypes)[id_col] not in ("int", "bigint", "smallint", "tinyint"):
+        raise ValueError(f"{name}: id column '{id_col}' must be an integer type")
+    if df.filter(F.col(id_col).isNull()).limit(1).count() > 0:
+        raise ValueError(f"{name}: nulls are presentin the id column '{id_col}'")
+    if df.select(id_col).distinct().count() != df.count():
+        raise ValueError(f"{name}: id column '{id_col}' must be unique")
+
+
 def spark_to_pandas_stream(df, chunk_size, by='_id'):
     """
     repartition df into chunk_size and return as iterator of 
