@@ -7,11 +7,10 @@ warnings.filterwarnings(
     category=DeprecationWarning,
 )
 
-# Import after warnings filter to suppress PyLucene deprecation warnings
-import pytest  # noqa: E402
-from pathlib import Path  # noqa: E402
-from pyspark.sql import SparkSession  # noqa: E402
-from sparkly.utils import init_jvm  # noqa: E402
+import pytest
+from pathlib import Path
+from pyspark.sql import SparkSession
+from sparkly.utils import init_jvm 
 
 
 @pytest.fixture(scope="session", autouse=True)
