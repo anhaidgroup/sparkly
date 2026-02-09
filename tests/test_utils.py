@@ -560,13 +560,19 @@ class TestCheckTablesManual:
         with pytest.raises(ValueError, match="nulls are present in the id column"):
             check_tables_manual(table_a, "_id", table_b, "_id")
 
+    def test_check_tables_manual_pandas_id_column_int64_nullable(self):
+        """check_tables_manual passes with pandas nullable Int64 id column (e.g. from parquet)."""
+        table_a = pd.DataFrame({"_id": pd.array([1, 2], dtype="Int64"), "name": ["a", "b"]})
+        table_b = pd.DataFrame({"_id": pd.array([10, 20], dtype="Int64"), "name": ["x", "y"]})
+        check_tables_manual(table_a, "_id", table_b, "_id")  # no raise
+
     def test_check_tables_manual_pandas_id_column_wrong_type(self):
-        """check_tables_manual raises when id column is not int32/int64."""
+        """check_tables_manual raises when id column is not int32/int64 or Int32/Int64."""
         table_a = pd.DataFrame(
             {"_id": [1.0, 2.0], "name": ["a", "b"]}
         )  # float
         table_b = pd.DataFrame({"_id": [10, 20], "name": ["x", "y"]})
-        with pytest.raises(ValueError, match="must be int32/int64"):
+        with pytest.raises(ValueError, match="must be int32/int64 or Int32/Int64"):
             check_tables_manual(table_a, "_id", table_b, "_id")
 
     def test_check_tables_manual_pandas_id_column_not_unique(self):
@@ -614,6 +620,22 @@ class TestCheckTablesManual:
         table_b_small = sample_table_b.select("_id", "name")
         table_a_has_more = sample_table_a.select("_id", "name", "description")
         check_tables_manual(table_a_has_more, "_id", table_b_small, "_id")  # no raise
+
+    def test_check_tables_manual_spark_nulls_in_table_a_id(self, spark_session, sample_table_b):
+        """check_tables_manual raises when Spark table_a id column has nulls."""
+        table_a_with_null = spark_session.createDataFrame(
+            [("a", 1), ("b", None)], schema=["name", "_id"]
+        )
+        with pytest.raises(ValueError, match="nulls are present in the id column"):
+            check_tables_manual(table_a_with_null, "_id", sample_table_b, "_id")
+
+    def test_check_tables_manual_spark_nulls_in_table_b_id(self, spark_session, sample_table_a):
+        """check_tables_manual raises when Spark table_b id column has nulls."""
+        table_b_with_null = spark_session.createDataFrame(
+            [("x", 10), ("y", None)], schema=["name", "_id"]
+        )
+        with pytest.raises(ValueError, match="nulls are present in the id column"):
+            check_tables_manual(sample_table_a, "_id", table_b_with_null, "_id")
 
 
 class TestCheckTablesAuto:
@@ -683,13 +705,19 @@ class TestCheckTablesAuto:
         with pytest.raises(ValueError, match="nulls are present in the id column"):
             check_tables_auto(table_a, "_id", table_b, "_id")
 
+    def test_check_tables_auto_pandas_id_column_int64_nullable(self):
+        """check_tables_auto passes with pandas nullable Int64 id column (e.g. from parquet)."""
+        table_a = pd.DataFrame({"_id": pd.array([1, 2], dtype="Int64"), "name": ["a", "b"]})
+        table_b = pd.DataFrame({"_id": pd.array([10, 20], dtype="Int64"), "name": ["x", "y"]})
+        check_tables_auto(table_a, "_id", table_b, "_id")  # no raise
+
     def test_check_tables_auto_pandas_id_column_wrong_type(self):
-        """check_tables_auto raises when id column is not int32/int64."""
+        """check_tables_auto raises when id column is not int32/int64 or Int32/Int64."""
         table_a = pd.DataFrame(
             {"_id": [1.0, 2.0], "name": ["a", "b"]}
         )  # float
         table_b = pd.DataFrame({"_id": [10, 20], "name": ["x", "y"]})
-        with pytest.raises(ValueError, match="must be int32/int64"):
+        with pytest.raises(ValueError, match="must be int32/int64 or Int32/Int64"):
             check_tables_auto(table_a, "_id", table_b, "_id")
 
     def test_check_tables_auto_pandas_id_column_not_unique(self):
@@ -747,3 +775,19 @@ class TestCheckTablesAuto:
         table_a_has_more = sample_table_a.select("_id", "name", "description")
         with pytest.raises(ValueError, match="must be a superset"):
             check_tables_auto(table_a_has_more, "_id", table_b_small, "_id")
+
+    def test_check_tables_auto_spark_nulls_in_table_a_id(self, spark_session, sample_table_b):
+        """check_tables_auto raises when Spark table_a id column has nulls."""
+        table_a_with_null = spark_session.createDataFrame(
+            [("a", 1), ("b", None)], schema=["name", "_id"]
+        )
+        with pytest.raises(ValueError, match="nulls are present in the id column"):
+            check_tables_auto(table_a_with_null, "_id", sample_table_b, "_id")
+
+    def test_check_tables_auto_spark_nulls_in_table_b_id(self, spark_session, sample_table_a):
+        """check_tables_auto raises when Spark table_b id column has nulls."""
+        table_b_with_null = spark_session.createDataFrame(
+            [("x", 10), ("y", None)], schema=["name", "_id"]
+        )
+        with pytest.raises(ValueError, match="nulls are present in the id column"):
+            check_tables_auto(sample_table_a, "_id", table_b_with_null, "_id")
