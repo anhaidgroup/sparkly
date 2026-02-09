@@ -342,6 +342,8 @@ def check_tables_manual(table_a : Union[pd.DataFrame, sql.DataFrame], id_col_tab
         _check_id_pandas(table_a, id_col_table_a, "table_a")
         _check_id_pandas(table_b, id_col_table_b, "table_b")
 
+        logger.warning("check_tables_manual: table_a and table_b formats are correct")
+
         return
 
     # --- spark ---
@@ -351,6 +353,8 @@ def check_tables_manual(table_a : Union[pd.DataFrame, sql.DataFrame], id_col_tab
 
         _check_id_spark(table_a, id_col_table_a, "table_a")
         _check_id_spark(table_b, id_col_table_b, "table_b")
+
+        logger.warning("check_tables_manual: table_a and table_b formats are correct")
 
         return
 
@@ -390,6 +394,9 @@ def check_tables_auto(table_a : Union[pd.DataFrame, sql.DataFrame], id_col_table
 
         if not set(table_b.columns).issuperset(table_a.columns):
             raise ValueError(f"table_b columns: {table_b.columns} must be a superset of table_a columns: {table_a.columns}")
+
+        logger.warning("check_tables_auto: table_a and table_b formats are correct")
+
         return
 
     # --- spark ---
@@ -402,6 +409,9 @@ def check_tables_auto(table_a : Union[pd.DataFrame, sql.DataFrame], id_col_table
 
         if not set(table_b.columns).issuperset(table_a.columns):
             raise ValueError(f"table_b columns: {table_b.columns} must be a superset of table_a columns: {table_a.columns}")
+
+        logger.warning("check_tables_auto: table_a and table_b formats are correct")
+
         return
 
     raise TypeError("table_a/table_b must be pandas or Spark DataFrames")
@@ -412,14 +422,15 @@ def _check_id_pandas(df: pd.DataFrame, id_col: str, name: str) -> None:
     Check that the id column is in the dataframe and is a valid id column.
     """
     if id_col not in df.columns:
-        raise ValueError(f"{name}: missing id column '{id_col}'")
+        raise ValueError(f"{name}: missing id column '{id_col}'. Available columns: {df.columns}")
     if len(df) == 0:
         raise ValueError(f"{name}: empty dataframe")
     s = df[id_col]
     if s.isna().any():
         raise ValueError(f"{name}: nulls are present in the id column '{id_col}'")
-    if str(s.dtype) not in ("int32", "int64"):
-        raise ValueError(f"{name}: id column '{id_col}' must be int32/int64 (got {s.dtype})")
+    allowed_int_dtypes = ("int32", "int64", "Int32", "Int64")
+    if str(s.dtype) not in allowed_int_dtypes:
+        raise ValueError(f"{name}: id column '{id_col}' must be int32/int64 or Int32/Int64 (got {s.dtype})")
     if not s.is_unique:
         raise ValueError(f"{name}: id column '{id_col}' must be unique")
 
@@ -429,13 +440,13 @@ def _check_id_spark(df: sql.DataFrame, id_col: str, name: str) -> None:
     Check that the id column is in the dataframe and is a valid id column.
     """
     if id_col not in df.columns:
-        raise ValueError(f"{name}: missing id column '{id_col}'")
+        raise ValueError(f"{name}: missing id column '{id_col}'. Available columns: {df.columns}")
     if len(df.take(1)) == 0:
         raise ValueError(f"{name}: empty dataframe")
     if dict(df.dtypes)[id_col] not in ("int", "bigint", "smallint", "tinyint"):
         raise ValueError(f"{name}: id column '{id_col}' must be an integer type")
     if df.filter(F.col(id_col).isNull()).limit(1).count() > 0:
-        raise ValueError(f"{name}: nulls are presentin the id column '{id_col}'")
+        raise ValueError(f"{name}: nulls are present in the id column '{id_col}'")
     if df.select(id_col).distinct().count() != df.count():
         raise ValueError(f"{name}: id column '{id_col}' must be unique")
 
