@@ -8,15 +8,13 @@ If you’re running a 64-bit version of Windows (Windows 10, Windows 11, or Wind
 
 ### Step 1: WSL Installation
 
-Sparkly requires PyLucene. PyLucene does not provide comprehensive Windows installation documentation. Therefore, it is unclear how to install PyLucene on a Windows machine. However, installing PyLucene on Limux is well-documented. Therefore, we use WSL (Windows Subsystem for Linux) to create a virtual Linux environment on your Windows machine and install PyLucene in the Linux environment. 
+Sparkly requires PyLucene, which does not provide clear Windows installation documentation. So we will install WSL (Windows Subsystem for Linux) to create a virtual Linux environment on your Windows machine (and then install PyLucene in that Linux environment). 
 
-Since PyLucene will be installed in the Linux environment, all other dependencies must also be installed there to ensure everything works together in a single environment. Therefore, all subsequent steps in this guide will be performed within WSL using Ubuntu as the Linux distribution.
-
-In this step, you will set up WSL 2 with Ubuntu.
+To install WSL, execute the following steps: 
 
 #### Step 1.1: Checking for WSL
 
-First, open Windows PowerShell. Press the Windows key, type PowerShell, and select Windows PowerShell. (Do not use Windows PowerShell (x86) or Windows PowerShell ISE.)
+First, open Windows PowerShell: Press the Windows key, type PowerShell, and select Windows PowerShell. (Do not use Windows PowerShell (x86) or Windows PowerShell ISE.)
 
 In the PowerShell window, run:
 
@@ -52,7 +50,7 @@ After the installation completes, you’ll be prompted to create a default Unix 
 
 _Note: Aside from this first time, however, opening an Ubuntu (WSL) terminal session will need to be done manually. To do so, open PowerShell (you do not need to "Run as administrator" anymore), and execute:_
 
-`wsl`
+_`wsl`
 
 This will open an Ubuntu (WSL) terminal shell.
 
@@ -79,4 +77,4 @@ After this, running `wsl` from PowerShell will launch the Ubuntu distribution by
 
 ### Step 2: Installing Sparkly and its Dependencies
 
-Now that WSL is installed, open an Ubuntu (WSL) terminal by running `wsl` from PowerShell. All remaining commands in the Linux guide should be run inside the Ubuntu (WSL) terminal. Now, follow the [Linux single machine installation instructions](https://github.com/anhaidgroup/sparkly/blob/main/doc/install-single-machine-linux.md).
+Now that WSL is installed, open an Ubuntu (WSL) terminal by running `wsl` from PowerShell. Now, follow the [Linux single machine installation instructions](https://github.com/anhaidgroup/sparkly/blob/main/doc/install-single-machine-linux.md). All of the commands in the Linux guide should be run inside the Ubuntu (WSL) terminal.
