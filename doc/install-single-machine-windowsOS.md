@@ -2,13 +2,17 @@
 
 This is a step-by-step guide to install Sparkly and its necessary dependencies on a single Windows machine.
 
-This guide has been tested only on a Dell Latitude 3340 with x86-64 bit architecture, running Windows 11 Home Edition, and having 16 GB of RAM. The test setup used WSL 2 (Ubuntu) and installed Python 3.10, the g++ compiler, Eclipse Temurin JDK 17, and PyLucene 9.4.1 by following the steps in this guide.
+This guide has been tested only on a Dell Latitude 3340 with x86-64 bit architecture, running Windows 11 Home Edition, and having 16 GB of RAM. The test setup used WSL 2 (Ubuntu) and installed Python 3.10, the g++ compiler, Eclipse Temurin JDK 17, and PyLucene 9.4.1.
 
 If you’re running a 64-bit version of Windows (Windows 10, Windows 11, or Windows Server) but your system specifications differ from the test machine, these steps may still work. However, we have not validated them on other configurations and cannot guarantee compatibility.
 
 ### Step 1: WSL Installation
 
-In this step, you will set up WSL 2 (Windows Subsystem for Linux) with the Ubuntu distribution. We use Ubuntu as the Linux environment for the remainder of this guide, including the PyLucene installation.
+Sparkly requires PyLucene. PyLucene does not provide comprehensive Windows installation documentation. Therefore, it is unclear how to install PyLucene on a Windows machine. However, installing PyLucene on Limux is well-documented. Therefore, we use WSL (Windows Subsystem for Linux) to create a virtual Linux environment on your Windows machine and install PyLucene in the Linux environment. 
+
+Since PyLucene will be installed in the Linux environment, all other dependencies must also be installed there to ensure everything works together in a single environment. Therefore, all subsequent steps in this guide will be performed within WSL using Ubuntu as the Linux distribution.
+
+In this step, you will set up WSL 2 with Ubuntu.
 
 #### Step 1.1: Checking for WSL
 
@@ -21,10 +25,10 @@ In the PowerShell window, run:
 You should see one of the following:
 
 1. A list of installed WSL distributions (it will start with “Windows Subsystem for Linux Distributions:”).
-   - If Ubuntu appears in the list, complete Step 1.2, and skip Step 1.3.
-   - If you see a list but Ubuntu is not included, complete Steps 1.2 and 1.3.
+   - If Ubuntu appears in the list, complete Step 1.2, skip Step 1.3, and complete Steps 1.4 and 1.5 before proceeding to Step 2.
+   - If you see a list but Ubuntu is not included, complete Steps 1.2, 1.3, 1.4, and 1.5 before proceeding to Step 2.
 2. A message indicating no distributions are installed (e.g., “Windows Subsystem for Linux has no installed distributions”).
-   - In this case, complete Steps 1.2 and 1.3.
+   - In this case, complete Steps 1.2, 1.3, 1.4, and 1.5 before proceeding to Step 2.
 
 #### Step 1.2: Setting the default WSL Version
 
@@ -34,19 +38,25 @@ To set WSL 2 as the default for newly installed distributions, run:
 
 `wsl --set-default-version 2`
 
-After this, you can proceed to installing Ubuntu (if it is not already installed, as indicated in Step 1.1).
+After this, you should proceed to Step 1.3 if Ubuntu is not already installed as indicated in Step 1.1. If Ubuntu is already installed as indicated in Step 1.1, proceed to Step 1.4.
 
 #### Step 1.3: Installing WSL and Ubuntu
 
-To install WSL and the default Ubuntu distribution, open PowerShell as Administrator:
+To install WSL and the default Ubuntu distribution, open PowerShell as Administrator. To do so, locate PowerShell on your computer, right-click on the icon, and click "Run as administrator". Then, within the PowerShell session, run the command:
 
 `wsl.exe --install -d Ubuntu`
 
 You may be prompted to restart Windows to finish enabling WSL.
 
-After the installation completes, you’ll be prompted to create a default Unix user account. Choose a username and password and keep them for later use. Once this is done, PowerShell will automatically open an Ubuntu (WSL) terminal session.
+After the installation completes, you’ll be prompted to create a default Unix user account. Choose a username and password and keep them for later use. Note that your password won't be visible as you type it. Once this is complete, PowerShell will open an Ubuntu (WSL) terminal session. 
 
-#### Step 1.4: Verifying Ubuntu uses WSL 2
+_Note: Aside from this first time, however, opening an Ubuntu (WSL) terminal session will need to be done manually. To do so, open PowerShell (you do not need to "Run as administrator" anymore), and execute:_
+
+`wsl`
+
+This will open an Ubuntu (WSL) terminal shell.
+
+#### Step 1.4: Verifying that Ubuntu Uses WSL 2
 
 Whether Ubuntu was already installed or you just installed it, confirm that Ubuntu is running under WSL 2.
 Run:
