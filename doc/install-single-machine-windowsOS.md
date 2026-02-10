@@ -50,9 +50,9 @@ After the installation completes, you’ll be prompted to create a default Unix 
 
 _Note: Aside from this first time, however, opening an Ubuntu (WSL) terminal session will need to be done manually. To do so, open PowerShell (you do not need to "Run as administrator" anymore), and execute:_
 
-_`wsl`
+`wsl`
 
-This will open an Ubuntu (WSL) terminal shell.
+_This will open an Ubuntu (WSL) terminal shell._
 
 #### Step 1.4: Verifying that Ubuntu Uses WSL 2
 
