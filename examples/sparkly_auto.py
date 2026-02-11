@@ -6,6 +6,7 @@ from sparkly.index_config import IndexConfig
 from sparkly.index_optimizer import IndexOptimizer
 from sparkly.search import Searcher
 from sparkly.utils import local_parquet_to_spark_df
+from sparkly.utils import check_tables_auto
 from argparse import ArgumentParser
 
 argp = ArgumentParser()
@@ -30,9 +31,6 @@ def main(args):
     # read all the data as spark dataframes
     table_a = local_parquet_to_spark_df(args.table_a)
     table_b = table_a if args.table_b is None else local_parquet_to_spark_df(args.table_b)
-
-
-
 
     index_optimizer = IndexOptimizer(args.table_b is None)
     config = index_optimizer.make_index_config(table_a)

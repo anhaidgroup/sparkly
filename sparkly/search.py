@@ -91,6 +91,7 @@ def _search_spark(index, query_spec, limit, partition_itr, id_col):
     for part in partition_itr:
         part = part.set_index(id_col)
         result = _search_many(index, query_spec, limit, part)
+        result = result.rename(columns={id_col: 'id2'})
         yield result
 
 def _search_many(index, query_spec, limit, df):
