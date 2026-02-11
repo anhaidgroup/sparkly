@@ -37,7 +37,7 @@ Spark must be installed on every node in order to set up a cluster - you will ha
 
 You can use these commands to download and unpack Spark:
 
-    wget "https://archive.apache.org/dist/spark/spark/spark-3.5.1-bin-hadoop3.tgz"
+    wget "https://archive.apache.org/dist/spark/spark-3.5.1/spark-3.5.1-bin-hadoop3.tgz"
     tar -xvf spark-3.5.1-bin-hadoop3.tgz
 
 Running the above commands will create a folder called ‘spark-3.5.1-bin-hadoop3’. This contains everything you need to create a Spark node. You should rename this as the default name is rather unwieldy:
