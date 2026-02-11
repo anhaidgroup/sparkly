@@ -36,9 +36,6 @@ def main(args):
     table_a = local_parquet_to_spark_df(args.table_a)
     table_b = table_a if args.table_b is None else local_parquet_to_spark_df(args.table_b)
 
-    # check that the tables fit the expected format
-    check_tables_manual(table_a, '_id', table_b, '_id')
-
     # the index config, '_id' column will be used as the unique 
     # id column in the index. Note id_col must be an integer (32 or 64 bit)
     config = IndexConfig(id_col='_id')
