@@ -23,8 +23,13 @@ table_a = pd.read_parquet(table_a_path)
 table_b = pd.read_parquet(table_b_path)
 gold =  pd.read_parquet(gold_path)
 
-# check that the tables fit the expected format
-check_tables_manual(table_a, '_id', table_b, '_id')
+# Validate that table_a and table_b have valid id columns with non-null and unique values
+# This check should be run before any other Sparkly operations.
+try:
+    check_tables_manual(table_a, '_id', table_b, '_id')
+except Exception as e:
+    print(f"Error: {e}")
+    exit(1)
 
 # the index config, '_id' column will be used as the unique 
 # id column in the index. Note id_col must be an integer (32 or 64 bit)

@@ -32,11 +32,6 @@ def main(args):
     table_a = local_parquet_to_spark_df(args.table_a)
     table_b = table_a if args.table_b is None else local_parquet_to_spark_df(args.table_b)
 
-    # check that the tables fit the expected format
-    check_tables_auto(table_a, '_id', table_b, '_id')
-
-
-
     index_optimizer = IndexOptimizer(args.table_b is None)
     config = index_optimizer.make_index_config(table_a)
 
