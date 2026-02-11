@@ -3,6 +3,7 @@ import pyspark.sql.functions as F
 from sparkly.index import  LuceneIndex
 from sparkly.index_config import IndexConfig
 from sparkly.search import Searcher
+from sparkly.utils import check_tables_manual
 from pathlib import Path
 
 # the number of candidates returned per record
@@ -27,6 +28,15 @@ spark = SparkSession.builder\
 table_a = spark.read.parquet(f'file://{str(table_a_path)}')
 table_b = spark.read.parquet(f'file://{str(table_b_path)}')
 gold = spark.read.parquet(f'file://{str(gold_path)}')
+
+# Validate that table_a and table_b have valid id columns with non-null and unique values
+# This check should be run before any other Sparkly operations.
+try:
+    check_tables_manual(table_a, '_id', table_b, '_id')
+except Exception as e:
+    print(f"Error: {e}")
+    exit(1)
+
 # the index config, '_id' column will be used as the unique 
 # id column in the index. Note id_col must be an integer (32 or 64 bit)
 config = IndexConfig(id_col='_id')

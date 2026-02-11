@@ -5,6 +5,7 @@ from sparkly.index import  LuceneIndex
 from sparkly.index_config import IndexConfig
 from sparkly.search import Searcher
 from sparkly.utils import local_parquet_to_spark_df
+from sparkly.utils import check_tables_manual
 from argparse import ArgumentParser
 
 argp = ArgumentParser()
@@ -34,6 +35,7 @@ def main(args):
     # read all the data as spark dataframes
     table_a = local_parquet_to_spark_df(args.table_a)
     table_b = table_a if args.table_b is None else local_parquet_to_spark_df(args.table_b)
+
     # the index config, '_id' column will be used as the unique 
     # id column in the index. Note id_col must be an integer (32 or 64 bit)
     config = IndexConfig(id_col='_id')

@@ -23,6 +23,8 @@ from sparkly.utils import (
     type_check_iterable,
     repartition_df,
     spark_to_pandas_stream,
+    check_tables_manual,
+    check_tables_auto,
 )
 
 
@@ -483,3 +485,309 @@ class TestLocalParquetToSparkDf:
         assert 'LongType' in str(id_field.dataType) or 'IntegerType' in str(
             id_field.dataType
         )
+
+
+class TestCheckTablesManual:
+    """Tests for check_tables_manual (id columns only, no superset check)."""
+
+    # --- Pandas: valid cases ---
+
+    def test_check_tables_manual_pandas_valid(self):
+        """check_tables_manual passes with valid pandas DataFrames (superset not required)."""
+        table_a = pd.DataFrame({"_id": [1, 2], "name": ["a", "b"]})
+        table_b = pd.DataFrame(
+            {"_id": [10, 20], "name": ["x", "y"], "extra": [0, 0]}
+        )
+        check_tables_manual(table_a, "_id", table_b, "_id")  # no raise
+
+    def test_check_tables_manual_pandas_same_columns(self):
+        """check_tables_manual passes when table_b has same columns as table_a."""
+        table_a = pd.DataFrame({"_id": [1, 2], "name": ["a", "b"]})
+        table_b = pd.DataFrame({"_id": [10, 20], "name": ["x", "y"]})
+        check_tables_manual(table_a, "_id", table_b, "_id")  # no raise
+
+    def test_check_tables_manual_pandas_table_b_not_superset(self):
+        """check_tables_manual passes when table_b columns are not superset (no superset check)."""
+        table_a = pd.DataFrame({"_id": [1, 2], "name": ["a", "b"], "foo": [0, 0]})
+        table_b = pd.DataFrame({"_id": [10, 20], "name": ["x", "y"]})  # no foo
+        check_tables_manual(table_a, "_id", table_b, "_id")  # no raise
+
+    # --- Pandas: missing id column ---
+
+    def test_check_tables_manual_pandas_table_a_missing_id_column(self):
+        """check_tables_manual raises when table_a is missing the id column."""
+        table_a = pd.DataFrame({"name": ["a", "b"]})  # no _id
+        table_b = pd.DataFrame({"_id": [10, 20], "name": ["x", "y"]})
+        with pytest.raises(ValueError, match="table_a: missing id column"):
+            check_tables_manual(table_a, "_id", table_b, "_id")
+
+    def test_check_tables_manual_pandas_table_b_missing_id_column(self):
+        """check_tables_manual raises when table_b is missing the id column."""
+        table_a = pd.DataFrame({"_id": [1, 2], "name": ["a", "b"]})
+        table_b = pd.DataFrame({"name": ["x", "y"]})  # no _id
+        with pytest.raises(ValueError, match="table_b: missing id column"):
+            check_tables_manual(table_a, "_id", table_b, "_id")
+
+    # --- Pandas: empty ---
+
+    def test_check_tables_manual_pandas_table_a_empty(self):
+        """check_tables_manual raises when table_a is empty."""
+        table_a = pd.DataFrame({"_id": [], "name": []})
+        table_b = pd.DataFrame({"_id": [10], "name": ["x"]})
+        with pytest.raises(ValueError, match="table_a: empty dataframe"):
+            check_tables_manual(table_a, "_id", table_b, "_id")
+
+    def test_check_tables_manual_pandas_table_b_empty(self):
+        """check_tables_manual raises when table_b is empty."""
+        table_a = pd.DataFrame({"_id": [1], "name": ["a"]})
+        table_b = pd.DataFrame({"_id": [], "name": []})
+        with pytest.raises(ValueError, match="table_b: empty dataframe"):
+            check_tables_manual(table_a, "_id", table_b, "_id")
+
+    # --- Pandas: nulls and types ---
+
+    def test_check_tables_manual_pandas_nulls_in_table_a_id(self):
+        """check_tables_manual raises when table_a id column has nulls."""
+        table_a = pd.DataFrame({"_id": [1, np.nan], "name": ["a", "b"]})
+        table_b = pd.DataFrame({"_id": [10, 20], "name": ["x", "y"]})
+        with pytest.raises(ValueError, match="nulls are present in the id column"):
+            check_tables_manual(table_a, "_id", table_b, "_id")
+
+    def test_check_tables_manual_pandas_nulls_in_table_b_id(self):
+        """check_tables_manual raises when table_b id column has nulls."""
+        table_a = pd.DataFrame({"_id": [1, 2], "name": ["a", "b"]})
+        table_b = pd.DataFrame({"_id": [10, np.nan], "name": ["x", "y"]})
+        with pytest.raises(ValueError, match="nulls are present in the id column"):
+            check_tables_manual(table_a, "_id", table_b, "_id")
+
+    def test_check_tables_manual_pandas_id_column_int64_nullable(self):
+        """check_tables_manual passes with pandas nullable Int64 id column (e.g. from parquet)."""
+        table_a = pd.DataFrame({"_id": pd.array([1, 2], dtype="Int64"), "name": ["a", "b"]})
+        table_b = pd.DataFrame({"_id": pd.array([10, 20], dtype="Int64"), "name": ["x", "y"]})
+        check_tables_manual(table_a, "_id", table_b, "_id")  # no raise
+
+    def test_check_tables_manual_pandas_id_column_wrong_type(self):
+        """check_tables_manual raises when id column is not int32/int64 or Int32/Int64."""
+        table_a = pd.DataFrame(
+            {"_id": [1.0, 2.0], "name": ["a", "b"]}
+        )  # float
+        table_b = pd.DataFrame({"_id": [10, 20], "name": ["x", "y"]})
+        with pytest.raises(ValueError, match="must be int32/int64 or Int32/Int64"):
+            check_tables_manual(table_a, "_id", table_b, "_id")
+
+    def test_check_tables_manual_pandas_id_column_not_unique(self):
+        """check_tables_manual raises when id column is not unique."""
+        table_a = pd.DataFrame({"_id": [1, 1], "name": ["a", "b"]})
+        table_b = pd.DataFrame({"_id": [10, 20], "name": ["x", "y"]})
+        with pytest.raises(ValueError, match="must be unique"):
+            check_tables_manual(table_a, "_id", table_b, "_id")
+
+    # --- Type mismatches ---
+
+    def test_check_tables_manual_mixed_pandas_spark(self, sample_table_a):
+        """check_tables_manual raises when table_a is pandas and table_b is Spark."""
+        table_a = pd.DataFrame({"_id": [1, 2], "name": ["a", "b"]})
+        table_b = sample_table_a  # Spark, from conftest
+        with pytest.raises(TypeError, match="both be pandas DataFrames"):
+            check_tables_manual(table_a, "_id", table_b, "_id")
+
+    def test_check_tables_manual_mixed_spark_pandas(self, sample_table_a):
+        """check_tables_manual raises when table_a is Spark and table_b is pandas."""
+        table_b = pd.DataFrame({"_id": [10, 20], "name": ["x", "y"]})
+        with pytest.raises(TypeError, match="both be Spark DataFrames"):
+            check_tables_manual(sample_table_a, "_id", table_b, "_id")
+
+    def test_check_tables_manual_invalid_type(self):
+        """check_tables_manual raises when table_a is not DataFrame."""
+        table_b = pd.DataFrame({"_id": [10, 20], "name": ["x", "y"]})
+        with pytest.raises(TypeError, match="table_a must be pandas or Spark DataFrame"):
+            check_tables_manual([1, 2, 3], "_id", table_b, "_id")
+
+    # --- Spark: valid and invalid ---
+
+    def test_check_tables_manual_spark_valid(self, sample_table_a, sample_table_b):
+        """check_tables_manual passes with valid Spark DataFrames."""
+        check_tables_manual(sample_table_a, "_id", sample_table_b, "_id")  # no raise
+
+    def test_check_tables_manual_spark_table_a_missing_id_column(self, sample_table_b):
+        """check_tables_manual raises when Spark table_a is missing id column."""
+        table_a_no_id = sample_table_b.select("name", "description", "price")
+        with pytest.raises(ValueError, match="table_a: missing id column"):
+            check_tables_manual(table_a_no_id, "_id", sample_table_b, "_id")
+
+    def test_check_tables_manual_spark_table_b_not_superset(self, sample_table_a, sample_table_b):
+        """check_tables_manual passes when Spark table_b has fewer columns (no superset check)."""
+        table_b_small = sample_table_b.select("_id", "name")
+        table_a_has_more = sample_table_a.select("_id", "name", "description")
+        check_tables_manual(table_a_has_more, "_id", table_b_small, "_id")  # no raise
+
+    def test_check_tables_manual_spark_nulls_in_table_a_id(self, spark_session, sample_table_b):
+        """check_tables_manual raises when Spark table_a id column has nulls."""
+        table_a_with_null = spark_session.createDataFrame(
+            [("a", 1), ("b", None)], schema=["name", "_id"]
+        )
+        with pytest.raises(ValueError, match="nulls are present in the id column"):
+            check_tables_manual(table_a_with_null, "_id", sample_table_b, "_id")
+
+    def test_check_tables_manual_spark_nulls_in_table_b_id(self, spark_session, sample_table_a):
+        """check_tables_manual raises when Spark table_b id column has nulls."""
+        table_b_with_null = spark_session.createDataFrame(
+            [("x", 10), ("y", None)], schema=["name", "_id"]
+        )
+        with pytest.raises(ValueError, match="nulls are present in the id column"):
+            check_tables_manual(sample_table_a, "_id", table_b_with_null, "_id")
+
+
+class TestCheckTablesAuto:
+    """Tests for check_tables_auto (id columns + table_b columns superset of table_a)."""
+
+    # --- Pandas: valid cases ---
+
+    def test_check_tables_auto_pandas_valid(self):
+        """check_tables_auto passes with valid pandas DataFrames and superset columns."""
+        table_a = pd.DataFrame({"_id": [1, 2], "name": ["a", "b"]})
+        table_b = pd.DataFrame(
+            {"_id": [10, 20], "name": ["x", "y"], "extra": [0, 0]}
+        )
+        check_tables_auto(table_a, "_id", table_b, "_id")  # no raise
+
+    def test_check_tables_auto_pandas_same_columns(self):
+        """check_tables_auto passes when table_b has same columns as table_a."""
+        table_a = pd.DataFrame({"_id": [1, 2], "name": ["a", "b"]})
+        table_b = pd.DataFrame({"_id": [10, 20], "name": ["x", "y"]})
+        check_tables_auto(table_a, "_id", table_b, "_id")  # no raise
+
+    # --- Pandas: missing id column ---
+
+    def test_check_tables_auto_pandas_table_a_missing_id_column(self):
+        """check_tables_auto raises when table_a is missing the id column."""
+        table_a = pd.DataFrame({"name": ["a", "b"]})  # no _id
+        table_b = pd.DataFrame({"_id": [10, 20], "name": ["x", "y"]})
+        with pytest.raises(ValueError, match="table_a: missing id column"):
+            check_tables_auto(table_a, "_id", table_b, "_id")
+
+    def test_check_tables_auto_pandas_table_b_missing_id_column(self):
+        """check_tables_auto raises when table_b is missing the id column."""
+        table_a = pd.DataFrame({"_id": [1, 2], "name": ["a", "b"]})
+        table_b = pd.DataFrame({"name": ["x", "y"]})  # no _id
+        with pytest.raises(ValueError, match="table_b: missing id column"):
+            check_tables_auto(table_a, "_id", table_b, "_id")
+
+    # --- Pandas: empty ---
+
+    def test_check_tables_auto_pandas_table_a_empty(self):
+        """check_tables_auto raises when table_a is empty."""
+        table_a = pd.DataFrame({"_id": [], "name": []})
+        table_b = pd.DataFrame({"_id": [10], "name": ["x"]})
+        with pytest.raises(ValueError, match="table_a: empty dataframe"):
+            check_tables_auto(table_a, "_id", table_b, "_id")
+
+    def test_check_tables_auto_pandas_table_b_empty(self):
+        """check_tables_auto raises when table_b is empty."""
+        table_a = pd.DataFrame({"_id": [1], "name": ["a"]})
+        table_b = pd.DataFrame({"_id": [], "name": []})
+        with pytest.raises(ValueError, match="table_b: empty dataframe"):
+            check_tables_auto(table_a, "_id", table_b, "_id")
+
+    # --- Pandas: nulls and types ---
+
+    def test_check_tables_auto_pandas_nulls_in_table_a_id(self):
+        """check_tables_auto raises when table_a id column has nulls."""
+        table_a = pd.DataFrame({"_id": [1, np.nan], "name": ["a", "b"]})
+        table_b = pd.DataFrame({"_id": [10, 20], "name": ["x", "y"]})
+        with pytest.raises(ValueError, match="nulls are present in the id column"):
+            check_tables_auto(table_a, "_id", table_b, "_id")
+
+    def test_check_tables_auto_pandas_nulls_in_table_b_id(self):
+        """check_tables_auto raises when table_b id column has nulls."""
+        table_a = pd.DataFrame({"_id": [1, 2], "name": ["a", "b"]})
+        table_b = pd.DataFrame({"_id": [10, np.nan], "name": ["x", "y"]})
+        with pytest.raises(ValueError, match="nulls are present in the id column"):
+            check_tables_auto(table_a, "_id", table_b, "_id")
+
+    def test_check_tables_auto_pandas_id_column_int64_nullable(self):
+        """check_tables_auto passes with pandas nullable Int64 id column (e.g. from parquet)."""
+        table_a = pd.DataFrame({"_id": pd.array([1, 2], dtype="Int64"), "name": ["a", "b"]})
+        table_b = pd.DataFrame({"_id": pd.array([10, 20], dtype="Int64"), "name": ["x", "y"]})
+        check_tables_auto(table_a, "_id", table_b, "_id")  # no raise
+
+    def test_check_tables_auto_pandas_id_column_wrong_type(self):
+        """check_tables_auto raises when id column is not int32/int64 or Int32/Int64."""
+        table_a = pd.DataFrame(
+            {"_id": [1.0, 2.0], "name": ["a", "b"]}
+        )  # float
+        table_b = pd.DataFrame({"_id": [10, 20], "name": ["x", "y"]})
+        with pytest.raises(ValueError, match="must be int32/int64 or Int32/Int64"):
+            check_tables_auto(table_a, "_id", table_b, "_id")
+
+    def test_check_tables_auto_pandas_id_column_not_unique(self):
+        """check_tables_auto raises when id column is not unique."""
+        table_a = pd.DataFrame({"_id": [1, 1], "name": ["a", "b"]})
+        table_b = pd.DataFrame({"_id": [10, 20], "name": ["x", "y"]})
+        with pytest.raises(ValueError, match="must be unique"):
+            check_tables_auto(table_a, "_id", table_b, "_id")
+
+    # --- Pandas: column superset ---
+
+    def test_check_tables_auto_pandas_table_b_not_superset(self):
+        """check_tables_auto raises when table_b columns are not superset of table_a."""
+        table_a = pd.DataFrame({"_id": [1, 2], "name": ["a", "b"], "foo": [0, 0]})
+        table_b = pd.DataFrame({"_id": [10, 20], "name": ["x", "y"]})  # no foo
+        with pytest.raises(ValueError, match="must be a superset"):
+            check_tables_auto(table_a, "_id", table_b, "_id")
+
+    # --- Type mismatches ---
+
+    def test_check_tables_auto_mixed_pandas_spark(self, sample_table_a):
+        """check_tables_auto raises when table_a is pandas and table_b is Spark."""
+        table_a = pd.DataFrame({"_id": [1, 2], "name": ["a", "b"]})
+        table_b = sample_table_a  # Spark, from conftest
+        with pytest.raises(TypeError, match="both be pandas DataFrames"):
+            check_tables_auto(table_a, "_id", table_b, "_id")
+
+    def test_check_tables_auto_mixed_spark_pandas(self, sample_table_a):
+        """check_tables_auto raises when table_a is Spark and table_b is pandas."""
+        table_b = pd.DataFrame({"_id": [10, 20], "name": ["x", "y"]})
+        with pytest.raises(TypeError, match="both be Spark DataFrames"):
+            check_tables_auto(sample_table_a, "_id", table_b, "_id")
+
+    def test_check_tables_auto_invalid_type(self):
+        """check_tables_auto raises when table_a is not DataFrame."""
+        table_b = pd.DataFrame({"_id": [10, 20], "name": ["x", "y"]})
+        with pytest.raises(TypeError, match="table_a/table_b must be pandas or Spark DataFrames"):
+            check_tables_auto([1, 2, 3], "_id", table_b, "_id")
+
+    # --- Spark: valid and invalid ---
+
+    def test_check_tables_auto_spark_valid(self, sample_table_a, sample_table_b):
+        """check_tables_auto passes with valid Spark DataFrames and superset columns."""
+        check_tables_auto(sample_table_a, "_id", sample_table_b, "_id")  # no raise
+
+    def test_check_tables_auto_spark_table_a_missing_id_column(self, sample_table_b):
+        """check_tables_auto raises when Spark table_a is missing id column."""
+        table_a_no_id = sample_table_b.select("name", "description", "price")
+        with pytest.raises(ValueError, match="table_a: missing id column"):
+            check_tables_auto(table_a_no_id, "_id", sample_table_b, "_id")
+
+    def test_check_tables_auto_spark_table_b_not_superset(self, sample_table_a, sample_table_b):
+        """check_tables_auto raises when Spark table_b columns are not superset of table_a."""
+        table_b_small = sample_table_b.select("_id", "name")
+        table_a_has_more = sample_table_a.select("_id", "name", "description")
+        with pytest.raises(ValueError, match="must be a superset"):
+            check_tables_auto(table_a_has_more, "_id", table_b_small, "_id")
+
+    def test_check_tables_auto_spark_nulls_in_table_a_id(self, spark_session, sample_table_b):
+        """check_tables_auto raises when Spark table_a id column has nulls."""
+        table_a_with_null = spark_session.createDataFrame(
+            [("a", 1), ("b", None)], schema=["name", "_id"]
+        )
+        with pytest.raises(ValueError, match="nulls are present in the id column"):
+            check_tables_auto(table_a_with_null, "_id", sample_table_b, "_id")
+
+    def test_check_tables_auto_spark_nulls_in_table_b_id(self, spark_session, sample_table_a):
+        """check_tables_auto raises when Spark table_b id column has nulls."""
+        table_b_with_null = spark_session.createDataFrame(
+            [("x", 10), ("y", None)], schema=["name", "_id"]
+        )
+        with pytest.raises(ValueError, match="nulls are present in the id column"):
+            check_tables_auto(sample_table_a, "_id", table_b_with_null, "_id")
