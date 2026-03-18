@@ -31,6 +31,10 @@ See instructions to install Sparkly on [a single machine](https://github.com/anh
 
 See [this page](https://github.com/anhaidgroup/sparkly/blob/main/doc/using-sparkly.md), which points to a technical report, slides, a tutorial, and examples.
 
+### Publications and Datasets
+
+Here is [the Sparkly paper](https://pages.cs.wisc.edu/~anhai/papers1/sparkly-vldb2023.pdf) and the [datasets](https://pages.cs.wisc.edu/~anhai/data5/sparkly-datasets/sparkly-datasets.zip) used in that paper. 
+
 ### Further Pointers
 
 See [API documentation](https://anhaidgroup.github.io/sparkly/). 
