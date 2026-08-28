@@ -1,5 +1,6 @@
 from copy import deepcopy
 from typing import Union
+import json
 import shutil 
 import tempfile
 import os
@@ -59,6 +60,8 @@ from .index_base import Index, QueryResult, EMPTY_QUERY_RESULT
 
 logger = get_logger(__name__)
 
+RID_COL = '_rid'
+
 
 class _DocumentConverter:
     @type_check_call
@@ -91,21 +94,26 @@ class _DocumentConverter:
                     df[new_field] = df[f]
         # get unique fields
         fields = list(set(sum(self._field_to_doc_fields.values(), [])))
-        df.set_index(self._config.id_col, inplace=True)
-        df = df[fields]
+        df.set_index(RID_COL, inplace=True)
+        df = df[fields + [self._config.id_col]]
         return df
     
     def _row_to_lucene_doc(self, row):
         doc = Document()
+        id_col = self._config.id_col
+        user_id = row[id_col]
+        row = row.drop(id_col)
         row.dropna(inplace=True)
+        doc.add(StoredField(RID_COL, str(row.name)))
+        doc.add(LongPoint(RID_COL, int(row.name)))
         # this has to be a string because 
         # pylucene improperly casts to an int, storing the incorrect 
         # value for 64 bit integers 
-        f = StoredField(self._config.id_col, str(row.name))
+        f = StoredField(id_col, str(user_id))
         #f = StoredField(self._config.id_col, Long.MAX_VALUE)
         #f.setLongValue(int(row.name))
         doc.add(f)
-        doc.add(LongPoint(self._config.id_col, int(row.name)))
+        doc.add(LongPoint(id_col, int(user_id)))
         # needed for sorting by id_col
         #doc.add(SortedNumericDocValuesField(self._config.id_col, int(row.name)))
         for k,v in row.items():
@@ -115,7 +123,7 @@ class _DocumentConverter:
 
     @type_check_call
     def convert_docs(self, df : pd.DataFrame):
-        # index of df is expected to be _id column
+        # df is expected to contain the _rid and id columns
         df = self._format_columns(df)
         docs = df.apply(self._row_to_lucene_doc, axis=1)
 
@@ -153,11 +161,17 @@ class LuceneIndex(Index):
         self._initialized = False
         self._is_built = False
         self._index_build_chunk_size = 2500
+        self._next_rid = 0
 
         self._arg_check_config(self.config)
         # clear old index if it exists
         if delete_if_exists and self._index_path.exists():
             shutil.rmtree(self._index_path)
+
+        meta_file = self._index_path / self.PY_META_FILE
+        if meta_file.exists():
+            meta = json.loads(meta_file.read_text())
+            self._next_rid = meta.get('next_rid', 0)
 
         # write the config
         self._write_meta_data(config)
@@ -281,8 +295,10 @@ class LuceneIndex(Index):
     def _write_meta_data(self, config):
         # write the index meta data 
         self._index_path.mkdir(parents=True, exist_ok=True)
+        meta = config.to_dict()
+        meta['next_rid'] = self._next_rid
         with open(self._index_path / self.PY_META_FILE, 'w') as ofs:
-            ofs.write(config.to_json())
+            ofs.write(json.dumps(meta))
 
     def _read_meta_data(self):
         p = self._get_data_dir()
@@ -368,6 +384,14 @@ class LuceneIndex(Index):
             end = min(len(df), i+self._index_build_chunk_size)
             yield df.iloc[i:end]
 
+    @staticmethod
+    def _with_rid(df, offset):
+        if isinstance(df, pd.DataFrame):
+            return df.assign(**{RID_COL: np.arange(offset, offset + len(df), dtype=np.int64)})
+        schema = T.StructType(df.schema.fields + [T.StructField(RID_COL, T.LongType(), False)])
+        rdd = df.rdd.zipWithIndex().map(lambda r: r[0] + (r[1] + offset,))
+        return df.sparkSession.createDataFrame(rdd, schema)
+
     
     def _arg_check_config(self, config):
         if len(config.field_to_analyzers) == 0:
@@ -376,8 +400,12 @@ class LuceneIndex(Index):
     def _arg_check_upsert(self, df : Union[pd.DataFrame, sql.DataFrame], validate_ids: bool=True):
 
         config = self.config
+        if config.id_col == RID_COL:
+            raise ValueError(f'id column cannot be named {RID_COL}, it is reserved for internal use')
+        if RID_COL in df.columns:
+            raise ValueError(f'column {RID_COL} in dataframe is reserved for internal use')
         if config.id_col not in df.columns:
-            raise ValueError(f'id column {config.id_col} is not is dataframe columns {df.columns}')
+            raise ValueError(f'id column {config.id_col} is not in dataframe columns {df.columns}')
 
         missing_cols = set(config.get_analyzed_fields()) - set(df.columns)
         if len(missing_cols) != 0:
@@ -411,7 +439,7 @@ class LuceneIndex(Index):
                 continue
 
             if index is None:
-                index_path = tmp_dir_path / f'{time.time()}_{df.iloc[0][config.id_col]}'
+                index_path = tmp_dir_path / f'{time.time()}_{df.iloc[0][RID_COL]}'
                 index = cls(index_path, config)
                 index_writer = index._get_index_writer(index.config, index_path)
 
@@ -488,7 +516,7 @@ class LuceneIndex(Index):
                 
     def _build_spark(self, df, df_size, config, tmp_dir_path, show_progress_bar):
         nparts = df_size // self._index_build_chunk_size
-        df = df.repartition(nparts, config.id_col)
+        df = df.repartition(nparts, RID_COL)
         
         schema = T.StructType([
             T.StructField('file', T.StringType(), False),
@@ -515,7 +543,7 @@ class LuceneIndex(Index):
 
     def _build_parallel_local(self, df, config, tmp_dir_base, show_progress_bar):
         # slice the dataframe into a local iterator of pandas dataframes
-        slices = spark_to_pandas_stream(df, self._index_build_chunk_size)
+        slices = spark_to_pandas_stream(df, self._index_build_chunk_size, by=RID_COL)
         # use all available threads
         pool = Parallel(n_jobs=-1)
         # build in parallel in sub dirs of tmp dir
@@ -615,6 +643,7 @@ class LuceneIndex(Index):
                 # project out unused columns
                 df_size = n_rows if n_rows is not None else df.count()
                 df = df.select(self.config.id_col, *self.config.get_analyzed_fields())
+                df = self._with_rid(df, self._next_rid)
                 if df_size > self._index_build_chunk_size * 10:
                     # build large tables in parallel
                     # put temp indexes in temp dir for easy deleting later
@@ -640,6 +669,8 @@ class LuceneIndex(Index):
 
             if isinstance(df, pd.DataFrame):
                 df_size = len(df)
+                if RID_COL not in df.columns:
+                    df = self._with_rid(df, self._next_rid)
                 # if table is small just build directly
                 self._add_docs(df, index_writer, show_progress_bar)
         except:
@@ -651,6 +682,8 @@ class LuceneIndex(Index):
             index_writer.close()
 
         self._is_built = True
+        self._next_rid += df_size
+        self._write_meta_data(self._config)
 
         self._invalidate_spark()
         # verify the index is correct

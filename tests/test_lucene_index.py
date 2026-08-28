@@ -37,6 +37,7 @@ class TestDocumentConverter:
         converter = _DocumentConverter(sample_config)
         df = pd.DataFrame(
             {
+                "_rid": [0, 1],
                 "_id": [1, 2],
                 "name": ["Widget", "Gadget"],
                 "description": ["Blue", "Red"],
@@ -45,13 +46,15 @@ class TestDocumentConverter:
 
         formatted = converter._format_columns(df.copy())
 
-        assert formatted.index.name == "_id"
+        assert formatted.index.name == "_rid"
         assert set(formatted.columns) == {
             "name.standard",
             "description.standard",
             "full_text.standard",
+            "_id",
         }
-        assert formatted.loc[1, "full_text.standard"] == "Widget Blue"
+        assert formatted.loc[0, "full_text.standard"] == "Widget Blue"
+        assert formatted.loc[0, "_id"] == 1
 
 
 class TestLuceneIndex:
@@ -102,6 +105,25 @@ class TestLuceneIndex:
             lucene_index_instance._arg_check_upsert(df)
 
         assert "id_col must be integer type" in str(excinfo.value)
+
+    def test_arg_check_upsert_rejects_reserved_rid_column(
+        self,
+        lucene_index_instance,
+    ):
+        """_arg_check_upsert raises when the dataframe contains a _rid column."""
+        df = pd.DataFrame(
+            {
+                "_rid": [0, 1],
+                "_id": [1, 2],
+                "name": ["Widget", "Gadget"],
+                "description": ["Blue", "Red"],
+            }
+        )
+
+        with pytest.raises(ValueError) as excinfo:
+            lucene_index_instance._arg_check_upsert(df)
+
+        assert "reserved" in str(excinfo.value)
 
     def test_arg_check_upsert_rejects_duplicate_ids(
         self,
@@ -169,6 +191,23 @@ class TestLuceneIndex:
 
         assert "must be unique" in str(excinfo.value)
         assert not lucene_index_instance.is_built
+
+    def test_upsert_advances_next_rid(self, lucene_index_instance):
+        """each upsert assigns fresh internal _rid values."""
+        df = pd.DataFrame(
+            {
+                "_id": [1, 2],
+                "name": ["Widget", "Gadget"],
+                "description": ["Blue", "Red"],
+            }
+        )
+
+        lucene_index_instance.upsert_docs(df)
+        assert lucene_index_instance._next_rid == 2
+
+        lucene_index_instance.upsert_docs(df)
+        assert lucene_index_instance._next_rid == 4
+        assert lucene_index_instance.num_indexed_docs() == 2
 
     def test_chunk_df_respects_chunk_size(self, lucene_index_instance):
         lucene_index_instance._index_build_chunk_size = 2
@@ -360,11 +399,33 @@ class TestLuceneIndexSparkData:
         )
 
         index.upsert_docs(medium_table_a, force_distributed=True, show_progress_bar=True)
-        
+
         assert index.is_built
-        
+
         num_docs = index.num_indexed_docs()
         assert num_docs == medium_table_a.count()
+
+    def test_upsert_medium_dataframe_parallel_local(
+        self, tmp_path, medium_table_a
+    ):
+        """
+        > 25k rows without force_distributed uses the local parallel build.
+        """
+        config = IndexConfig()
+        config.add_field("name", ["standard"])
+        config.add_field("description", ["standard"])
+        config.id_col = "_id"
+
+        index = LuceneIndex(
+            tmp_path / "medium-local-index",
+            config,
+            delete_if_exists=True,
+        )
+
+        index.upsert_docs(medium_table_a)
+
+        assert index.is_built
+        assert index.num_indexed_docs() == medium_table_a.count()
 
     def test_delete_docs_single_id(self, tmp_path, sample_table_a):
         """delete_docs should delete the documents from the index."""
