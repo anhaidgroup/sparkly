@@ -103,6 +103,73 @@ class TestLuceneIndex:
 
         assert "id_col must be integer type" in str(excinfo.value)
 
+    def test_arg_check_upsert_rejects_duplicate_ids(
+        self,
+        lucene_index_instance,
+    ):
+        """_arg_check_upsert raises when the id column has duplicate values."""
+        df = pd.DataFrame(
+            {
+                "_id": [1, 1],
+                "name": ["Widget", "Gadget"],
+                "description": ["Blue", "Red"],
+            }
+        )
+
+        with pytest.raises(ValueError) as excinfo:
+            lucene_index_instance._arg_check_upsert(df)
+
+        assert "must be unique" in str(excinfo.value)
+
+    def test_arg_check_upsert_rejects_null_ids(
+        self,
+        lucene_index_instance,
+    ):
+        """_arg_check_upsert raises when the id column contains nulls."""
+        df = pd.DataFrame(
+            {
+                "_id": pd.array([1, None], dtype="Int64"),
+                "name": ["Widget", "Gadget"],
+                "description": ["Blue", "Red"],
+            }
+        )
+
+        with pytest.raises(ValueError) as excinfo:
+            lucene_index_instance._arg_check_upsert(df)
+
+        assert "nulls are present" in str(excinfo.value)
+
+    def test_arg_check_upsert_validate_ids_disabled(
+        self,
+        lucene_index_instance,
+    ):
+        """_arg_check_upsert skips value checks when validate_ids is False."""
+        df = pd.DataFrame(
+            {
+                "_id": [1, 1],
+                "name": ["Widget", "Gadget"],
+                "description": ["Blue", "Red"],
+            }
+        )
+
+        lucene_index_instance._arg_check_upsert(df, validate_ids=False)
+
+    def test_upsert_docs_rejects_duplicate_ids(self, lucene_index_instance):
+        """upsert_docs raises before writing when ids are duplicated."""
+        df = pd.DataFrame(
+            {
+                "_id": [1, 1],
+                "name": ["Widget", "Gadget"],
+                "description": ["Blue", "Red"],
+            }
+        )
+
+        with pytest.raises(ValueError) as excinfo:
+            lucene_index_instance.upsert_docs(df)
+
+        assert "must be unique" in str(excinfo.value)
+        assert not lucene_index_instance.is_built
+
     def test_chunk_df_respects_chunk_size(self, lucene_index_instance):
         lucene_index_instance._index_build_chunk_size = 2
         df = pd.DataFrame(
@@ -206,6 +273,71 @@ class TestLuceneIndexSparkData:
         assert index.num_indexed_docs() == sample_table_a.count()
 
         index.upsert_docs(sample_table_a)
+
+        assert index.is_built
+        assert index.num_indexed_docs() == sample_table_a.count()
+
+    def test_upsert_spark_rejects_duplicate_ids(self, tmp_path, spark_session):
+        """upsert_docs raises when a Spark dataframe has duplicate ids."""
+        config = IndexConfig()
+        config.add_field("name", ["standard"])
+        config.add_field("description", ["standard"])
+        config.id_col = "_id"
+
+        index = LuceneIndex(
+            tmp_path / "spark-index",
+            config,
+            delete_if_exists=True,
+        )
+        df = spark_session.createDataFrame(
+            [("a", "x", 1), ("b", "y", 1)],
+            schema=["name", "description", "_id"],
+        )
+
+        with pytest.raises(ValueError) as excinfo:
+            index.upsert_docs(df)
+
+        assert "must be unique" in str(excinfo.value)
+        assert not index.is_built
+
+    def test_upsert_spark_rejects_null_ids(self, tmp_path, spark_session):
+        """upsert_docs raises when a Spark dataframe has null ids."""
+        config = IndexConfig()
+        config.add_field("name", ["standard"])
+        config.add_field("description", ["standard"])
+        config.id_col = "_id"
+
+        index = LuceneIndex(
+            tmp_path / "spark-index",
+            config,
+            delete_if_exists=True,
+        )
+        df = spark_session.createDataFrame(
+            [("a", "x", 1), ("b", "y", None)],
+            schema=["name", "description", "_id"],
+        )
+
+        with pytest.raises(ValueError) as excinfo:
+            index.upsert_docs(df)
+
+        assert "nulls are present" in str(excinfo.value)
+        assert not index.is_built
+
+    def test_upsert_spark_validate_ids_disabled(
+        self, tmp_path, sample_table_a
+    ):
+        """upsert_docs with validate_ids=False builds a valid table."""
+        config = IndexConfig()
+        config.add_field("name", ["standard"])
+        config.add_field("description", ["standard"])
+        config.id_col = "_id"
+
+        index = LuceneIndex(
+            tmp_path / "spark-index",
+            config,
+            delete_if_exists=True,
+        )
+        index.upsert_docs(sample_table_a, validate_ids=False)
 
         assert index.is_built
         assert index.num_indexed_docs() == sample_table_a.count()

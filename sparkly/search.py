@@ -5,7 +5,7 @@ import pyspark
 import pandas as pd
 from sparkly.index import QueryResult, Index
 from sparkly.query_generator import QuerySpec
-from sparkly.utils import type_check_call
+from sparkly.utils import type_check_call, _check_id_schema_spark, _check_id_values_spark
 from pydantic import (
         PositiveInt,
 )
@@ -39,7 +39,7 @@ class Searcher:
         return self._index.get_full_query_spec()
     
     @type_check_call
-    def search(self, search_df: pyspark.sql.DataFrame, query_spec: QuerySpec, limit: PositiveInt, id_col: str='_id'):
+    def search(self, search_df: pyspark.sql.DataFrame, query_spec: QuerySpec, limit: PositiveInt, id_col: str='_id', validate_ids: bool=True):
         """
         perform search for all the records in search_df according to
         query_spec
@@ -55,25 +55,33 @@ class Searcher:
             the topk that will be retrieved for each query
         id_col : str
             the id column from search_df that will be output with the query results
+        validate_ids : bool
+            check that the id column of search_df contains no nulls and no duplicate values
 
         Returns
         -------
         pyspark DataFrame
             a pyspark dataframe with the schema (id2, id1_list array<long> , scores array<float>, search_time float)
         """
-        return self._search_spark(search_df, query_spec, limit, id_col)
+        n_rows = None
+        if validate_ids:
+            _check_id_schema_spark(search_df, id_col, 'search_df')
+            n_rows = _check_id_values_spark(search_df, id_col, 'search_df')
+        return self._search_spark(search_df, query_spec, limit, id_col, n_rows)
 
 
 
-    def _search_spark(self, search_df, query_spec, limit, id_col='_id'):
+    def _search_spark(self, search_df, query_spec, limit, id_col='_id', n_rows=None):
         # set data to spark workers
         self._index.to_spark()
 
+        if n_rows is None:
+            n_rows = search_df.count()
         projection = self._index.config.get_analyzed_fields(query_spec)
         if id_col not in projection:
             projection.append(id_col)
         search_df = search_df.select(projection)\
-                        .repartition(max(1, search_df.count() // self._search_chunk_size), id_col)
+                        .repartition(max(1, n_rows // self._search_chunk_size), id_col)
 
         f = lambda x : _search_spark(self._index, query_spec, limit, x, id_col)
 

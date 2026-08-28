@@ -123,6 +123,60 @@ class TestSearcher:
         assert isinstance(sample_row.scores, list)
         assert isinstance(sample_row.search_time, float)
 
+    def test_searcher_search_missing_id_column(
+        self, real_index_with_docs, sample_table_b
+    ):
+        """Searcher search raises when id_col is not in search_df."""
+        searcher = Searcher(real_index_with_docs)
+        query_spec = QuerySpec({'name': {'name.standard'}})
+
+        with pytest.raises(ValueError, match="missing id column"):
+            searcher.search(
+                sample_table_b, query_spec, limit=5, id_col='no_such_col'
+            )
+
+    def test_searcher_search_rejects_duplicate_ids(
+        self, real_index_with_docs, sample_table_b
+    ):
+        """Searcher search raises when search_df ids are duplicated."""
+        searcher = Searcher(real_index_with_docs)
+        query_spec = QuerySpec({'name': {'name.standard'}})
+        duplicated = sample_table_b.union(sample_table_b)
+
+        with pytest.raises(ValueError, match="must be unique"):
+            searcher.search(duplicated, query_spec, limit=5, id_col='_id')
+
+    def test_searcher_search_rejects_null_ids(
+        self, real_index_with_docs, sample_table_b, spark_session
+    ):
+        """Searcher search raises when search_df ids contain nulls."""
+        import pyspark.sql.functions as F
+
+        searcher = Searcher(real_index_with_docs)
+        query_spec = QuerySpec({'name': {'name.standard'}})
+        with_null = sample_table_b.withColumn(
+            '_id',
+            F.when(F.col('_id') == sample_table_b.first()['_id'], None)
+            .otherwise(F.col('_id'))
+        )
+
+        with pytest.raises(ValueError, match="nulls are present"):
+            searcher.search(with_null, query_spec, limit=5, id_col='_id')
+
+    def test_searcher_search_validate_ids_disabled(
+        self, real_index_with_docs, sample_table_b
+    ):
+        """Searcher search skips id validation when validate_ids is False."""
+        searcher = Searcher(real_index_with_docs)
+        query_spec = QuerySpec({'name': {'name.standard'}})
+        duplicated = sample_table_b.union(sample_table_b)
+
+        results = searcher.search(
+            duplicated, query_spec, limit=5, id_col='_id', validate_ids=False
+        )
+
+        assert results.count() == duplicated.count()
+
 
 class TestSearchFunctions:
     """Tests for module-level search functions."""

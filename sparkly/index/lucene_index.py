@@ -9,10 +9,11 @@ from sparkly.query_generator import QuerySpec, LuceneQueryGenerator, LuceneWeigh
 from sparkly.analysis import get_standard_analyzer_no_stop_words, Gram3Analyzer, StandardEdgeGram36Analyzer, UnfilteredGram5Analyzer, get_shingle_analyzer
 from sparkly.analysis import StrippedGram3Analyzer
 from sparkly.utils import (
-        Timer, init_jvm, zip_dir, 
-        atomic_unzip, kill_loky_workers, 
+        Timer, init_jvm, zip_dir,
+        atomic_unzip, kill_loky_workers,
         spark_to_pandas_stream, attach_current_thread_jvm,
         type_check_call,
+        _check_id_values_pandas, _check_id_values_spark,
 )
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -372,12 +373,12 @@ class LuceneIndex(Index):
         if len(config.field_to_analyzers) == 0:
             raise ValueError('config with no fields passed to build')
 
-    def _arg_check_upsert(self, df : Union[pd.DataFrame, sql.DataFrame]):
+    def _arg_check_upsert(self, df : Union[pd.DataFrame, sql.DataFrame], validate_ids: bool=True):
 
         config = self.config
         if config.id_col not in df.columns:
             raise ValueError(f'id column {config.id_col} is not is dataframe columns {df.columns}')
-        
+
         missing_cols = set(config.get_analyzed_fields()) - set(df.columns)
         if len(missing_cols) != 0:
             raise ValueError(f'dataframe is missing columns {list(missing_cols)} required by config (actual columns in df {df.columns})')
@@ -386,10 +387,15 @@ class LuceneIndex(Index):
             dtype = df[config.id_col].dtype
             if not pd.api.types.is_integer_dtype(dtype):
                 raise TypeError(f'id_col must be integer type (got {dtype})')
+            if validate_ids:
+                _check_id_values_pandas(df, config.id_col, 'df')
         else:
             dtype = df.schema[config.id_col].dataType
             if dtype.typeName() not in {'integer', 'long'}:
                 raise TypeError(f'id_col must be integer type (got {dtype})')
+            if validate_ids:
+                return _check_id_values_spark(df, config.id_col, 'df')
+        return None
     
     @classmethod
     def _build_spark_worker_local(cls, df_itr, config, acc):
@@ -561,7 +567,7 @@ class LuceneIndex(Index):
 
     
     @type_check_call
-    def upsert_docs(self, df: Union[pd.DataFrame, sql.DataFrame], disable_distributed: bool=False, force_distributed: bool=False, show_progress_bar: bool=False):
+    def upsert_docs(self, df: Union[pd.DataFrame, sql.DataFrame], disable_distributed: bool=False, force_distributed: bool=False, show_progress_bar: bool=False, validate_ids: bool=True):
         """
         build the index, indexing df according to self.config
 
@@ -580,10 +586,13 @@ class LuceneIndex(Index):
 
         show_progress_bar: bool, default=False
             show the progress bar in addition to debug logs
+
+        validate_ids : bool, default=True
+            check that the id column of df contains no nulls and no duplicate values
         """
         if disable_distributed and force_distributed:
             raise ValueError('disable_distributed and force_distributed both set to True, only one can be set')
-        self._arg_check_upsert(df)
+        n_rows = self._arg_check_upsert(df, validate_ids)
 
         # verify the index is correct
         index_writer = self._get_index_writer(self.config, self._index_path)
@@ -604,7 +613,7 @@ class LuceneIndex(Index):
 
             if isinstance(df, sql.DataFrame):
                 # project out unused columns
-                df_size = df.count()
+                df_size = n_rows if n_rows is not None else df.count()
                 df = df.select(self.config.id_col, *self.config.get_analyzed_fields())
                 if df_size > self._index_build_chunk_size * 10:
                     # build large tables in parallel

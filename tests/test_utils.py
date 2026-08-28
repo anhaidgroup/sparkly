@@ -637,6 +637,22 @@ class TestCheckTablesManual:
         with pytest.raises(ValueError, match="nulls are present in the id column"):
             check_tables_manual(sample_table_a, "_id", table_b_with_null, "_id")
 
+    def test_check_tables_manual_spark_duplicate_ids_in_table_a(self, spark_session, sample_table_b):
+        """check_tables_manual raises when Spark table_a id column has duplicates."""
+        table_a_with_dups = spark_session.createDataFrame(
+            [("a", 1), ("b", 1)], schema=["name", "_id"]
+        )
+        with pytest.raises(ValueError, match="must be unique"):
+            check_tables_manual(table_a_with_dups, "_id", sample_table_b, "_id")
+
+    def test_check_tables_manual_spark_table_a_empty(self, spark_session, sample_table_b):
+        """check_tables_manual raises when Spark table_a is empty."""
+        table_a_empty = spark_session.createDataFrame(
+            [], schema="name string, _id long"
+        )
+        with pytest.raises(ValueError, match="table_a: empty dataframe"):
+            check_tables_manual(table_a_empty, "_id", sample_table_b, "_id")
+
 
 class TestCheckTablesAuto:
     """Tests for check_tables_auto (id columns + table_b columns superset of table_a)."""
