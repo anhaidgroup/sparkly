@@ -349,7 +349,7 @@ class IndexOptimizer():
 
     
     @type_check_call
-    def optimize(self, index : Index, search_df: pyspark.sql.DataFrame) -> QuerySpec:
+    def optimize_topk(self, index : Index, search_df: pyspark.sql.DataFrame, topk=1) -> list[QuerySpec]:
         """
 
         Parameters
@@ -404,7 +404,8 @@ class IndexOptimizer():
             # index/block on
 
             # take the top spec if this is the last iteration, else the top 10
-            k = 1 if i == max_depth - 1 else 10
+            # k = 1 if i == max_depth - 1 else 10
+            k = topk
             top_specs_stats = self._get_topk_specs(cands, search_df, k=k, nulls=nulls)
             top_spec = top_specs_stats.iloc[0]
 
@@ -425,4 +426,28 @@ class IndexOptimizer():
                 log.debug('cand_score < min_score, replacing')
 
 
-        return best_query_specs[0]
+        return best_query_specs
+
+
+    @type_check_call
+    def optimize(self, index : Index, search_df: pyspark.sql.DataFrame) -> QuerySpec:
+        """
+
+        Parameters
+        ----------
+
+        index : Index
+            the index that will have an optimzed query spec created for it
+            
+        search_df : pyspark.sql.DataFrame:
+            the records that will be used to choose the query spec
+
+        Returns
+        -------
+
+        QuerySpec
+            a query spec optimized for searching for `search_df` using `index`
+
+        """
+        return self.optimize_topk(index=index, search_df=search_df, topk=5)[0]
+

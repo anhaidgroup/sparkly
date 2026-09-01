@@ -94,10 +94,38 @@ class QuerySpec(dict):
                 return False
         return True
 
-    def to_dict(self) -> dict:
-        return {
-                'boost_map' : deepcopy(self._boost_map),
-                'spec' : {k : list(v) for k,v in self.items()},
-                'filter' : list(self._filter)
-        }
+    @classmethod
+    def from_dict(cls, data: dict):
+        spec = cls(data['spec'])
+        spec.filter = [tuple(x) for x in data.get('filter', [])]
 
+        boost_map = data.get('boost_map', {})
+        if isinstance(boost_map, list):
+            boost_map = {tuple(x['key']): x['value'] for x in boost_map}
+
+        spec.boost_map = boost_map
+        return spec
+
+    @staticmethod
+    def _serialize_tuple_key_map(data: dict) -> list:
+        return [
+            {'key': list(k), 'value': v}
+            for k, v in sorted(data.items(), key=lambda x: x[0])
+        ]
+
+    def to_dict(self, json_safe: bool=False) -> dict:
+        boost_map = deepcopy(self._boost_map)
+        filter_pairs = list(self._filter)
+
+        if json_safe:
+            boost_map = self._serialize_tuple_key_map(boost_map)
+            filter_pairs = [list(x) for x in sorted(filter_pairs)]
+
+        return {
+                'boost_map' : boost_map,
+                'spec' : {
+                    k : sorted(v) if json_safe else list(v)
+                    for k,v in self.items()
+                },
+                'filter' : filter_pairs
+        }

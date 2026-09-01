@@ -95,6 +95,8 @@ class IndexConfig:
         o.concat_fields = data['concat_fields']
         o.default_analyzer = data['default_analyzer']
         o.sim = data['sim']
+        if 'store_vectors' in data:
+            o.store_vectors = data['store_vectors']
         o.id_col = data['id_col']
         o.weighted_queries = data['weighted_queries']
         return o
